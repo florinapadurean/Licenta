@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "571174433885",
+    "firebase_url": "https://quizzgame-b0fa4.firebaseio.com",
+    "project_id": "quizzgame-b0fa4",
+    "storage_bucket": "quizzgame-b0fa4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571174433885:android:f2e3f0ce06406cd8",
+        "android_client_info": {
+          "package_name": "com.example.padurean.quizzgame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571174433885-ps4ecpa91a790geu33o50gvkm33nc8lb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCXtiwcjdcaMMmE_MwqahwLIHNevQr0gU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Smart or Smarter?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="facebook_app_id">193493134481434</string>
+    <string name="fb_login_protocol_scheme">fb193493134481434</string>
+    <string name="auth_failed">Login Failed</string>
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
+    <string name="nearby_key">AIzaSyAvSRP2q-hLK7aoYqW3L8-t_rOqVl6e7rw</string>
+
+</resources>

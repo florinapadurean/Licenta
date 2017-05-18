@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_error_wifi"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@mipmap/triunghiuri"
+    tools:context="com.example.padurean.quizzgame.Errors.ErrorWifi">
+
+    <!--<ImageButton-->
+        <!--android:id="@+id/wifi_on_btn"-->
+        <!--android:layout_width="86dp"-->
+        <!--android:layout_height="65dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:src="@mipmap/ic_signal_wifi_4_bar_black_24dp"-->
+        <!--android:background="@drawable/rounded_corners"-->
+        <!--android:layout_marginLeft="18dp"-->
+        <!--android:layout_alignTop="@+id/wifi_off_btn"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignBottom="@+id/wifi_off_btn" />-->
+
+    <ImageButton
+        android:id="@+id/wifi_off_btn"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_signal_wifi_off_black_24dp"
+        android:background="@drawable/rounded_corners"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="144dp" />
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You need to have wifi connected in order to use this app"
+        android:textColor="@color/colorAccent"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="66dp" />
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Press to find wifi"
+        android:textColor="@color/colorAccent"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:layout_marginTop="63dp"
+        android:layout_below="@+id/wifi_off_btn" />
+
+    <View
+        android:layout_width="30dp"
+        android:layout_height="50dp"
+        android:background="@mipmap/arrow"
+        android:layout_below="@+id/wifi_off_btn"
+        android:layout_toRightOf="@+id/tv2"
+        android:layout_alignBottom="@+id/tv2"
+        android:layout_alignRight="@+id/wifi_off_btn" />
+
+
+</RelativeLayout>
