@@ -2,12 +2,10 @@ package com.example.padurean.quizzgame.Login;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
@@ -21,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.padurean.quizzgame.Errors.ErrorWifi;
-import com.example.padurean.quizzgame.P2PConnection.MainActivity;
+import com.example.padurean.quizzgame.MainActivity;
 import com.example.padurean.quizzgame.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;

@@ -1,7 +1,6 @@
-package com.example.padurean.quizzgame;
+package com.example.padurean.quizzgame.Menu;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,16 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class StartMenu extends Fragment {
+import com.example.padurean.quizzgame.R;
+
+public class StartGameMenu extends Fragment {
 
     Button startDiscovery;
 
-    public StartMenu() {
+    public StartGameMenu() {
     }
 
 
-    public static StartMenu newInstance() {
-        StartMenu fragment = new StartMenu();
+    public static StartGameMenu newInstance() {
+        StartGameMenu fragment = new StartGameMenu();
         return fragment;
     }
 

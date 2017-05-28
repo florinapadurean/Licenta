@@ -1,15 +1,9 @@
 package com.example.padurean.quizzgame.Levels;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.os.CountDownTimer;
-import android.os.SystemClock;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.padurean.quizzgame.Callbacks.KnowledgeLvlCallback;
-import com.example.padurean.quizzgame.DatabaseManager.FirebaseHelper;
 import com.example.padurean.quizzgame.DatabaseManager.Manager;
 import com.example.padurean.quizzgame.Domain.Question;
 import com.example.padurean.quizzgame.R;
@@ -30,16 +23,8 @@ import com.example.padurean.quizzgame.R;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
@@ -60,7 +45,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
     private Long otherPlayerTime;
     private Boolean dataSet=false;
     private Boolean player2IsReady=false;
-    private BackgoundTimer timer;
+    private BackgroundTimer timer;
     private Thread t;
     private Boolean lost=false;
     private ProgressBar timeProgressBar;
@@ -95,7 +80,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
         winner=(TextView) view.findViewById(R.id.winner);
         timeProgressBar=(ProgressBar) view.findViewById(R.id.progressbar1);
         timeProgressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.OVERLAY);
-        timeProgressBar.setMax(20);
+        timeProgressBar.setMax(30);
         myTime=null;
         otherPlayerTime=null;
 
@@ -106,11 +91,11 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                 if(viewQuestion==1){
                     if(goodAnswerButton==1){
                         setView2Data();
-                    }else{
-                        Log.i(TAG,"send you won");
+                    } else{
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("you won");
+                        ((GetMessageListener)getActivity()).send("i lost");
+                        winner.setText("I lost");
                     }
                 }
                 else if(viewQuestion==2){
@@ -118,12 +103,11 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         setView3Data();
                     }
                     else{
-                        Log.i(TAG,"send you won");
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("you won");
+                        ((GetMessageListener)getActivity()).send("i lost");
+                        winner.setText("I lost");
                     }
-
                 }
                 else if(viewQuestion==3){
                     if(goodAnswerButton==1){
@@ -146,10 +130,10 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         }
                     }
                     else{
-                        Log.i(TAG,"send you won");
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("you won");
+                        ((GetMessageListener)getActivity()).send("i lost");
+                        winner.setText("I lost");
                     }
                 }
 
@@ -162,11 +146,11 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                 if(viewQuestion==1){
                     if(goodAnswerButton==2){
                         setView2Data();
-                    }else{
-                        Log.i(TAG,"send you won");
+                    } else{
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("you won");
+                        ((GetMessageListener)getActivity()).send("i lost");
+                        winner.setText("I lost");
                     }
                 }
                 else if(viewQuestion==2){
@@ -174,10 +158,10 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         setView3Data();
                     }
                     else{
-                        Log.i(TAG,"send you won");
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("you won");
+                        ((GetMessageListener)getActivity()).send("i lost");
+                        winner.setText("I lost");
                     }
 
                 }
@@ -202,10 +186,10 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         }
                     }
                     else{
-                        Log.i(TAG,"send you won");
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("you won");
+                        ((GetMessageListener)getActivity()).send("i lost");
+                        winner.setText("I lost");
                     }
                 }
             }
@@ -219,10 +203,10 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         setView3Data();
                     }
                     else{
-                        Log.i(TAG,"send you won");
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("you won");
+                        ((GetMessageListener)getActivity()).send("i lost");
+                        winner.setText("I lost");
                     }
 
                 }
@@ -247,10 +231,10 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         }
                     }
                     else{
-                        Log.i(TAG,"send you won");
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("you won");
+                        ((GetMessageListener)getActivity()).send("i lost");
+                        winner.setText("I lost");
                     }
                 }
 
@@ -281,10 +265,9 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         }
                     }
                     else{
-                        Log.i(TAG,"send you won");
-                        t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("you won");
+                        ((GetMessageListener)getActivity()).send("i lost");
+                        winner.setText("I lost");
                     }
                 }
 
@@ -306,7 +289,6 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @Override
@@ -431,16 +413,16 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
             }
 
         }
-        if (message.equals("you won")) {
-            Log.i(TAG,"am primit you won");
-            winner.setText("I won");
-        }
+//        if (message.equals("you won")) {
+//            Log.i(TAG,"am primit you won");
+//            winner.setText("I won");
+//        }
     };
 
 
     public void startClock(){
         timeProgressBar.setVisibility(View.VISIBLE);
-        timer=new BackgoundTimer(System.currentTimeMillis()/1000,60,timeProgressBar);
+        timer=new BackgroundTimer(System.currentTimeMillis(),60000,timeProgressBar);
         t=new Thread(timer);
         t.start();
     }

@@ -1,10 +1,7 @@
-package com.example.padurean.quizzgame.P2PConnection;
+package com.example.padurean.quizzgame;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,60 +13,48 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.padurean.quizzgame.DatabaseManager.FirebaseHelper;
 import com.example.padurean.quizzgame.Domain.Question;
 import com.example.padurean.quizzgame.Errors.NoDevices;
+import com.example.padurean.quizzgame.Levels.ImagePuzzleHardLvl;
+import com.example.padurean.quizzgame.Levels.ImagePuzzleLvl;
 import com.example.padurean.quizzgame.Levels.KnowledgeLvl;
-import com.example.padurean.quizzgame.LevelsMenu;
+import com.example.padurean.quizzgame.Menu.LevelsMenu;
 import com.example.padurean.quizzgame.Login.Login;
 
 
 import static java.lang.Boolean.FALSE;
 
-import com.example.padurean.quizzgame.R;
-import com.example.padurean.quizzgame.StartMenu.StartMenuListener;
+import com.example.padurean.quizzgame.P2PConnection.DeviceList;
+import com.example.padurean.quizzgame.P2PConnection.WifiDirectBroadcastReceiver;
+import com.example.padurean.quizzgame.Menu.StartGameMenu.StartMenuListener;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.connection.Connections;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
-import com.google.android.gms.nearby.messages.MessagesOptions;
-import com.google.android.gms.nearby.messages.Strategy;
-import com.google.android.gms.nearby.messages.SubscribeOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 
 import java.lang.reflect.Method;
-import java.security.acl.Group;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
 
-public class MainActivity extends AppCompatActivity implements KnowledgeLvl.GetMessageListener, LevelsMenu.LevelPressedListener,GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks,NoDevices.RetryInterface,WifiP2pManager.GroupInfoListener, DeviceList.DeviceActionListener,StartMenuListener,WifiP2pManager.ChannelListener{
+public class MainActivity extends AppCompatActivity implements ImagePuzzleHardLvl.GetMessageListener,ImagePuzzleLvl.GetMessageListener,KnowledgeLvl.GetMessageListener, LevelsMenu.LevelPressedListener,GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks,NoDevices.RetryInterface,WifiP2pManager.GroupInfoListener, DeviceList.DeviceActionListener,StartMenuListener,WifiP2pManager.ChannelListener{
     private WifiP2pManager mManager;
     private Channel mChannel;
     private BroadcastReceiver mReceiver;
@@ -105,20 +90,21 @@ public class MainActivity extends AppCompatActivity implements KnowledgeLvl.GetM
         toolbar.setLogo(R.drawable.smart);
 //        getDataFromDb();
 
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .addApi(Nearby.MESSAGES_API)
-//                .addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this).build();
-
-        // Publish bytes to send message = new Message(yourByteArray);
-
 //         Create an instance of MessageListener
         messageListener = new MessageListener() {
             @Override public void onFound(Message message) {
                 messageAsString = new String(message.getContent());
                 KnowledgeLvl f=(KnowledgeLvl)getFragmentManager().findFragmentByTag("knowledgelvlfragment");
+                ImagePuzzleLvl f1=(ImagePuzzleLvl)getFragmentManager().findFragmentByTag("puzzlelvlfragment");
+                ImagePuzzleHardLvl f2=(ImagePuzzleHardLvl) getFragmentManager().findFragmentByTag("puzzlehardlvlfragment");
                 if (f !=null && f.isVisible()){
                     f.setMessage(messageAsString);
+                }
+                if (f1 !=null && f1.isVisible()){
+                    f1.setMessage(messageAsString);
+                }
+                if (f2 !=null && f2.isVisible()){
+                    f2.setMessage(messageAsString);
                 }
                 Log.i(TAG,"recieve:"+messageAsString);
             }
@@ -141,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements KnowledgeLvl.GetM
         mChannel = mManager.initialize(this, getMainLooper(), null);
         if (savedInstanceState == null) {
 //            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//            StartMenu fragment = new StartMenu();
+//            StartGameMenu fragment = new StartGameMenu();
 //            transaction.replace(R.id.main_container, fragment);
 //            transaction.commit();
             FragmentManager fm = getFragmentManager();
@@ -157,29 +143,6 @@ public class MainActivity extends AppCompatActivity implements KnowledgeLvl.GetM
 
     @Override
     public Observable<String> observableListenerWrapper() {
-
-//        return Observable.create(new Observable.OnSubscribe<String>() {
-//
-//            @Override
-//            public void call(final Subscriber<? super String> subscriber) {
-//                messageListener = new MessageListener() {
-//                    @Override public void onFound(Message message) {
-//                        String messageAsString = new String(message.getContent());
-//                        Log.i(TAG,"recieve:"+messageAsString);
-//                        if (!subscriber.isUnsubscribed()) {
-//                            subscriber.onNext(messageAsString);
-//                            subscriber.onCompleted();
-//                        }
-//
-//                    }
-//                    // Called when a message is no longer nearby.
-//                    @Override public void onLost(Message message) {
-//                        String messageAsString = new String(message.getContent());
-//                        Log.i(TAG, "Lost message: " + messageAsString);
-//                    }
-//                };
-//            }
-//        });
         Observable<String> myObservable= Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
@@ -245,8 +208,6 @@ public class MainActivity extends AppCompatActivity implements KnowledgeLvl.GetM
             try {
                 Method method1 = manager.getClass().getMethod("enableP2p", Channel.class);
                 method1.invoke(manager, channel);
-                //Toast.makeText(getActivity(), "method found",
-                //       Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(this, "method did not found",
                    Toast.LENGTH_SHORT).show();
@@ -389,6 +350,7 @@ public class MainActivity extends AppCompatActivity implements KnowledgeLvl.GetM
 
             });
         }
+
         super.onStop();
     }
 
@@ -412,22 +374,23 @@ public class MainActivity extends AppCompatActivity implements KnowledgeLvl.GetM
             // Clean up when the user leaves the activity.
             Nearby.Messages.unpublish(mGoogleApiClient, message);
             Nearby.Messages.unsubscribe(mGoogleApiClient, messageListener);
+            mGoogleApiClient.disconnect();
         }
-        mGoogleApiClient.disconnect();
+
         super.onDestroy();
     }
 
 
     @Override
     public void showMenu() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Nearby.MESSAGES_API)
-                .addConnectionCallbacks(this)
-                .enableAutoManage(this, this)
-                .build();
-        Log.i(TAG,mGoogleApiClient.toString());
+//        Log.i(TAG,mGoogleApiClient.toString());
         //there is a group to remove at the end of app
-        if (!mGoogleApiClient.isConnected()) {
+        if (mGoogleApiClient==null || !mGoogleApiClient.isConnected()) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(Nearby.MESSAGES_API)
+                    .addConnectionCallbacks(this)
+                    .enableAutoManage(this, this)
+                    .build();
             mGoogleApiClient.connect();
         }
         this.groupFlag=true;
@@ -439,6 +402,15 @@ public class MainActivity extends AppCompatActivity implements KnowledgeLvl.GetM
         ft.hide(fm.findFragmentById(R.id.frag_err_no_devices));
         ft.commit();
     }
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            this.finish();
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
+
 
     @Override
     public void onGroupInfoAvailable(WifiP2pGroup group) {
@@ -461,7 +433,7 @@ public class MainActivity extends AppCompatActivity implements KnowledgeLvl.GetM
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.i("MAIN","CONNESCTED");
-                publishAndSubscribe();
+        publishAndSubscribe();
 
     }
 
@@ -515,50 +487,5 @@ public class MainActivity extends AppCompatActivity implements KnowledgeLvl.GetM
         Nearby.Messages.publish(mGoogleApiClient,message);
     }
 
-
-
-//    private class ErrorCheckingCallback implements ResultCallback<Status> {
-//        private final String method;
-//        private final Runnable runOnSuccess;
-//
-//        private ErrorCheckingCallback(String method) {
-//            this(method, null);
-//        }
-//
-//        private ErrorCheckingCallback(String method, @Nullable Runnable runOnSuccess) {
-//            this.method = method;
-//            this.runOnSuccess = runOnSuccess;
-//        }
-//
-//        @Override
-//        public void onResult(@NonNull Status status) {
-//            if (status.isSuccess()) {
-//                Log.i(TAG, method + " succeeded.");
-//                if (runOnSuccess != null) {
-//                    runOnSuccess.run();
-//                }
-//            } else {
-//                // Currently, the only resolvable error is that the device is not opted
-//                // in to Nearby. Starting the resolution displays an opt-in dialog.
-//                if (status.hasResolution()) {
-//                    if (!mResolvingError) {
-//                        try {
-//                            status.startResolutionForResult(MainActivity.this, REQUEST_RESOLVE_ERROR);
-//                            mResolvingError = true;
-//                        } catch (IntentSender.SendIntentException e) {
-//                            Log.e("errcallback", method + " failed with exception: " + e);
-//                        }
-//                    } else {
-//                        // This will be encountered on initial startup because we do
-//                        // both publish and subscribe together. So having a toast while
-//                        // resolving dialog is in progress is confusing, so just log it.
-//                        Log.i("errcalback", method + " failed with status: " + status + " while resolving error.");
-//                    }
-//                } else {
-//                    Log.e("errcalack", method + " failed with : " + status + " resolving error: " + mResolvingError);
-//                }
-//            }
-//        }
-//    }
 }
 

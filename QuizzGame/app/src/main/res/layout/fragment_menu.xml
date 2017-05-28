@@ -1,35 +1,156 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.padurean.quizzgame.LevelsMenu">
+    tools:context="com.example.padurean.quizzgame.Menu.LevelsMenu">
 
-    <LinearLayout
-        android:id="@+id/menu_container"
-        android:orientation="horizontal"
+    <HorizontalScrollView
+        android:id="@+id/horizontal_menu_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-      >
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
+        <LinearLayout
+            android:id="@+id/asthma_action_plan"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/general_knowledge"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/button"
-            android:text="General Knowledge"
-            />
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/general_knowledge"
+                android:layout_width="200dp"
+                android:layout_height="300dp"
+                android:orientation="vertical"
+                android:background="@color/translucent_grey"
+                >
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:text="General Knowledge"
+                    android:textSize="20sp"
+                    android:layout_marginTop="40dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/puzzle"
+                android:layout_width="200dp"
+                android:layout_height="300dp"
+                android:orientation="vertical"
+                android:background="@color/translucent_grey">
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:src="@mipmap/ic_launcher" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:textSize="20sp"
+                    android:layout_marginTop="40dp"
+                    android:text="Image puzzle" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/puzzle_hard"
+                android:layout_width="200dp"
+                android:layout_height="300dp"
+                android:orientation="vertical"
+                android:background="@color/translucent_grey">
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:textSize="20sp"
+                    android:layout_marginTop="40dp"
+                    android:text="Image puzzle hard" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lvl3"
+                android:layout_width="200dp"
+                android:layout_height="300dp"
+                android:orientation="vertical"
+                android:background="@color/translucent_grey">
+
+                <ImageView
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
+                    android:src="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:textSize="20sp"
+                    android:layout_marginTop="40dp"
+                    android:text="lvl3" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            </LinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/menu_container"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="center_horizontal"-->
+      <!--&gt;-->
 
         <!--<Button-->
-            <!--android:id="@+id/lvl2"-->
+            <!--android:id="@+id/general_knowledge"-->
             <!--android:layout_width="200dp"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_gravity="center"-->
             <!--android:background="@drawable/button"-->
             <!--android:text="General Knowledge"-->
             <!--/>-->
-    </LinearLayout>
+        <!---->
+    <!--</LinearLayout>-->
 
 
-</FrameLayout>
+</RelativeLayout>
+

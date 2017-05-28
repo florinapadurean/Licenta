@@ -12,7 +12,7 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  * Created by Asus on 09.04.2017.
  */
 
-public class BackgoundTimer implements Runnable {
+public class BackgroundTimer implements Runnable {
 
     private long start;
     private long elapsed;
@@ -23,7 +23,7 @@ public class BackgoundTimer implements Runnable {
     private ProgressBar progressBar;
 
 
-    public BackgoundTimer(long start, long howLong, ProgressBar progressBar){
+    public BackgroundTimer(long start, long howLong, ProgressBar progressBar){
         this.start=start;
         this.howLong=howLong;
         this.running=true;
@@ -32,13 +32,13 @@ public class BackgoundTimer implements Runnable {
 
     @Override
     public void run() {
-        while (running  ){
-            now = System.currentTimeMillis()/1000;
+        while (running ){
+            now = System.currentTimeMillis();
 //            && !Thread.currentThread().isInterrupted()
             elapsed = now - start;
-            progressBar.setProgress((int)elapsed);
+            progressBar.setProgress((int)elapsed/1000);
 //            Log.i(TAG,"elapsed "+elapsed+" howlong "+ howLong);
-            if (elapsed >= howLong) {
+            if (elapsed/1000 >= howLong/1000) {
                 Log.i(TAG,"game over");
                 this.running=false;
             }

@@ -12,6 +12,7 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.util.Log;
 
+import com.example.padurean.quizzgame.MainActivity;
 import com.example.padurean.quizzgame.R;
 
 /**
@@ -45,7 +46,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                 mActivity.setIsWifiP2pEnabled(false);
 
             }
-            Log.d(MainActivity.TAG, "P2P state changed - " + state);
+            Log.d("wifiBroadcastReciever", "P2P state changed - " + state);
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
 
             // request available peers from the wifi p2p manager. This is an
@@ -56,7 +57,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
                 mManager.requestPeers(mChannel, (WifiP2pManager.PeerListListener) mActivity.getFragmentManager()
                         .findFragmentById(R.id.frag_list));
             }
-            Log.d(MainActivity.TAG, "P2P peers changed");
+            Log.d("wifiBroadcastReciever", "P2P peers changed");
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
             if (mManager == null) {
@@ -81,21 +82,21 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
             WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
             switch (device.status) {
                 case WifiP2pDevice.CONNECTED:
-                    Log.v(MainActivity.TAG,"mConnected");
+                    Log.v("wifiBroadcastReciever","mConnected");
                     break;
                 case WifiP2pDevice.INVITED:
-                    Log.v(MainActivity.TAG,"mInvited");
+                    Log.v("wifiBroadcastReciever","mInvited");
                     break;
                 case WifiP2pDevice.FAILED:
-                    Log.v(MainActivity.TAG,"mFailed");
+                    Log.v("wifiBroadcastReciever","mFailed");
                     break;
                 case WifiP2pDevice.AVAILABLE:
-                    Log.v(MainActivity.TAG,"mAvailable");
+                    Log.v("wifiBroadcastReciever","mAvailable");
                     break;
                 case WifiP2pDevice.UNAVAILABLE:
-                    Log.v(MainActivity.TAG,"mUnavailable");
+                    Log.v("wifiBroadcastReciever","mUnavailable");
                 default:
-                    Log.v(MainActivity.TAG,"mUnknown");
+                    Log.v("wifiBroadcastReciever","mUnknown");
                     break;
             }
         }

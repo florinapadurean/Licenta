@@ -16,7 +16,7 @@
         <!--android:orientation="vertical"-->
         <!--android:layout_below="@+id/tool_bar">-->
         <fragment
-            android:name="com.example.padurean.quizzgame.StartMenu"
+            android:name="com.example.padurean.quizzgame.Menu.StartGameMenu"
             android:id="@+id/frag_start"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -31,8 +31,9 @@
             android:layout_below="@+id/tool_bar">
         </fragment>
         <fragment
-            android:name="com.example.padurean.quizzgame.LevelsMenu"
+            android:name="com.example.padurean.quizzgame.Menu.LevelsMenu"
             android:id="@+id/frag_menu"
+            android:tag="levelsMenuFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/tool_bar">
