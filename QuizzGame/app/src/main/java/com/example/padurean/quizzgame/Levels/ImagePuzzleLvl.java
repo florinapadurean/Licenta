@@ -108,8 +108,19 @@ public class ImagePuzzleLvl extends Fragment {
         settingsDialog.setContentView(dialogView);
         linearLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
+//        checkIfMessageAlreadyRecieved();
         Log.v("3","aici");
         return view;
+    }
+
+    private void checkIfMessageAlreadyRecieved() {
+        String lastMsg=((ImagePuzzleLvl.GetMessageListener) getActivity()).getLastMessageRecieved();
+        if(lastMsg!="" && lastMsg=="puzzle"){
+            Log.v("4","aici");
+            linearLayout.setVisibility(View.VISIBLE);
+            settingsDialog.show();
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -207,16 +218,19 @@ public class ImagePuzzleLvl extends Fragment {
                                     ImagePuzzleLoose lost=new ImagePuzzleLoose();
                                     getActivity().getFragmentManager().beginTransaction()
                                             .replace(R.id.frag_menu,lost,"puzzleloose")
+                                            .addToBackStack("levelsMenuFragment")
                                             .commit();
                                 } else if (myTime == otherPlayerTime) {
                                     ImagePuzzleWin win=new ImagePuzzleWin();
                                     getActivity().getFragmentManager().beginTransaction()
                                             .replace(R.id.frag_menu,win,"puzzlewin")
+                                            .addToBackStack("levelsMenuFragment")
                                             .commit();
                                 } else {
                                     ImagePuzzleWin win=new ImagePuzzleWin();
                                     getActivity().getFragmentManager().beginTransaction()
                                             .replace(R.id.frag_menu,win,"puzzlewin")
+                                            .addToBackStack("levelsMenuFragment")
                                             .commit();
                                 }
                             }
@@ -226,6 +240,7 @@ public class ImagePuzzleLvl extends Fragment {
                             ImagePuzzleLoose lost=new ImagePuzzleLoose();
                             getActivity().getFragmentManager().beginTransaction()
                                     .replace(R.id.frag_menu,lost,"puzzleloose")
+                                    .addToBackStack("levelsMenuFragment")
                                     .commit();
                         }
 
@@ -263,11 +278,13 @@ public class ImagePuzzleLvl extends Fragment {
                     ImagePuzzleLoose lost=new ImagePuzzleLoose();
                     getActivity().getFragmentManager().beginTransaction()
                             .replace(R.id.frag_menu,lost,"puzzleloose")
+                            .addToBackStack("levelsMenuFragment")
                             .commit();
                 } else {
                     ImagePuzzleWin win=new ImagePuzzleWin();
                     getActivity().getFragmentManager().beginTransaction()
                             .replace(R.id.frag_menu,win,"puzzlewin")
+                            .addToBackStack("levelsMenuFragment")
                             .commit();
                 }
             }
@@ -278,5 +295,7 @@ public class ImagePuzzleLvl extends Fragment {
 
     public interface GetMessageListener{
         void send(String string);
+
+        String getLastMessageRecieved();
     }
 }

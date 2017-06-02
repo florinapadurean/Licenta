@@ -11,6 +11,7 @@ import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pGroup;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.os.Build;
@@ -25,6 +26,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.padurean.quizzgame.Callbacks.ServerCallback;
+import com.example.padurean.quizzgame.Communication.ClientSocket;
+import com.example.padurean.quizzgame.Communication.MyServerSocket;
 import com.example.padurean.quizzgame.Domain.Question;
 import com.example.padurean.quizzgame.Errors.NoDevices;
 import com.example.padurean.quizzgame.Levels.ImagePuzzleHardLvl;
@@ -54,23 +58,28 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 
-public class MainActivity extends AppCompatActivity implements ImagePuzzleHardLvl.GetMessageListener,ImagePuzzleLvl.GetMessageListener,KnowledgeLvl.GetMessageListener, LevelsMenu.LevelPressedListener,GoogleApiClient.OnConnectionFailedListener,GoogleApiClient.ConnectionCallbacks,NoDevices.RetryInterface,WifiP2pManager.GroupInfoListener, DeviceList.DeviceActionListener,StartMenuListener,WifiP2pManager.ChannelListener{
+public class MainActivity extends AppCompatActivity implements ServerCallback,ImagePuzzleHardLvl.GetMessageListener,ImagePuzzleLvl.GetMessageListener,KnowledgeLvl.GetMessageListener, LevelsMenu.LevelPressedListener,GoogleApiClient.OnConnectionFailedListener,NoDevices.RetryInterface,WifiP2pManager.GroupInfoListener, DeviceList.DeviceActionListener,StartMenuListener,WifiP2pManager.ChannelListener{
+//    GoogleApiClient.ConnectionCallbacks
     private WifiP2pManager mManager;
     private Channel mChannel;
     private BroadcastReceiver mReceiver;
     private IntentFilter mIntentFilter;
     private Boolean wifiEnabled=FALSE;
     static String TAG="MAin";
+    private Thread t;
 
     private boolean groupFlag=false;
     private WifiP2pGroup groupInfo;
     private List<Question> knowledgelevel;
-    private GoogleApiClient mGoogleApiClient;
+//    private GoogleApiClient mGoogleApiClient;
     private MessageListener messageListener;
     private Message message;
     private String messageAsString;
     private static final int REQUEST_RESOLVE_ERROR = 1001;
     private Boolean mResolvingError=false;
+    private MyServerSocket serverSocket=null;
+    private ClientSocket clientSocket=null;
+    private String lastMessageRecievedAndNotSent="";
 
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
         this.wifiEnabled = isWifiP2pEnabled;
@@ -91,29 +100,29 @@ public class MainActivity extends AppCompatActivity implements ImagePuzzleHardLv
 //        getDataFromDb();
 
 //         Create an instance of MessageListener
-        messageListener = new MessageListener() {
-            @Override public void onFound(Message message) {
-                messageAsString = new String(message.getContent());
-                KnowledgeLvl f=(KnowledgeLvl)getFragmentManager().findFragmentByTag("knowledgelvlfragment");
-                ImagePuzzleLvl f1=(ImagePuzzleLvl)getFragmentManager().findFragmentByTag("puzzlelvlfragment");
-                ImagePuzzleHardLvl f2=(ImagePuzzleHardLvl) getFragmentManager().findFragmentByTag("puzzlehardlvlfragment");
-                if (f !=null && f.isVisible()){
-                    f.setMessage(messageAsString);
-                }
-                if (f1 !=null && f1.isVisible()){
-                    f1.setMessage(messageAsString);
-                }
-                if (f2 !=null && f2.isVisible()){
-                    f2.setMessage(messageAsString);
-                }
-                Log.i(TAG,"recieve:"+messageAsString);
-            }
-            // Called when a message is no longer nearby.
-            @Override public void onLost(Message message) {
-                String messageAsString2 = new String(message.getContent());
-                Log.i(TAG, "Lost message: " + messageAsString2);
-            }
-        };
+//        messageListener = new MessageListener() {
+//            @Override public void onFound(Message message) {
+//                messageAsString = new String(message.getContent());
+//                KnowledgeLvl f=(KnowledgeLvl)getFragmentManager().findFragmentByTag("knowledgelvlfragment");
+//                ImagePuzzleLvl f1=(ImagePuzzleLvl)getFragmentManager().findFragmentByTag("puzzlelvlfragment");
+//                ImagePuzzleHardLvl f2=(ImagePuzzleHardLvl) getFragmentManager().findFragmentByTag("puzzlehardlvlfragment");
+//                if (f !=null && f.isVisible()){
+//                    f.setMessage(messageAsString);
+//                }
+//                if (f1 !=null && f1.isVisible()){
+//                    f1.setMessage(messageAsString);
+//                }
+//                if (f2 !=null && f2.isVisible()){
+//                    f2.setMessage(messageAsString);
+//                }
+//                Log.i(TAG,"recieve:"+messageAsString);
+//            }
+//            // Called when a message is no longer nearby.
+//            @Override public void onLost(Message message) {
+//                String messageAsString2 = new String(message.getContent());
+//                Log.i(TAG, "Lost message: " + messageAsString2);
+//            }
+//        };
         // Subscribe to receive messages
 
         // add necessary intent values to be matched.
@@ -168,6 +177,12 @@ public class MainActivity extends AppCompatActivity implements ImagePuzzleHardLv
     public void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
+//        if(clientSocket!=null){
+//            clientSocket.close();
+//        }
+//        if(serverSocket!=null){
+//            serverSocket.close();
+//        }
     }
 
 
@@ -370,29 +385,52 @@ public class MainActivity extends AppCompatActivity implements ImagePuzzleHardLv
 
             });
         }
-        if (mGoogleApiClient!= null && mGoogleApiClient.isConnected()) {
-            // Clean up when the user leaves the activity.
-            Nearby.Messages.unpublish(mGoogleApiClient, message);
-            Nearby.Messages.unsubscribe(mGoogleApiClient, messageListener);
-            mGoogleApiClient.disconnect();
-        }
+//        if(clientSocket!=null){
+//            clientSocket.close();
+//        }
+//        if(serverSocket!=null){
+//            serverSocket.close();
+//        }
+//        if (mGoogleApiClient!= null && mGoogleApiClient.isConnected()) {
+//            // Clean up when the user leaves the activity.
+//            Nearby.Messages.unpublish(mGoogleApiClient, message);
+//            Nearby.Messages.unsubscribe(mGoogleApiClient, messageListener);
+//            mGoogleApiClient.disconnect();
+//        }
 
         super.onDestroy();
     }
 
 
     @Override
-    public void showMenu() {
+    public void showMenu(WifiP2pInfo info) {
 //        Log.i(TAG,mGoogleApiClient.toString());
         //there is a group to remove at the end of app
-        if (mGoogleApiClient==null || !mGoogleApiClient.isConnected()) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(Nearby.MESSAGES_API)
-                    .addConnectionCallbacks(this)
-                    .enableAutoManage(this, this)
-                    .build();
-            mGoogleApiClient.connect();
-        }
+//        if (mGoogleApiClient==null || !mGoogleApiClient.isConnected()) {
+//            mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                    .addApi(Nearby.MESSAGES_API)
+//                    .addConnectionCallbacks(this)
+//                    .enableAutoManage(this, this)
+//                    .build();
+//            mGoogleApiClient.connect();
+//        }
+       if(info.isGroupOwner){
+           Log.i(TAG,"server start");
+           serverSocket=new MyServerSocket(this);
+           serverSocket.start();
+//           t=new Thread(serverSocket);
+//           t.start();
+//           serverSocket.run();
+       }
+        else{
+           Log.i(TAG,"client start");
+           clientSocket=new ClientSocket(this,info.groupOwnerAddress);
+           clientSocket.start();
+//           t=new Thread(clientSocket);
+//           t.start();
+       }
+
+
         this.groupFlag=true;
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
@@ -422,25 +460,91 @@ public class MainActivity extends AppCompatActivity implements ImagePuzzleHardLv
         return groupInfo;
     }
 
-    @Override
+
     public void send(String string) {
-        message=new Message(string.getBytes());
-        publish(message);
+        if(serverSocket!=null){
+            serverSocket.send(string);
+        }
+        if(clientSocket!=null){
+            clientSocket.send(string);
+        }
+
+//        publish(message);
+    }
+
+    public void recieveMessage(final String messageAsString){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                KnowledgeLvl f=(KnowledgeLvl)getFragmentManager().findFragmentByTag("knowledgelvlfragment");
+                ImagePuzzleLvl f1=(ImagePuzzleLvl)getFragmentManager().findFragmentByTag("puzzlelvlfragment");
+                ImagePuzzleHardLvl f2=(ImagePuzzleHardLvl) getFragmentManager().findFragmentByTag("puzzlehardlvlfragment");
+                Boolean msgNotSent=true;
+                Log.i(TAG, "recieve:" + messageAsString);
+
+                //wait
+                if (f != null && f.isVisible()) {
+                    Log.i("knowledge", "setMessage:" + messageAsString);
+                    f.setMessage(messageAsString);
+                    msgNotSent = false;
+                }
+                if (f1 != null && f1.isVisible()) {
+                    Log.i("puzzle", "setMessage:" + messageAsString);
+                    f1.setMessage(messageAsString);
+                    msgNotSent = false;
+                }
+                if (f2 != null && f2.isVisible()) {
+                    Log.i("puzzleHArd", "setMessage:" + messageAsString);
+                    f2.setMessage(messageAsString);
+                    msgNotSent = false;
+                }
+
+                if(msgNotSent){
+                    Runnable r=new Runnable() {
+                        @Override
+                        public void run() {
+                            Boolean msgNotSent=true;
+                            int counter=50;
+                            //wait a few seconds
+                            while (counter>0){
+                                counter--;
+                            }
+                            recieveMessage(messageAsString);
+                        }
+                    };
+                    t=new Thread(r);
+                    t.start();
+                    //try again
+//                    int interval=10;
+//                    while(interval>0){
+//                        interval--;
+//                    }
+//                    recieveMessage(messageAsString);
+                }
+
+            }
+        });
+
+    }
+
+    @Override
+    public String getLastMessageRecieved() {
+        return lastMessageRecievedAndNotSent;
     }
 
     //nearby messages callbacks
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.i("MAIN","CONNESCTED");
-        publishAndSubscribe();
+//    @Override
+//    public void onConnected(@Nullable Bundle bundle) {
+//        Log.i("MAIN","CONNESCTED");
+////        publishAndSubscribe();
+//
+//    }
 
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-        Log.e(TAG, "GoogleApiClient disconnected with cause: " + cause);
-    }
+//    @Override
+//    public void onConnectionSuspended(int cause) {
+//        Log.e(TAG, "GoogleApiClient disconnected with cause: " + cause);
+//    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult result) {
@@ -459,33 +563,33 @@ public class MainActivity extends AppCompatActivity implements ImagePuzzleHardLv
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_RESOLVE_ERROR) {
-            if (resultCode == RESULT_OK) {
-                mGoogleApiClient.connect();
-            } else {
-                Log.e(TAG, "GoogleApiClient connection failed. Unable to resolve.");
-            }
-        } else {
+//            if (resultCode == RESULT_OK) {
+//                mGoogleApiClient.connect();
+//            } else {
+//                Log.e(TAG, "GoogleApiClient connection failed. Unable to resolve.");
+//            }
+//        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    private void publishAndSubscribe() {
-        // We automatically subscribe to messages from nearby devices once
-        // GoogleApiClient is connected. If we arrive here more than once during
-        // an activity's lifetime, we may end up with multiple calls to
-        // subscribe(). Repeated subscriptions using the same MessageListener
-        // are ignored.
-        Log.i(TAG,"aici");
-        String s="Hello from" +Build.MANUFACTURER+Build.MODEL;
-        message=new Message(s.getBytes());
-        publish(message);
-        Nearby.Messages.publish(mGoogleApiClient, message);
-        Nearby.Messages.subscribe(mGoogleApiClient, messageListener);
-    }
-
-    private void publish(Message message){
-        Nearby.Messages.publish(mGoogleApiClient,message);
-    }
+//    private void publishAndSubscribe() {
+//        // We automatically subscribe to messages from nearby devices once
+//        // GoogleApiClient is connected. If we arrive here more than once during
+//        // an activity's lifetime, we may end up with multiple calls to
+//        // subscribe(). Repeated subscriptions using the same MessageListener
+//        // are ignored.
+//        Log.i(TAG,"aici");
+//        String s="Hello from" +Build.MANUFACTURER+Build.MODEL;
+//        message=new Message(s.getBytes());
+//        publish(message);
+//        Nearby.Messages.publish(mGoogleApiClient, message);
+//        Nearby.Messages.subscribe(mGoogleApiClient, messageListener);
+//    }
+//
+//    private void publish(Message message){
+//        Nearby.Messages.publish(mGoogleApiClient,message);
+//    }
 
 }
 

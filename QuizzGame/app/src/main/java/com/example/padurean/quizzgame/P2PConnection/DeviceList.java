@@ -152,18 +152,18 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
         // socket.
         if (info.groupFormed && info.isGroupOwner) {
             Log.v("onconn","owner");
+
 //            Intent i=new Intent(getActivity(), com.example.padurean.quizzgame.Menu.class);
 //            startActivity(i);
 
         } else if (info.groupFormed) {
             Log.v("onconn","peer");
-
 //            Intent i=new Intent(getActivity(), com.example.padurean.quizzgame.Menu.class);
 //            startActivity(i);
             // The other device acts as the client. In this case, we enable the
             // get file button.
         }
-        ((DeviceActionListener)getActivity()).showMenu();
+        ((DeviceActionListener)getActivity()).showMenu(info);
     }
 
     public void clearPeers() {
@@ -218,7 +218,7 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
      * events.
      */
     public interface DeviceActionListener {
-        void showMenu();
+        void showMenu(WifiP2pInfo info);
 
         void connect(WifiP2pDevice device);
 
