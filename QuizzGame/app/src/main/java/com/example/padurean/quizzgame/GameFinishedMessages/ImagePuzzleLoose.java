@@ -21,6 +21,12 @@ public class ImagePuzzleLoose extends Fragment{
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }

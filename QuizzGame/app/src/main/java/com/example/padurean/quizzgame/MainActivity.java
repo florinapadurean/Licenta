@@ -31,6 +31,8 @@ import com.example.padurean.quizzgame.Communication.ClientSocket;
 import com.example.padurean.quizzgame.Communication.MyServerSocket;
 import com.example.padurean.quizzgame.Domain.Question;
 import com.example.padurean.quizzgame.Errors.NoDevices;
+import com.example.padurean.quizzgame.GameFinishedMessages.ImagePuzzleLoose;
+import com.example.padurean.quizzgame.GameFinishedMessages.ImagePuzzleWin;
 import com.example.padurean.quizzgame.Levels.ImagePuzzleHardLvl;
 import com.example.padurean.quizzgame.Levels.ImagePuzzleLvl;
 import com.example.padurean.quizzgame.Levels.KnowledgeLvl;
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements ServerCallback,Im
                 | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
         toolbar.setDisplayUseLogoEnabled(true);
         toolbar.setLogo(R.drawable.smart);
+
 //        getDataFromDb();
 
 //         Create an instance of MessageListener
@@ -134,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements ServerCallback,Im
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
+        mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+        registerReceiver(mReceiver, mIntentFilter);
         if (savedInstanceState == null) {
 //            FragmentTransaction transaction = getFragmentManager().beginTransaction();
 //            StartGameMenu fragment = new StartGameMenu();
@@ -150,33 +155,19 @@ public class MainActivity extends AppCompatActivity implements ServerCallback,Im
     }
 
 
-    @Override
-    public Observable<String> observableListenerWrapper() {
-        Observable<String> myObservable= Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                if (!subscriber.isUnsubscribed()) {
-                    subscriber.onNext(messageAsString);
-                    subscriber.onCompleted();
-                }
-            }
-        });
-        return myObservable;
-    }
-
-
     /** register the BroadcastReceiver with the intent values to be matched */
     @Override
     public void onResume() {
+        Log.i(TAG,"onResume()");
         super.onResume();
-        mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
-        registerReceiver(mReceiver, mIntentFilter);
+
     }
 
     @Override
     public void onPause() {
+        Log.i(TAG,"onPause()");
         super.onPause();
-        unregisterReceiver(mReceiver);
+
 //        if(clientSocket!=null){
 //            clientSocket.close();
 //        }
@@ -348,29 +339,37 @@ public class MainActivity extends AppCompatActivity implements ServerCallback,Im
         ft.commit();
     }
 
+    @Override
+    protected void onStart() {
+        Log.i(TAG,"onstart()");
+        super.onStart();
+    }
 
     @Override
     public void onStop() {
-        if (mManager != null && mChannel != null ) {
-            mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
-                @Override
-                public void onFailure(int reasonCode) {
-                    Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d(TAG, "Disconnected");
-                }
-
-            });
-        }
+        Log.i(TAG,"onStop()");
+//        if (mManager != null && mChannel != null ) {
+//            mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
+//                @Override
+//                public void onFailure(int reasonCode) {
+//                    Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
+//                }
+//
+//                @Override
+//                public void onSuccess() {
+//                    Log.d(TAG, "Disconnected");
+//                }
+//
+//            });
+//        }
 
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
+        Log.i(TAG,"onDestroy()");
+        unregisterReceiver(mReceiver);
         if (mManager != null && mChannel != null) {
             mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
                 @Override
@@ -442,11 +441,41 @@ public class MainActivity extends AppCompatActivity implements ServerCallback,Im
     }
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            this.finish();
-        } else {
-            getFragmentManager().popBackStack();
+        if(getFragmentManager().findFragmentById(R.id.frag_menu).isVisible()){
+            if(getFragmentManager().findFragmentById(R.id.frag_menu) instanceof ImagePuzzleLoose){
+                LevelsMenu lm=new LevelsMenu();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.frag_menu,lm)
+                        .commit();
+            }
+            if(getFragmentManager().findFragmentById(R.id.frag_menu) instanceof  ImagePuzzleWin){
+                LevelsMenu lm=new LevelsMenu();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.frag_menu,lm)
+                        .commit();
+            }
         }
+
+//        if (getFragmentManager().getBackStackEntryCount() > 0) {
+//            Log.i(TAG,"hereeeee on bkpress");
+//            getFragmentManager().popBackStack();
+//        }
+//
+//        super.onBackPressed();
+//        KnowledgeLvl f=(KnowledgeLvl)getFragmentManager().findFragmentByTag("knowledgelvlfragment");
+//        ImagePuzzleLvl f1=(ImagePuzzleLvl)getFragmentManager().findFragmentByTag("puzzlelvlfragment");
+//        ImagePuzzleHardLvl f2=(ImagePuzzleHardLvl) getFragmentManager().findFragmentByTag("puzzlehardlvlfragment");
+//        ImagePuzzleLoose puzzleLoose=(ImagePuzzleLoose) getFragmentManager().findFragmentByTag("puzzleloose");
+//        ImagePuzzleWin puzzleWin=(ImagePuzzleWin) getFragmentManager().findFragmentByTag("puzzlewin");
+////        LevelsMenu lm=(LevelsMenu)getFragmentManager().findFragmentById(R.id.frag_menu);
+//        if(puzzleLoose!=null && puzzleLoose.isVisible()){
+//            Log.i(TAG,"hereeeee on bkpress");
+//            FragmentManager fm = getFragmentManager();
+//            FragmentTransaction ft = fm.beginTransaction();
+//            ft.remove(puzzleLoose);
+//            ft.show(fm.findFragmentById(R.id.frag_menu));
+//            ft.commit();
+//        }
     }
 
 
@@ -479,8 +508,9 @@ public class MainActivity extends AppCompatActivity implements ServerCallback,Im
                 KnowledgeLvl f=(KnowledgeLvl)getFragmentManager().findFragmentByTag("knowledgelvlfragment");
                 ImagePuzzleLvl f1=(ImagePuzzleLvl)getFragmentManager().findFragmentByTag("puzzlelvlfragment");
                 ImagePuzzleHardLvl f2=(ImagePuzzleHardLvl) getFragmentManager().findFragmentByTag("puzzlehardlvlfragment");
+
                 Boolean msgNotSent=true;
-                Log.i(TAG, "recieve:" + messageAsString);
+//                Log.i(TAG, "recieve:" + messageAsString);
 
                 //wait
                 if (f != null && f.isVisible()) {
@@ -562,7 +592,7 @@ public class MainActivity extends AppCompatActivity implements ServerCallback,Im
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_RESOLVE_ERROR) {
+//        if (requestCode == REQUEST_RESOLVE_ERROR) {
 //            if (resultCode == RESULT_OK) {
 //                mGoogleApiClient.connect();
 //            } else {
@@ -570,7 +600,7 @@ public class MainActivity extends AppCompatActivity implements ServerCallback,Im
 //            }
 //        } else {
             super.onActivityResult(requestCode, resultCode, data);
-        }
+//        }
     }
 
 //    private void publishAndSubscribe() {

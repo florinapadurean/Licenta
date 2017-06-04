@@ -23,6 +23,11 @@ public class ImagePuzzleWin extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }
@@ -42,6 +47,7 @@ public class ImagePuzzleWin extends Fragment {
 
     @Override
     public void onDetach() {
+
         super.onDetach();
     }
 }

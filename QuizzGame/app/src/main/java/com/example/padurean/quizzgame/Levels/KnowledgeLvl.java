@@ -428,7 +428,6 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
     }
 
     public interface GetMessageListener{
-        Observable<String> observableListenerWrapper();
         void send(String string);
     }
 }

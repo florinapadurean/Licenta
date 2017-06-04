@@ -217,20 +217,23 @@ public class ImagePuzzleLvl extends Fragment {
                                 if (myTime - otherPlayerTime > 0) {
                                     ImagePuzzleLoose lost=new ImagePuzzleLoose();
                                     getActivity().getFragmentManager().beginTransaction()
+//                                            .add(lost,"puzzleloose")
                                             .replace(R.id.frag_menu,lost,"puzzleloose")
-                                            .addToBackStack("levelsMenuFragment")
+//                                            .addToBackStack("levelsMenuFragment")
                                             .commit();
                                 } else if (myTime == otherPlayerTime) {
                                     ImagePuzzleWin win=new ImagePuzzleWin();
                                     getActivity().getFragmentManager().beginTransaction()
+//                                            .add(win,"puzzlewin")
                                             .replace(R.id.frag_menu,win,"puzzlewin")
-                                            .addToBackStack("levelsMenuFragment")
+//                                            .addToBackStack("levelsMenuFragment")
                                             .commit();
                                 } else {
                                     ImagePuzzleWin win=new ImagePuzzleWin();
                                     getActivity().getFragmentManager().beginTransaction()
+//                                            .add(win,"puzzlewin")
                                             .replace(R.id.frag_menu,win,"puzzlewin")
-                                            .addToBackStack("levelsMenuFragment")
+//                                            .addToBackStack("levelsMenuFragment")
                                             .commit();
                                 }
                             }
@@ -239,8 +242,9 @@ public class ImagePuzzleLvl extends Fragment {
                         if (!t.isAlive()) {
                             ImagePuzzleLoose lost=new ImagePuzzleLoose();
                             getActivity().getFragmentManager().beginTransaction()
+//                                    .add(lost,"puzzleloose")
                                     .replace(R.id.frag_menu,lost,"puzzleloose")
-                                    .addToBackStack("levelsMenuFragment")
+//                                    .addToBackStack("levelsMenuFragment")
                                     .commit();
                         }
 
@@ -277,15 +281,18 @@ public class ImagePuzzleLvl extends Fragment {
                 if (myTime - otherPlayerTime > 0) {
                     ImagePuzzleLoose lost=new ImagePuzzleLoose();
                     getActivity().getFragmentManager().beginTransaction()
+//                            .add(lost,"puzzleloose")
                             .replace(R.id.frag_menu,lost,"puzzleloose")
-                            .addToBackStack("levelsMenuFragment")
+//                            .addToBackStack("levelsMenuFragment")
                             .commit();
                 } else {
                     ImagePuzzleWin win=new ImagePuzzleWin();
                     getActivity().getFragmentManager().beginTransaction()
+//                            .add(win,"puzzlewin")
                             .replace(R.id.frag_menu,win,"puzzlewin")
-                            .addToBackStack("levelsMenuFragment")
+//                            .addToBackStack("levelsMenuFragment")
                             .commit();
+
                 }
             }
 

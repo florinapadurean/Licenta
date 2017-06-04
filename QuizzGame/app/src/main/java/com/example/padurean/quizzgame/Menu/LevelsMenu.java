@@ -82,8 +82,14 @@ public class LevelsMenu extends Fragment {
                 Log.v("1","aici");
                 getActivity().getFragmentManager().beginTransaction()
                         .replace(R.id.frag_menu, imagePuzzleLvl,"puzzlelvlfragment")
-                        .addToBackStack("levelsMenuFragment")
+                        .addToBackStack(null)
                         .commit();
+//                getActivity().getFragmentManager().beginTransaction()
+//                        .addToBackStack(null)
+//                        .add(R.id.frag_menu,imagePuzzleLvl,"puzzlelvlfragment")
+//                        .commit();
+
+//                ImagePuzzleLvl puzzlelvl=(ImagePuzzleLvl)getActivity().getFragmentManager().findFragmentByTag("puzzlelvlfragment");
 
             }
 
@@ -98,8 +104,8 @@ public class LevelsMenu extends Fragment {
                 horizontalScrollView.setVisibility(View.GONE);
 
                 getActivity().getFragmentManager().beginTransaction()
-                        .replace(R.id.frag_menu, imagePuzzleHardLvl,"puzzlehardlvlfragment")
                         .addToBackStack(null)
+                        .replace(R.id.frag_menu, imagePuzzleHardLvl,"puzzlehardlvlfragment")
                         .commit();
             }
 
