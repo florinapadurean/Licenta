@@ -12,6 +12,7 @@
         android:text="You lost!!!!"/>
 
     <TextView
+        android:id="@+id/additional_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20dp"

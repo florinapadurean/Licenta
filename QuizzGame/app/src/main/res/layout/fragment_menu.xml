@@ -13,7 +13,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true">
         <LinearLayout
-            android:id="@+id/asthma_action_plan"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -73,9 +72,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/space_puzzle_hard"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
             </LinearLayout>
 
             <LinearLayout
@@ -83,7 +84,8 @@
                 android:layout_width="200dp"
                 android:layout_height="300dp"
                 android:orientation="vertical"
-                android:background="@color/translucent_grey">
+                android:background="@color/translucent_grey"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="200dp"
@@ -105,7 +107,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lvl3"
+                android:id="@+id/battleship"
                 android:layout_width="200dp"
                 android:layout_height="300dp"
                 android:orientation="vertical"
@@ -121,7 +123,7 @@
                     android:layout_height="fill_parent"
                     android:textSize="20sp"
                     android:layout_marginTop="40dp"
-                    android:text="lvl3" />
+                    android:text="Battleship" />
             </LinearLayout>
 
             <LinearLayout

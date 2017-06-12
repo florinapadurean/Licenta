@@ -1,0 +1,1873 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/triunghiuri"
+    android:orientation="horizontal"
+    android:gravity="center_horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text=""
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="1"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="2"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="3"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="4"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="5"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="6"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="7"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="8"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="9"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="10"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="A"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="B"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="C"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="D"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="E"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="F"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="G"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="H"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="I"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="J"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <GridLayout
+                android:id="@+id/myGrid"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:background="@color/notSoBlack"
+                android:columnCount="10"
+                android:columnOrderPreserved="true"
+                android:horizontalSpacing="1dp"
+                android:rowCount="10"
+                android:verticalSpacing="1dp">
+
+                <ImageView
+                    android:id="@+id/rAc1"
+                    android:tag="rAc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rAc2"
+                    android:tag="rAc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rAc3"
+                    android:tag="rAc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rAc4"
+                    android:tag="rAc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rAc5"
+                    android:tag="rAc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rAc6"
+                    android:tag="rAc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rAc7"
+                    android:tag="rAc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rAc8"
+                    android:tag="rAc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rAc9"
+                    android:tag="rAc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rAc10"
+                    android:tag="rAc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!-- second row-->
+                <ImageView
+                    android:id="@+id/rBc1"
+                    android:tag="rBc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rBc2"
+                    android:tag="rBc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rBc3"
+                    android:tag="rBc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rBc4"
+                    android:tag="rBc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rBc5"
+                    android:tag="rBc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rBc6"
+                    android:tag="rBc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rBc7"
+                    android:tag="rBc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rBc8"
+                    android:tag="rBc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rBc9"
+                    android:tag="rBc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rBc10"
+                    android:tag="rBc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--third row-->
+                <ImageView
+                    android:id="@+id/rCc1"
+                    android:tag="rCc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rCc2"
+                    android:tag="rCc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rCc3"
+                    android:tag="rCc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rCc4"
+                    android:tag="rCc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rCc5"
+                    android:tag="rCc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rCc6"
+                    android:tag="rCc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rCc7"
+                    android:tag="rCc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rCc8"
+                    android:tag="rCc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rCc9"
+                    android:tag="rCc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rCc10"
+                    android:tag="rCc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--FOURTH ROW-->
+                <ImageView
+                    android:id="@+id/rDc1"
+                    android:tag="rDc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rDc2"
+                    android:tag="rDc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rDc3"
+                    android:tag="rDc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rDc4"
+                    android:tag="rDc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rDc5"
+                    android:tag="rDc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rDc6"
+                    android:tag="rDc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rDc7"
+                    android:tag="rDc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rDc8"
+                    android:tag="rDc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rDc9"
+                    android:tag="rDc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rDc10"
+                    android:tag="rDc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--R5-->
+                <ImageView
+                    android:id="@+id/rEc1"
+                    android:tag="rEc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rEc2"
+                    android:tag="rEc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rEc3"
+                    android:tag="rEc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rEc4"
+                    android:tag="rEc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rEc5"
+                    android:tag="rEc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rEc6"
+                    android:tag="rEc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rEc7"
+                    android:tag="rEc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rEc8"
+                    android:tag="rEc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rEc9"
+                    android:tag="rEc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rEc10"
+                    android:tag="rEc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--6ROW-->
+                <ImageView
+                    android:id="@+id/rFc1"
+                    android:tag="rFc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rFc2"
+                    android:tag="rFc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rFc3"
+                    android:tag="rFc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rFc4"
+                    android:tag="rFc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rFc5"
+                    android:tag="rFc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rFc6"
+                    android:tag="rFc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rFc7"
+                    android:tag="rFc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rFc8"
+                    android:tag="rFc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rFc9"
+                    android:tag="rFc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rFc10"
+                    android:tag="rFc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--r7-->
+                <ImageView
+                    android:id="@+id/rGc1"
+                    android:tag="rGc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rGc2"
+                    android:tag="rGc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rGc3"
+                    android:tag="rGc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rGc4"
+                    android:tag="rGc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rGc5"
+                    android:tag="rGc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rGc6"
+                    android:tag="rGc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rGc7"
+                    android:tag="rGc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rGc8"
+                    android:tag="rGc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rGc9"
+                    android:tag="rGc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rGc10"
+                    android:tag="rGc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--R8-->
+                <ImageView
+                    android:id="@+id/rHc1"
+                    android:tag="rHc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rHc2"
+                    android:tag="rHc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rHc3"
+                    android:tag="rHc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rHc4"
+                    android:tag="rHc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rHc5"
+                    android:tag="rHc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rHc6"
+                    android:tag="rHc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rHc7"
+                    android:tag="rHc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rHc8"
+                    android:tag="rHc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rHc9"
+                    android:tag="rHc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rHc10"
+                    android:tag="rHc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--R9-->
+                <ImageView
+                    android:id="@+id/rIc1"
+                    android:tag="rIc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rIc2"
+                    android:tag="rIc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rIc3"
+                    android:tag="rIc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rIc4"
+                    android:tag="rIc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rIc5"
+                    android:tag="rIc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rIc6"
+                    android:tag="rIc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rIc7"
+                    android:tag="rIc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rIc8"
+                    android:tag="rIc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rIc9"
+                    android:tag="rIc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rIc10"
+                    android:tag="rIc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--R10-->
+                <ImageView
+                    android:id="@+id/rJc1"
+                    android:tag="rJc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rJc2"
+                    android:tag="rJc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rJc3"
+                    android:tag="rJc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rJc4"
+                    android:tag="rJc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rJc5"
+                    android:tag="rJc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rJc6"
+                    android:tag="rJc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rJc7"
+                    android:tag="rJc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rJc8"
+                    android:tag="rJc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rJc9"
+                    android:tag="rJc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/rJc10"
+                    android:tag="rJc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+            </GridLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text=""
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="1"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="2"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="3"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="4"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="5"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="6"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="7"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="8"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="9"
+                android:textAlignment="center" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:text="10"
+                android:textAlignment="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="A"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="B"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="C"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="D"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="E"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="F"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="G"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="H"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="I"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:text="J"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <GridLayout
+                android:id="@+id/player2Grid"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/notSoBlack"
+                android:layout_gravity="right"
+                android:columnCount="10"
+                android:rowCount="10">
+
+                <ImageView
+                    android:id="@+id/P2rAc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rAc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rAc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rAc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rAc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rAc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rAc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rAc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rAc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rAc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!-- second row-->
+                <ImageView
+                    android:id="@+id/P2rBc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rBc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rBc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rBc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rBc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rBc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rBc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rBc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rBc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rBc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--third row-->
+                <ImageView
+                    android:id="@+id/P2rCc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rCc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rCc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rCc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rCc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rCc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rCc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rCc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rCc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rCc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--FOURTH ROW-->
+                <ImageView
+                    android:id="@+id/P2rDc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rDc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rDc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rDc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rDc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rDc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rDc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rDc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rDc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rDc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--R5-->
+                <ImageView
+                    android:id="@+id/P2rEc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rEc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rEc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rEc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rEc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rEc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rEc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rEc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rEc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rEc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--6ROW-->
+                <ImageView
+                    android:id="@+id/P2rFc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rFc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rFc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rFc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rFc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rFc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rFc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rFc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rFc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rFc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--r7-->
+                <ImageView
+                    android:id="@+id/P2rGc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rGc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rGc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rGc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rGc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rGc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rGc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rGc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rGc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rGc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--R8-->
+                <ImageView
+                    android:id="@+id/P2rHc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rHc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rHc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rHc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rHc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rHc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rHc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rHc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rHc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rHc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--R9-->
+                <ImageView
+                    android:id="@+id/P2rIc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rIc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rIc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rIc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rIc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rIc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rIc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rIc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rIc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rIc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+                <!--R10-->
+                <ImageView
+                    android:id="@+id/P2rJc1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rJc2"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rJc3"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rJc4"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rJc5"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rJc6"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rJc7"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rJc8"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rJc9"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+
+                <ImageView
+                    android:id="@+id/P2rJc10"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="1dp"
+                    android:background="@color/com_facebook_messenger_blue" />
+            </GridLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

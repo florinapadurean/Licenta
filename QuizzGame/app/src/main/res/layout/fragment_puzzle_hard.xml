@@ -36,7 +36,7 @@
                 android:id="@+id/empty_box1"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:background="@drawable/clock0_3"
+                android:background="@drawable/clock3_2"
                 />
 
             <FrameLayout
@@ -69,7 +69,7 @@
                 android:id="@+id/empty_box5"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:background="@drawable/clock2_3"
+                android:background="@drawable/clock3_1"
                 />
 
             <FrameLayout
@@ -104,7 +104,7 @@
                 android:id="@+id/empty_box9"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:background="@drawable/clock1_3"
+                android:background="@drawable/clock3_0"
                 />
         </LinearLayout>
         <LinearLayout

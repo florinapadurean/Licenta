@@ -1,20 +1,17 @@
 package com.example.padurean.quizzgame.Communication;
 
 import android.util.Log;
+import android.widget.Toast;
 
-import com.example.padurean.quizzgame.Callbacks.ServerCallback;
+import com.example.padurean.quizzgame.Callbacks.SocketCallback;
+import com.example.padurean.quizzgame.MainActivity;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -24,7 +21,7 @@ import java.net.Socket;
 public class ClientSocket extends Thread {
     private String serverMessage;
     public static final int SERVERPORT = 4444;
-    ServerCallback callback;
+    SocketCallback callback;
     private boolean mRun = false;
     InetAddress groupOwnerAddress;
 
@@ -34,7 +31,7 @@ public class ClientSocket extends Thread {
     /**
      *  Constructor of the class. OnMessagedReceived listens for the messages received from server
      */
-    public ClientSocket(ServerCallback callback, InetAddress groupOwnerAddress){
+    public ClientSocket(SocketCallback callback, InetAddress groupOwnerAddress){
         this.callback=callback;
         this.groupOwnerAddress=groupOwnerAddress;
 
@@ -50,7 +47,11 @@ public class ClientSocket extends Thread {
             out.println(message);
             out.flush();
         }
+        if(message=="end connection"){
+            mRun=false;
+        }
     }
+
 
     public void stopClient(){
         mRun = false;
@@ -84,26 +85,45 @@ public class ClientSocket extends Thread {
                 //in this while the client listens for the messages sent by the server
                 while (mRun) {
                     serverMessage = in.readLine();
-
                     if (serverMessage != null ) {
                         Log.i("clientSocket","recieve in while msg:"+serverMessage);
-                        //call the method messageReceived from MyActivity class
-                        callback.recieveMessage(serverMessage);
+                        if(serverMessage=="end connection"){
+                            Log.v("Client","aici alo");
+                            mRun=false;
+                            if (socket != null) socket.close();
+                            if (in != null) in.close();
+                            if(out!=null) out.close();
+                            callback.disconnect();
+//                            Toast.makeText((MainActivity)callback, "Sorry,your friend disconnected!", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        else{
+                            //call the method messageReceived from MyActivity class
+                            callback.recieveMessage(serverMessage);
+                        }
                     }
                     serverMessage = null;
-
                 }
+                if (socket != null) socket.close();
+                if (in != null) in.close();
+                if(out!=null) out.close();
+                callback.disconnect();
 
-                Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + serverMessage + "'");
 
             } catch (Exception e) {
-
+                callback.showToastDisconnected();
+//                callback.disconnect();
                 Log.e("TCP", "S: Error", e);
 
             } finally {
                 //the socket must be closed. It is not possible to reconnect to this socket
                 // after it is closed, which means a new socket instance has to be created.
-                socket.close();
+//                socket.close();
+                if (socket != null) socket.close();
+                if (in != null) in.close();
+                if(out!=null) out.close();
+                callback.disconnect();
+
             }
 
         } catch (Exception e) {
@@ -115,7 +135,7 @@ public class ClientSocket extends Thread {
     }
 //    static final int SocketServerPORT = 8080;
 
-//    ServerCallback callback;
+//    SocketCallback callback;
 //    Socket socket=null;
 //    DataInputStream dataInputStream = null;
 //    DataOutputStream dataOutputStream = null;
@@ -133,16 +153,7 @@ public class ClientSocket extends Thread {
 //
 //    }
 //
-//    public void close() {
-//        try{
-//            if (socket != null) socket.close();
-//            if (dataInputStream != null) dataInputStream.close();
-//            open=false;
-//        }
-//        catch(IOException ioe)
-//        {  System.out.println("close client error " + ioe.getMessage()); }
-//
-//    }
+
 //    @Override
 //    public void run() {
 //        try {

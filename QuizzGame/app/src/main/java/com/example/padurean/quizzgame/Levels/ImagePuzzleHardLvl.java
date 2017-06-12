@@ -26,8 +26,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.example.padurean.quizzgame.GameFinishedMessages.ImagePuzzleLoose;
-import com.example.padurean.quizzgame.GameFinishedMessages.ImagePuzzleWin;
+import com.example.padurean.quizzgame.GameFinishedMessages.MessageLoose;
+import com.example.padurean.quizzgame.GameFinishedMessages.MessageWin;
 import com.example.padurean.quizzgame.R;
 
 
@@ -84,7 +84,7 @@ public class ImagePuzzleHardLvl extends Fragment {
         progressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         timeProgressBar=(ProgressBar) view.findViewById(R.id.progressbar1);
         timeProgressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.OVERLAY);
-        timeProgressBar.setMax(30);
+        timeProgressBar.setMax(100);
         myTime=null;
         otherPlayerTime=null;
 
@@ -219,51 +219,38 @@ public class ImagePuzzleHardLvl extends Fragment {
                     }
                     //check if everything is ok
 
-//                    Log.v("asss",box1.getBackground().getConstantState().toString() + getResources().getDrawable(R.drawable.white).getConstantState().toString());
 
                     if (box1.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock0_0).getConstantState() &&
                             box2.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock0_1).getConstantState() &&
                             box3.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock0_2).getConstantState() &&
-                            box4.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock0_3).getConstantState() &&
-                            box5.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock1_0).getConstantState() &&
-                            box6.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock1_1).getConstantState() &&
-                            box7.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock1_2).getConstantState() &&
-                            box8.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock1_3).getConstantState() &&
-                            box9.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock2_0).getConstantState() &&
-                            box10.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock2_1).getConstantState() &&
-                            box11.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock2_2).getConstantState() &&
-                            box12.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock2_3).getConstantState()) {
+                            box4.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock1_0).getConstantState() &&
+                            box5.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock1_1).getConstantState() &&
+                            box6.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock1_2).getConstantState() &&
+                            box7.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock2_0).getConstantState() &&
+                            box8.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock2_1).getConstantState() &&
+                            box9.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock2_2).getConstantState() &&
+                            box10.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock3_0).getConstantState() &&
+                            box11.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock3_1).getConstantState() &&
+                            box12.getBackground().getConstantState() == getResources().getDrawable(R.drawable.clock3_2).getConstantState()) {
                         Log.v("tangram", "ok :)");
                         if (t.isAlive()) {
                             myTime = timer.getMyTime();
-                            timer.stopRunning();
-                            t.interrupt();
+//                            timer.stopRunning();
+//                            t.interrupt();
                             ((ImagePuzzleLvl.GetMessageListener) getActivity()).send("mytime:" + String.valueOf(myTime));
                             if (otherPlayerTime != null) {
                                 if (myTime - otherPlayerTime > 0) {
-                                    ImagePuzzleLoose lost=new ImagePuzzleLoose();
-                                    getActivity().getFragmentManager().beginTransaction()
-                                            .replace(R.id.frag_menu,lost,"puzzleloose")
-                                            .commit();
+                                    goToPuzzleLoose();
                                 } else if (myTime == otherPlayerTime) {
-                                    ImagePuzzleWin win=new ImagePuzzleWin();
-                                    getActivity().getFragmentManager().beginTransaction()
-                                            .replace(R.id.frag_menu,win,"puzzlewin")
-                                            .commit();
+                                    goToPuzzleWin();
                                 } else {
-                                    ImagePuzzleWin win=new ImagePuzzleWin();
-                                    getActivity().getFragmentManager().beginTransaction()
-                                            .replace(R.id.frag_menu,win,"puzzlewin")
-                                            .commit();
+                                   goToPuzzleWin();
                                 }
                             }
                         }
                     } else {
                         if (!t.isAlive()) {
-                            ImagePuzzleLoose lost=new ImagePuzzleLoose();
-                            getActivity().getFragmentManager().beginTransaction()
-                                    .replace(R.id.frag_menu,lost,"puzzleloose")
-                                    .commit();
+                           goToPuzzleLoose();
                         }
 
                     }
@@ -278,7 +265,7 @@ public class ImagePuzzleHardLvl extends Fragment {
 
     public void startClock(){
         timeProgressBar.setVisibility(View.VISIBLE);
-        timer=new BackgroundTimer(System.currentTimeMillis(),130000,timeProgressBar);
+        timer=new BackgroundTimer(System.currentTimeMillis(),100000,timeProgressBar,this);
         t=new Thread(timer);
         t.start();
     }
@@ -294,23 +281,53 @@ public class ImagePuzzleHardLvl extends Fragment {
         if (message.startsWith("mytime:")) {
             String[] l = message.split(":");
             otherPlayerTime = Long.parseLong(l[1]);
-            Log.i("puzzle","am primit timp"+otherPlayerTime);
-            if (myTime!=null) {
+            Log.i("puzzle", "am primit timp" + otherPlayerTime);
+            if (myTime != null) {
                 if (myTime - otherPlayerTime > 0) {
-                    ImagePuzzleLoose lost=new ImagePuzzleLoose();
-                    getActivity().getFragmentManager().beginTransaction()
-                            .replace(R.id.frag_menu,lost,"puzzleloose")
-                            .commit();
+                    goToPuzzleLoose();
                 } else {
-                    ImagePuzzleWin win=new ImagePuzzleWin();
-                    getActivity().getFragmentManager().beginTransaction()
-                            .replace(R.id.frag_menu,win,"puzzlewin")
-                            .commit();
+                    goToPuzzleWin();
                 }
             }
-
         }
-    };
+    }
+
+    public void goToPuzzleWin(){
+        MessageWin win= MessageWin.newInstance("");
+        getActivity().getFragmentManager().beginTransaction()
+                .replace(R.id.frag_menu,win,"puzzlewin")
+                .commit();
+    }
+
+    public void goToPuzzleLoose(){
+        MessageLoose lost= MessageLoose.newInstance("");
+        getActivity().getFragmentManager().beginTransaction()
+                .replace(R.id.frag_menu,lost,"puzzleloose")
+                .commit();
+    }
+
+    public void stopLevel(){
+        if(t!=null && t.isAlive()){
+            timer.stopRunning();
+            t.interrupt();
+        }
+        if(settingsDialog.isShowing()){
+            settingsDialog.dismiss();
+        }
+
+    }
+
+    public void timerDone() {
+        Log.i("ImageHArdPuzzle","timerdDOne");
+        t.interrupt();
+        timer.stopRunning();
+        if (myTime != null) {
+            Log.i("ImageHArdPuzzle",myTime.toString());
+            goToPuzzleWin();
+        } else {
+            goToPuzzleLoose();
+        }
+    }
 
     public interface GetMessageListener{
         void send(String string);

@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.padurean.quizzgame.R;
 
@@ -15,17 +15,24 @@ import com.example.padurean.quizzgame.R;
  * Created by Asus on 28.05.2017.
  */
 
-public class ImagePuzzleWin extends Fragment {
+public class MessageLoose extends Fragment{
 
-    private Button checknewlvl;
+    private String text=null;
 
-    public ImagePuzzleWin() {
+    public MessageLoose() {
+    }
+
+    public static MessageLoose newInstance(String param){
+        MessageLoose imagePuzzleWin= new MessageLoose();
+        imagePuzzleWin.text=param;
+        return imagePuzzleWin;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -35,19 +42,16 @@ public class ImagePuzzleWin extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.puzzle_win, container, false);
-//        checknewlvl=(Button) view.findViewById(R.id.checkNewLevel);
-//        checknewlvl.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//            }
-//        });
+        View view=inflater.inflate(R.layout.puzzle_loose, container, false);
+        if(text!=null){
+            TextView additionalText=(TextView) view.findViewById(R.id.additional_text);
+            additionalText.setText(text);
+        }
         return view;
     }
 
     @Override
     public void onDetach() {
-
         super.onDetach();
     }
 }

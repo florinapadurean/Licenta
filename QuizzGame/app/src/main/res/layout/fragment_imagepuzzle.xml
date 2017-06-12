@@ -75,46 +75,5 @@
         android:layout_height="95dp"
         android:layout_gravity="center" />
 
-    <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="200dp">-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/img1_2"-->
-            <!--android:layout_width="80dp"-->
-            <!--android:layout_height="80dp"-->
-            <!--android:src="@drawable/unicorn1_2"-->
-            <!--android:layout_below="@+id/img2_1"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_marginLeft="18dp" />-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/img2_2"-->
-            <!--android:layout_width="80dp"-->
-            <!--android:layout_height="80dp"-->
-            <!--android:src="@drawable/unicorn2_2"-->
-            <!--android:layout_above="@+id/img1_2"-->
-            <!--android:layout_toRightOf="@+id/img1_2" />-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/img1_1"-->
-            <!--android:layout_width="80dp"-->
-            <!--android:layout_height="80dp"-->
-            <!--android:src="@drawable/unicorn1_1"-->
-
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_alignLeft="@+id/img2_1" />-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/img2_1"-->
-            <!--android:layout_width="80dp"-->
-            <!--android:layout_height="80dp"-->
-            <!--android:src="@drawable/unicorn2_1"-->
-            <!--android:layout_above="@+id/img1_1"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_marginRight="22dp"-->
-            <!--android:layout_marginBottom="14dp" />-->
-    <!--</RelativeLayout>-->
-
 
 </LinearLayout>

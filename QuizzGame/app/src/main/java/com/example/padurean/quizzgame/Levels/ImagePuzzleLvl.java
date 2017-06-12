@@ -18,16 +18,12 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
-import com.example.padurean.quizzgame.GameFinishedMessages.ImagePuzzleLoose;
-import com.example.padurean.quizzgame.GameFinishedMessages.ImagePuzzleWin;
+import com.example.padurean.quizzgame.GameFinishedMessages.MessageLoose;
+import com.example.padurean.quizzgame.GameFinishedMessages.MessageWin;
 import com.example.padurean.quizzgame.R;
-
-import rx.Observable;
 
 /**
  * Created by Asus on 27.05.2017.
@@ -47,9 +43,17 @@ public class ImagePuzzleLvl extends Fragment {
     private ProgressBar progressBar;
     private ProgressBar timeProgressBar;
     private Thread t;
+    private Boolean showPuzzleHard=false;
+
 
     public ImagePuzzleLvl() {
         super();
+    }
+
+    public static ImagePuzzleLvl newInstance(Boolean param) {
+        ImagePuzzleLvl fragment = new ImagePuzzleLvl();
+        fragment.showPuzzleHard=param;
+        return fragment;
     }
 
     @Override
@@ -74,7 +78,7 @@ public class ImagePuzzleLvl extends Fragment {
 //        progressBar.getIndeterminateDrawable().setColorFilter(0xFF4081, android.graphics.PorterDuff.Mode.MULTIPLY);
         timeProgressBar=(ProgressBar) view.findViewById(R.id.progressbar1);
         timeProgressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.OVERLAY);
-        timeProgressBar.setMax(30);
+        timeProgressBar.setMax(40);
         myTime=null;
         otherPlayerTime=null;
 
@@ -108,7 +112,6 @@ public class ImagePuzzleLvl extends Fragment {
         settingsDialog.setContentView(dialogView);
         linearLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-//        checkIfMessageAlreadyRecieved();
         Log.v("3","aici");
         return view;
     }
@@ -178,20 +181,6 @@ public class ImagePuzzleLvl extends Fragment {
                     else{
                         Log.v("puzzle",event.getLocalState().toString());
                     }
-
-//                    ImageView view = (ImageView) event.getLocalState();
-//                    Log.v("Tangram", "x:" + x+"y:"+y);
-//
-//                    ViewGroup owner = (ViewGroup) view.getParent();
-//                    Log.v("Tangram", "owner" + owner);
-//                    Log.v("Tangram", "v" + v);
-//                    Log.v("Tangram", "vIEW" + view);
-//
-//                    v.setBackground(view.getDrawable());
-//                    view.setVisibility(View.INVISIBLE);
-
-                    // Returns true. DragEvent.getResult() will return true.
-//                    return true;
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     if (event.getResult()) {
@@ -202,7 +191,6 @@ public class ImagePuzzleLvl extends Fragment {
                     }
                     //check if everything is ok
 
-//                    Log.v("asss",box1.getBackground().getConstantState().toString() + getResources().getDrawable(R.drawable.white).getConstantState().toString());
                     if (box1.getBackground().getConstantState() == getResources().getDrawable(R.drawable.unicorn1_1).getConstantState() &&
                             box2.getBackground().getConstantState() == getResources().getDrawable(R.drawable.unicorn2_1).getConstantState() &&
                             box3.getBackground().getConstantState() == getResources().getDrawable(R.drawable.unicorn1_2).getConstantState() &&
@@ -210,44 +198,23 @@ public class ImagePuzzleLvl extends Fragment {
                         Log.v("tangram", "ok :)");
                         if (t.isAlive()) {
                             myTime = timer.getMyTime();
-                            timer.stopRunning();
-                            t.interrupt();
+//                            timer.stopRunning();
+//                            t.interrupt();
                             ((ImagePuzzleLvl.GetMessageListener) getActivity()).send("mytime:" + String.valueOf(myTime));
                             if (otherPlayerTime != null) {
                                 if (myTime - otherPlayerTime > 0) {
-                                    ImagePuzzleLoose lost=new ImagePuzzleLoose();
-                                    getActivity().getFragmentManager().beginTransaction()
-//                                            .add(lost,"puzzleloose")
-                                            .replace(R.id.frag_menu,lost,"puzzleloose")
-//                                            .addToBackStack("levelsMenuFragment")
-                                            .commit();
+                                    goToPuzzleLoose();
                                 } else if (myTime == otherPlayerTime) {
-                                    ImagePuzzleWin win=new ImagePuzzleWin();
-                                    getActivity().getFragmentManager().beginTransaction()
-//                                            .add(win,"puzzlewin")
-                                            .replace(R.id.frag_menu,win,"puzzlewin")
-//                                            .addToBackStack("levelsMenuFragment")
-                                            .commit();
+                                    goToPuzzleWin();
                                 } else {
-                                    ImagePuzzleWin win=new ImagePuzzleWin();
-                                    getActivity().getFragmentManager().beginTransaction()
-//                                            .add(win,"puzzlewin")
-                                            .replace(R.id.frag_menu,win,"puzzlewin")
-//                                            .addToBackStack("levelsMenuFragment")
-                                            .commit();
+                                    goToPuzzleWin();
                                 }
                             }
                         }
                     } else {
                         if (!t.isAlive()) {
-                            ImagePuzzleLoose lost=new ImagePuzzleLoose();
-                            getActivity().getFragmentManager().beginTransaction()
-//                                    .add(lost,"puzzleloose")
-                                    .replace(R.id.frag_menu,lost,"puzzleloose")
-//                                    .addToBackStack("levelsMenuFragment")
-                                    .commit();
+                            goToPuzzleLoose();
                         }
-
                     }
 
 
@@ -258,10 +225,10 @@ public class ImagePuzzleLvl extends Fragment {
         }
     }
 
-    public void startClock(){
+    public void startClock() {
         timeProgressBar.setVisibility(View.VISIBLE);
-        timer=new BackgroundTimer(System.currentTimeMillis(),60000,timeProgressBar);
-        t=new Thread(timer);
+        timer = new BackgroundTimer(System.currentTimeMillis(), 40000, timeProgressBar,this);
+        t = new Thread(timer);
         t.start();
     }
 
@@ -279,26 +246,69 @@ public class ImagePuzzleLvl extends Fragment {
             Log.i("puzzle","am primit timp"+otherPlayerTime);
             if (myTime!=null) {
                 if (myTime - otherPlayerTime > 0) {
-                    ImagePuzzleLoose lost=new ImagePuzzleLoose();
-                    getActivity().getFragmentManager().beginTransaction()
-//                            .add(lost,"puzzleloose")
-                            .replace(R.id.frag_menu,lost,"puzzleloose")
-//                            .addToBackStack("levelsMenuFragment")
-                            .commit();
+                    goToPuzzleLoose();
                 } else {
-                    ImagePuzzleWin win=new ImagePuzzleWin();
-                    getActivity().getFragmentManager().beginTransaction()
-//                            .add(win,"puzzlewin")
-                            .replace(R.id.frag_menu,win,"puzzlewin")
-//                            .addToBackStack("levelsMenuFragment")
-                            .commit();
-
+                    goToPuzzleWin();
                 }
             }
 
         }
-    };
+    }
 
+    public void goToPuzzleWin() {
+        timer.stopRunning();
+        t.interrupt();
+        MessageWin win;
+        if (showPuzzleHard) {
+            win = MessageWin.newInstance("");
+        } else {
+            win = new MessageWin();
+        }
+        getActivity().getFragmentManager().beginTransaction()
+                .replace(R.id.frag_menu, win, "puzzlewin")
+                .commit();
+    }
+
+    public void goToPuzzleLoose() {
+        timer.stopRunning();
+        t.interrupt();
+        MessageLoose lost;
+        if (showPuzzleHard) {
+            lost = MessageLoose.newInstance("");
+        }
+        else {
+            lost=new MessageLoose();
+        }
+        getActivity().getFragmentManager().beginTransaction()
+                .replace(R.id.frag_menu,lost,"puzzleloose")
+                .commit();
+    }
+
+
+    public Boolean getShowPuzzleHard(){
+        return this.showPuzzleHard;
+    }
+
+    public void stopLevel(){
+        if(t!=null && t.isAlive()){
+            timer.stopRunning();
+            t.interrupt();
+        }
+        if(settingsDialog.isShowing()){
+            settingsDialog.dismiss();
+        }
+
+    }
+
+    public void timerDone() {
+        timer.stopRunning();
+        t.interrupt();
+        if (myTime != null) {
+            goToPuzzleWin();
+        } else {
+            goToPuzzleLoose();
+        }
+    }
 
     public interface GetMessageListener{
         void send(String string);

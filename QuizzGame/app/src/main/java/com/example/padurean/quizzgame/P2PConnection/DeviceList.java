@@ -135,7 +135,7 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
         peers.addAll(peerList.getDeviceList());
         ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
         if (peers.size() == 0) {
-            Snackbar.make(mContentView,"No devices found!",Snackbar.LENGTH_SHORT).show();
+            Log.d("devicelist","No devices found!");
             return;
         }
 

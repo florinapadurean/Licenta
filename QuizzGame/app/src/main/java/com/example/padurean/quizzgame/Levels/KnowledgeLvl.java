@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.example.padurean.quizzgame.Callbacks.KnowledgeLvlCallback;
 import com.example.padurean.quizzgame.DatabaseManager.Manager;
 import com.example.padurean.quizzgame.Domain.Question;
+import com.example.padurean.quizzgame.GameFinishedMessages.MessageLoose;
+import com.example.padurean.quizzgame.GameFinishedMessages.MessageWin;
 import com.example.padurean.quizzgame.R;
 
 
@@ -50,12 +52,19 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
     private Boolean lost=false;
     private ProgressBar timeProgressBar;
     private Integer viewQuestion;
+    private Boolean showPuzzleHard=false;
+
 
 
     public KnowledgeLvl() {
         // Required empty public constructor
     }
 
+    public static KnowledgeLvl newInstance(Boolean param) {
+        KnowledgeLvl fragment = new KnowledgeLvl();
+        fragment.showPuzzleHard=param;
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,7 +104,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         t.interrupt();
                         lost=true;
                         ((GetMessageListener)getActivity()).send("i lost");
-                        winner.setText("I lost");
+                        goToMessageLoose();
                     }
                 }
                 else if(viewQuestion==2){
@@ -106,7 +115,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         t.interrupt();
                         lost=true;
                         ((GetMessageListener)getActivity()).send("i lost");
-                        winner.setText("I lost");
+                        goToMessageLoose();
                     }
                 }
                 else if(viewQuestion==3){
@@ -120,11 +129,11 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                             ((GetMessageListener)getActivity()).send("mytime:"+String.valueOf(myTime));
                             if (winner.getText().equals("") && otherPlayerTime!=null){
                                 if (myTime - otherPlayerTime > 0) {
-                                    winner.setText("I lost");
+                                    goToMessageLoose();
                                 } else if(myTime==otherPlayerTime) {
-                                    winner.setText("Same time");
+                                    goToMessageWin("You did it in the same time!");
                                   }else{
-                                    winner.setText("I won");
+                                    goToMessageWin("");
                                   }
                             }
                         }
@@ -133,7 +142,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         t.interrupt();
                         lost=true;
                         ((GetMessageListener)getActivity()).send("i lost");
-                        winner.setText("I lost");
+                        goToMessageLoose();
                     }
                 }
 
@@ -150,7 +159,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         t.interrupt();
                         lost=true;
                         ((GetMessageListener)getActivity()).send("i lost");
-                        winner.setText("I lost");
+                        goToMessageLoose();
                     }
                 }
                 else if(viewQuestion==2){
@@ -161,9 +170,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         t.interrupt();
                         lost=true;
                         ((GetMessageListener)getActivity()).send("i lost");
-                        winner.setText("I lost");
-                    }
-
+                        goToMessageLoose();                    }
                 }
                 else if(viewQuestion==3){
                     if(goodAnswerButton==2){
@@ -176,11 +183,11 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                             ((GetMessageListener)getActivity()).send("mytime:"+String.valueOf(myTime));
                             if (winner.getText().equals("") && otherPlayerTime!=null){
                                 if (myTime - otherPlayerTime > 0) {
-                                    winner.setText("I lost");
+                                    goToMessageLoose();
                                 } else if(myTime==otherPlayerTime) {
-                                    winner.setText("Same time");
+                                    goToMessageWin("You did it in the same time!");
                                 }else{
-                                    winner.setText("I won");
+                                    goToMessageWin("");
                                 }
                             }
                         }
@@ -189,7 +196,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         t.interrupt();
                         lost=true;
                         ((GetMessageListener)getActivity()).send("i lost");
-                        winner.setText("I lost");
+                        goToMessageLoose();
                     }
                 }
             }
@@ -206,7 +213,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         t.interrupt();
                         lost=true;
                         ((GetMessageListener)getActivity()).send("i lost");
-                        winner.setText("I lost");
+                        goToMessageLoose();
                     }
 
                 }
@@ -221,11 +228,11 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                             ((GetMessageListener)getActivity()).send("mytime:"+String.valueOf(myTime));
                             if (winner.getText().equals("") && otherPlayerTime!=null){
                                 if (myTime - otherPlayerTime > 0) {
-                                    winner.setText("I lost");
+                                    goToMessageLoose();
                                 } else if(myTime==otherPlayerTime) {
-                                    winner.setText("Same time");
+                                    goToMessageWin("You did it in the same time!");
                                 }else{
-                                    winner.setText("I won");
+                                    goToMessageWin("");
                                 }
                             }
                         }
@@ -234,7 +241,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                         t.interrupt();
                         lost=true;
                         ((GetMessageListener)getActivity()).send("i lost");
-                        winner.setText("I lost");
+                        goToMessageLoose();
                     }
                 }
 
@@ -255,11 +262,11 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                             ((GetMessageListener)getActivity()).send("mytime:"+String.valueOf(myTime));
                             if (winner.getText().equals("") && otherPlayerTime!=null){
                                 if (myTime - otherPlayerTime > 0) {
-                                    winner.setText("I lost");
+                                    goToMessageLoose();
                                 } else if(myTime==otherPlayerTime) {
-                                    winner.setText("Same time");
+                                    goToMessageWin("You did it in the same time!");
                                 }else{
-                                    winner.setText("I won");
+                                    goToMessageWin("");
                                 }
                             }
                         }
@@ -267,7 +274,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                     else{
                         lost=true;
                         ((GetMessageListener)getActivity()).send("i lost");
-                        winner.setText("I lost");
+                        goToMessageLoose();
                     }
                 }
 
@@ -406,26 +413,51 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
             Log.i(TAG,"am primit timp"+otherPlayerTime);
             if (!lost && myTime!=null) {
                 if (myTime - otherPlayerTime > 0) {
-                    winner.setText("I lost");
+                    goToMessageLoose();
                 } else {
-                    winner.setText("I won");
+                    goToMessageWin("");
                 }
             }
 
         }
-//        if (message.equals("you won")) {
-//            Log.i(TAG,"am primit you won");
-//            winner.setText("I won");
-//        }
-    };
+
+    }
 
 
     public void startClock(){
         timeProgressBar.setVisibility(View.VISIBLE);
-        timer=new BackgroundTimer(System.currentTimeMillis(),60000,timeProgressBar);
+        timer=new BackgroundTimer(System.currentTimeMillis(),60000,timeProgressBar,this);
         t=new Thread(timer);
         t.start();
     }
+
+    public Boolean getShowPuzzleHard(){
+        return this.showPuzzleHard;
+    }
+
+    public void timerDone() {
+        t.interrupt();
+        if (myTime != null) {
+            goToMessageWin("");
+        } else {
+            goToMessageLoose();
+        }
+    }
+
+    private void goToMessageLoose() {
+        MessageLoose lost= MessageLoose.newInstance("");
+        getActivity().getFragmentManager().beginTransaction()
+                .replace(R.id.frag_menu,lost,"puzzleloose")
+                .commit();
+    }
+
+    private void goToMessageWin(String message){
+        MessageWin win= MessageWin.newInstance(message);
+        getActivity().getFragmentManager().beginTransaction()
+                .replace(R.id.frag_menu,win,"puzzlewin")
+                .commit();
+    }
+
 
     public interface GetMessageListener{
         void send(String string);

@@ -11,6 +11,7 @@
         android:text="You won!!!!"/>
 
     <TextView
+        android:id="@+id/additional_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20dp"

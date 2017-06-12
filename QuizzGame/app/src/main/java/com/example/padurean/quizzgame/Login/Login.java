@@ -70,12 +70,6 @@ public class Login extends Activity implements View.OnClickListener{
 //                this.finish();
             }
         }
-//        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-//        if (!wifi.isWifiEnabled()){
-//            Log.i(TAG,"not enabled");
-//            startActivity(new Intent(Login.this,ErrorWifi.class));
-//            this.finish();
-//        }
         mAuth = FirebaseAuth.getInstance();
         callbackManager = CallbackManager.Factory.create();
         progressDialog=new ProgressDialog(this);
@@ -129,7 +123,6 @@ public class Login extends Activity implements View.OnClickListener{
                     }
 
                 }
-                // ...
             }
         };
 

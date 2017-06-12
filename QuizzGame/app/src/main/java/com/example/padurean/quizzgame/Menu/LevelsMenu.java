@@ -10,10 +10,13 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
+import com.example.padurean.quizzgame.Levels.BattleshipLvl;
 import com.example.padurean.quizzgame.Levels.ImagePuzzleHardLvl;
 import com.example.padurean.quizzgame.Levels.KnowledgeLvl;
 import com.example.padurean.quizzgame.Levels.ImagePuzzleLvl;
 import com.example.padurean.quizzgame.R;
+
+import static java.lang.Boolean.TRUE;
 
 
 public class LevelsMenu extends Fragment {
@@ -21,9 +24,13 @@ public class LevelsMenu extends Fragment {
     private LinearLayout generalKnowledge;
     private LinearLayout puzzle;
     private LinearLayout puzzleHard;
+    private LinearLayout spacePuzzleHard;
+    private LinearLayout battleship;
+    private BattleshipLvl battleshipLvl;
     private KnowledgeLvl knowledgeLvl;
     private ImagePuzzleLvl imagePuzzleLvl;
     private ImagePuzzleHardLvl imagePuzzleHardLvl;
+    private Boolean showPuzzleHard=false;
 
 
 //    private OnFragmentInteractionListener mListener;
@@ -32,19 +39,15 @@ public class LevelsMenu extends Fragment {
         // Required empty public constructor
     }
 
-    public static LevelsMenu newInstance(String param1, String param2) {
+    public static LevelsMenu newInstance(Boolean param) {
         LevelsMenu fragment = new LevelsMenu();
+        fragment.showPuzzleHard=param;
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        knowledgeLvl=new KnowledgeLvl();
-        imagePuzzleLvl =new ImagePuzzleLvl();
-        imagePuzzleHardLvl=new ImagePuzzleHardLvl();
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -56,13 +59,28 @@ public class LevelsMenu extends Fragment {
         generalKnowledge=(LinearLayout)view.findViewById(R.id.general_knowledge);
         puzzle=(LinearLayout)view.findViewById(R.id.puzzle);
         puzzleHard=(LinearLayout)view.findViewById(R.id.puzzle_hard);
-//        btnGeneralKnowledge=(Button) view.findViewById(R.id.general_knowledge);
+        spacePuzzleHard=(LinearLayout)view.findViewById(R.id.space_puzzle_hard);
+        battleship=(LinearLayout)view.findViewById(R.id.battleship);
+
+        if(showPuzzleHard!=null && showPuzzleHard== TRUE){
+            puzzleHard.setVisibility(View.VISIBLE);
+            spacePuzzleHard.setVisibility(View.VISIBLE);
+            knowledgeLvl=KnowledgeLvl.newInstance(TRUE);
+            imagePuzzleLvl =ImagePuzzleLvl.newInstance(TRUE);
+            battleshipLvl=BattleshipLvl.newInstance(TRUE);
+            imagePuzzleHardLvl=new ImagePuzzleHardLvl();
+        }
+        else{
+            knowledgeLvl=new KnowledgeLvl();
+            imagePuzzleLvl =new ImagePuzzleLvl();
+            imagePuzzleHardLvl=new ImagePuzzleHardLvl();
+            battleshipLvl=new BattleshipLvl();
+        }
+
         generalKnowledge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((LevelPressedListener) getActivity()).send("knowledge");
-//                LinearLayout container=(LinearLayout) view.findViewById(R.id.menu_container);
-//                container.setVisibility(View.GONE);
                 HorizontalScrollView horizontalScrollView=(HorizontalScrollView) view.findViewById(R.id.horizontal_menu_scroll);
                 horizontalScrollView.setVisibility(View.GONE);
                 getActivity().getFragmentManager().beginTransaction()
@@ -84,12 +102,6 @@ public class LevelsMenu extends Fragment {
                         .replace(R.id.frag_menu, imagePuzzleLvl,"puzzlelvlfragment")
                         .addToBackStack(null)
                         .commit();
-//                getActivity().getFragmentManager().beginTransaction()
-//                        .addToBackStack(null)
-//                        .add(R.id.frag_menu,imagePuzzleLvl,"puzzlelvlfragment")
-//                        .commit();
-
-//                ImagePuzzleLvl puzzlelvl=(ImagePuzzleLvl)getActivity().getFragmentManager().findFragmentByTag("puzzlelvlfragment");
 
             }
 
@@ -111,6 +123,22 @@ public class LevelsMenu extends Fragment {
 
         });
 
+        battleship.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((LevelPressedListener) getActivity()).send("battleship");
+                HorizontalScrollView horizontalScrollView=(HorizontalScrollView) view.findViewById(R.id.horizontal_menu_scroll);
+                horizontalScrollView.setVisibility(View.GONE);
+
+                getActivity().getFragmentManager().beginTransaction()
+                        .addToBackStack(null)
+                        .replace(R.id.frag_menu,battleshipLvl,"battleshipfragment")
+                        .commit();
+            }
+
+        });
+
+
 
         return view;
 
@@ -118,7 +146,7 @@ public class LevelsMenu extends Fragment {
 
     @Override
     public void onStart() {
-        puzzleHard.setVisibility(View.VISIBLE);
+//        puzzleHard.setVisibility(View.VISIBLE);
         Log.v("lvls","aici");
         super.onStart();
     }
