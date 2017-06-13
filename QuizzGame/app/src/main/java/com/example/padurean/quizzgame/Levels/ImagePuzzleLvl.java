@@ -116,15 +116,6 @@ public class ImagePuzzleLvl extends Fragment {
         return view;
     }
 
-    private void checkIfMessageAlreadyRecieved() {
-        String lastMsg=((ImagePuzzleLvl.GetMessageListener) getActivity()).getLastMessageRecieved();
-        if(lastMsg!="" && lastMsg=="puzzle"){
-            Log.v("4","aici");
-            linearLayout.setVisibility(View.VISIBLE);
-            settingsDialog.show();
-            progressBar.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     public void onDestroy() {

@@ -57,7 +57,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements SocketCallback,ImagePuzzleHardLvl.GetMessageListener,ImagePuzzleLvl.GetMessageListener,KnowledgeLvl.GetMessageListener, LevelsMenu.LevelPressedListener,GoogleApiClient.OnConnectionFailedListener,NoDevices.RetryInterface,WifiP2pManager.GroupInfoListener, DeviceList.DeviceActionListener,StartMenuListener,WifiP2pManager.ChannelListener{
+public class MainActivity extends AppCompatActivity implements BattleshipLvl.GetMessageListener,SocketCallback,ImagePuzzleHardLvl.GetMessageListener,ImagePuzzleLvl.GetMessageListener,KnowledgeLvl.GetMessageListener, LevelsMenu.LevelPressedListener,GoogleApiClient.OnConnectionFailedListener,NoDevices.RetryInterface,WifiP2pManager.GroupInfoListener, DeviceList.DeviceActionListener,StartMenuListener,WifiP2pManager.ChannelListener{
 
     private WifiP2pManager mManager;
     private Channel mChannel;
@@ -456,18 +456,6 @@ public class MainActivity extends AppCompatActivity implements SocketCallback,Im
                 //the other player exited imgpuzzlelvl
                 Fragment fragment_menu=getFragmentManager().findFragmentById(R.id.frag_menu);
                 Log.i(TAG,messageAsString);
-//                if(fragment_menu.isVisible()){
-//                    Log.i(TAG,"true");
-//                }
-//                else{
-//                    Log.i(TAG,"false");
-//                }
-//                if(fragment_menu instanceof ImagePuzzleLvl){
-//                    Log.i(TAG,"true");
-//                }
-//                else{
-//                    Log.i(TAG,"false");
-//                }
                 if(messageAsString.equals("I exited ImagePuzzleLvl") && fragment_menu.isVisible() && fragment_menu instanceof  ImagePuzzleLvl){
                     Log.i(TAG,"recieved I exited ImagePuzzleLvl");
                     ImagePuzzleLvl plvl=(ImagePuzzleLvl)fragment_menu;
