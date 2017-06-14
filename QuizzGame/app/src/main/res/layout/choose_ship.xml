@@ -4,10 +4,12 @@
     android:layout_height="match_parent">
     <TextView
         android:id="@+id/textView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Place one Aircraft Carrier having size of 5 boxes."
+        android:textSize="20dp"
+        android:textColor="@android:color/black"
+        android:text="Place one Aircraft Carrier having size of 5 boxes by pressing on each box.To unselect the box,click again!"
         />
     <Button
         android:id="@+id/okbtn"

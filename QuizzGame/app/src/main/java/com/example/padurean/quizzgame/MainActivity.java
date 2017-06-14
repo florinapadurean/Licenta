@@ -405,6 +405,20 @@ public class MainActivity extends AppCompatActivity implements BattleshipLvl.Get
                         .commit();
             }
 
+            if(fragment_menu instanceof BattleshipLvl){
+                BattleshipLvl kl=(BattleshipLvl) fragment_menu;
+                LevelsMenu lm;
+                if(kl.getShowPuzzleHard()){
+                    lm=LevelsMenu.newInstance(TRUE);
+                }
+                else{
+                    lm=new LevelsMenu();
+                }
+                send("I exited BattleshipLvl");
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.frag_menu,lm)
+                        .commit();
+            }
             if(fragment_menu instanceof LevelsMenu){
                 send("end connection");
                 disconnect();
@@ -481,7 +495,18 @@ public class MainActivity extends AppCompatActivity implements BattleshipLvl.Get
                             .commit();
                     Toast.makeText(MainActivity.this, "Sorry,your friend exited Image Puzzle Hard Level", Toast.LENGTH_SHORT).show();
                 }
-                if(messageAsString.equals("I exited ImagePuzzleLvl") || messageAsString.equals("I exited ImagePuzzleHardLvl")){
+                if(messageAsString.equals( "I exited BattleshipLvl") && fragment_menu.isVisible() && fragment_menu instanceof  BattleshipLvl){
+                    Log.i(TAG,"recieved I exited BattleshipLvl");
+                    BattleshipLvl bLvl=(BattleshipLvl) fragment_menu;
+                    LevelsMenu lm=LevelsMenu.newInstance(TRUE);
+                    bLvl.stopLevel();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.frag_menu,lm)
+                            .commit();
+                    Toast.makeText(MainActivity.this, "Sorry,your friend exited Battleship Level", Toast.LENGTH_SHORT).show();
+                }
+
+                if(messageAsString.equals("I exited ImagePuzzleLvl") || messageAsString.equals("I exited ImagePuzzleHardLvl") || messageAsString.equals("I exited BattleshipLvl")){
                     msgNotSent=false;
                 }else{
                     //strat game message

@@ -285,7 +285,7 @@ public class ImagePuzzleLvl extends Fragment {
             timer.stopRunning();
             t.interrupt();
         }
-        if(settingsDialog.isShowing()){
+        if(settingsDialog!=null && settingsDialog.isShowing()){
             settingsDialog.dismiss();
         }
 

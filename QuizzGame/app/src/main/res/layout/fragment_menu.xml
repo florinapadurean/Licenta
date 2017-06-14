@@ -35,7 +35,7 @@
                 <ImageView
                     android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@drawable/timer" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
                 <ImageView
                     android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@drawable/puzzlesimple" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
@@ -90,7 +90,7 @@
                 <ImageView
                     android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@drawable/puzzle" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,7 +116,7 @@
                 <ImageView
                     android:layout_width="200dp"
                     android:layout_height="200dp"
-                    android:src="@mipmap/ic_launcher" />
+                    android:src="@drawable/battleship" />
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.net.wifi.p2p.WifiP2pGroup;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,12 +24,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.padurean.quizzgame.GameFinishedMessages.MessageLoose;
+import com.example.padurean.quizzgame.GameFinishedMessages.MessageWin;
 import com.example.padurean.quizzgame.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by Asus on 12.06.2017.
@@ -41,7 +46,7 @@ public class BattleshipLvl extends Fragment {
     //1*Cruiser-3partatele
     //2*Destroyer-2 patratele
     //2*Submarine-1 partratele
-    public Boolean showPuzzleHard;
+    public Boolean showPuzzleHard=false;
     public ProgressBar progressBar;
     public LinearLayout myGrid;
     public HorizontalScrollView horizontalScroll;
@@ -54,6 +59,8 @@ public class BattleshipLvl extends Fragment {
     View dialogView;
     ProgressDialog progressDialog;
     Boolean allShipsSetFriend=false;
+    Boolean allShipsSetMe=false;
+    Boolean myTurn=false;
 
     public BattleshipLvl(){
 
@@ -137,7 +144,7 @@ public class BattleshipLvl extends Fragment {
                     } else {
                         Log.i("ship", "bad");
                         setWater("Aircraft Carrier");
-                        Toast.makeText(getActivity(),"Please set Aircraft Carrier horizontally or vertically only,having 5 boxes length,try again!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Please set Aircraft Carrier horizontally or vertically only,having 5 boxes length,try again!", Toast.LENGTH_LONG).show();
                         break;
                     }
                 }
@@ -154,7 +161,7 @@ public class BattleshipLvl extends Fragment {
                         break;
                     } else {
                         Log.i("ship", "bad");
-                        Toast.makeText(getActivity(),"Please set Battleship horizontally or vertically only,having 4 boxes length,try again!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Please set Battleship horizontally or vertically only,having 4 boxes length,try again!", Toast.LENGTH_LONG).show();
                         setWater("Battleship");
                         break;
                     }
@@ -173,7 +180,7 @@ public class BattleshipLvl extends Fragment {
                     }
                     else {
                         Log.i("ship", "bad");
-                        Toast.makeText(getActivity(),"Please set Cruiser horizontally or vertically only,having 3 boxes length,try again!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Please set Cruiser horizontally or vertically only,having 3 boxes length,try again!", Toast.LENGTH_LONG).show();
                         setWater("Cruiser");
                         break;
                     }
@@ -192,7 +199,7 @@ public class BattleshipLvl extends Fragment {
                     else {
                         Log.i("ship", "bad");
                         setWater("Destroyer");
-                        Toast.makeText(getActivity(),"Please set two Destroyers horizontally or vertically only,having 2 boxes length,try again!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Please set two Destroyers horizontally or vertically only,having 2 boxes length,try again!", Toast.LENGTH_LONG).show();
                         break;
                     }
                     //2*Submarine-1 partratele
@@ -206,6 +213,14 @@ public class BattleshipLvl extends Fragment {
                         ((BattleshipLvl.GetMessageListener)getActivity()).send("Ships all set");
                         if(!allShipsSetFriend){
                             progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to set his ships ", " Please Wait...", true, true);
+                        }
+                        allShipsSetMe=true;
+                        WifiP2pGroup group=((BattleshipLvl.GetMessageListener)getActivity()).getGroupInfo();
+                        if(group.isGroupOwner() && allShipsSetFriend){
+                            ((BattleshipLvl.GetMessageListener)getActivity()).send("I start");
+                            myTurn=true;
+                            horizontalScroll.scrollTo((getView().getWidth()),0);
+                            Toast.makeText(getActivity(),"You start!Hit one box!", Toast.LENGTH_LONG).show();
                         }
                         otherPlayerGrid.setVisibility(View.VISIBLE);
                         break;
@@ -322,7 +337,10 @@ public class BattleshipLvl extends Fragment {
         public void onClick(View v) {
             String txt=v.getTag().toString();
             Log.i("battleship enemy ships",txt);
-            ((BattleshipLvl.GetMessageListener)getActivity()).send("hit:"+txt);
+            if(myTurn){
+                ((BattleshipLvl.GetMessageListener)getActivity()).send("hit:"+txt);
+            }
+
         }};
 
 
@@ -444,27 +462,55 @@ public class BattleshipLvl extends Fragment {
             chooseShipDialog.show();
         }
 
-        if(message.equals("hit:")){
+        if(message.startsWith("hit:")){
+            Log.i("hit",message);
             String[] l = message.split(":");
             String tagP2=l[1];
+            Log.i("tagP2",tagP2);
             String tag=tagP2.substring(tagP2.indexOf("2") + 1);
+            Log.i("tag",tag);
             String s=checkIfShipOrWater(tag);
             if(s.equals("water"))  ((BattleshipLvl.GetMessageListener)getActivity()).send("water:"+tag);
             if(s.equals("ship"))  ((BattleshipLvl.GetMessageListener)getActivity()).send("ship:"+tag);
+            if(checkIfAllBoatsAreHit()){
+                ((BattleshipLvl.GetMessageListener)getActivity()).send("You won");
+                MessageLoose lost = MessageLoose.newInstance("");
+                getActivity().getFragmentManager().beginTransaction()
+                        .replace(R.id.frag_menu,lost,"puzzleloose")
+                        .commit();
+            }
+            horizontalScroll.scrollTo(0,0);
+        }
+
+        if(message.equals("You won")){
+            MessageWin win;
+            win = MessageWin.newInstance("");
+            getActivity().getFragmentManager().beginTransaction()
+                    .replace(R.id.frag_menu, win, "puzzlewin")
+                    .commit();
         }
 
         if (message.startsWith("water:")) {
             String[] l = message.split(":");
             String tag=l[1];
             ImageView iv = (ImageView) getView().findViewWithTag("P2"+tag);
-            iv.setBackground(getResources().getDrawable(R.drawable.roundedx));
+            iv.setImageDrawable(getResources().getDrawable(R.drawable.roundedx));
+            myTurn=false;
             ((BattleshipLvl.GetMessageListener)getActivity()).send("Your turn");
 
         }
 
         if(message.equals("Your turn")){
-            horizontalScroll.scrollTo((getView().getWidth()) / 2, 0);
-            Toast.makeText(getActivity(),"Your turn!", Toast.LENGTH_SHORT).show();
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    myTurn=true;
+                    horizontalScroll.scrollTo((getView().getWidth()), 0);
+//            Toast.makeText(getActivity(),"Your turn!", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(getView(),"Your turn!",Snackbar.LENGTH_SHORT).show();
+                }
+            }, 3000);
+
         }
 
         if(message.startsWith("ship:")){
@@ -472,6 +518,7 @@ public class BattleshipLvl extends Fragment {
             String tag=l[1];
             ImageView iv = (ImageView) getView().findViewWithTag("P2"+tag);
             iv.setBackgroundColor(Color.RED);
+            myTurn=false;
             ((BattleshipLvl.GetMessageListener)getActivity()).send("Your turn");
         }
 
@@ -481,10 +528,11 @@ public class BattleshipLvl extends Fragment {
                 progressDialog.dismiss();
             }
             WifiP2pGroup group=((BattleshipLvl.GetMessageListener)getActivity()).getGroupInfo();
-            if(group.isGroupOwner()){
+            if(group.isGroupOwner() && allShipsSetMe){
                 ((BattleshipLvl.GetMessageListener)getActivity()).send("I start");
-                horizontalScroll.scrollTo((getView().getWidth()) /2, 0);
-                Toast.makeText(getActivity(),"You start!Hit one box!", Toast.LENGTH_SHORT).show();
+                myTurn=true;
+                horizontalScroll.scrollTo((getView().getWidth()) , 0);
+                Toast.makeText(getActivity(),"You start!Hit one box!", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -533,9 +581,36 @@ public class BattleshipLvl extends Fragment {
         }
 
         ImageView iv = (ImageView) getView().findViewWithTag(tag);
-        iv.setBackground(getResources().getDrawable(R.drawable.roundedx));
+        iv.setImageDrawable(getResources().getDrawable(R.drawable.roundedx));
         return "water";
 
+    }
+
+    public Boolean checkIfAllBoatsAreHit(){
+        List<String> l = shipsPosition.get("Aircraft Carrier");
+        List<String> l1 = shipsPosition.get("Battleship");
+        List<String> l2 = shipsPosition.get("Cruiser");
+        List<String> l3 = shipsPosition.get("Destroyer");
+        List<String> l4 = shipsPosition.get("Submarine");
+
+        if (l.size() == 0 && l1.size() == 0 && l2.size() == 0 && l3.size() == 0 && l4.size() == 0) {
+            return true;
+        }
+        else return false;
+    }
+
+    public void stopLevel(){
+        if(chooseShipDialog!=null && chooseShipDialog.isShowing()){
+            chooseShipDialog.dismiss();
+        }
+        if(progressDialog!=null && progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+
+    }
+
+    public Boolean getShowPuzzleHard(){
+        return this.showPuzzleHard;
     }
 
     public interface GetMessageListener{
