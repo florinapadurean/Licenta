@@ -1,0 +1,21 @@
+@startuml
+
+Player1 -> (Login)
+(Login) <- Player2
+
+Player1 --> (Connect to Wi-Fi)
+(Connect to Wi-Fi) <-- Player2
+
+Player1 ---> (Search for peers)
+(Search for peers)<--- Player2
+
+Player1 ----> (Choose&play a level)
+(Choose&play a level)<---- Player2
+
+Player1 -----> (Disconnect)
+(Disconnect)<----- Player2
+
+
+
+
+@enduml

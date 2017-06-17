@@ -1,0 +1,57 @@
+@startuml
+actor Player
+Player->LevelsMenu:onClick(Button generalKnowledge)
+LevelsMenu -> MainActivity: MainActivity.send("Knowledge");
+LevelsMenu -> KnowledgeLvl: getFragmentManager.replace(R.id.frag_menu,battleshipLvl,"battleshipfragment")
+KnowledgeLvl -> KnowledgeLvl: wait for friend press the same level
+Socket->MainActivity: recieveMessage("Knowledge");
+MainActivity->KnowledgeLvl: setMessage("Knowledge");
+KnowledgeLevel->Manager:getDataKnowledge(KnowledgeLvlCallback callback)
+KnowledgeLevel<-Manager:callback.setData(List<Question> data)
+ note over KnowledgeLvl
+   goodAnswerButton=a number randomly between 1 and 2,set answers correspondingly and show answer
+ end note
+Player->KnowledgeLvl:onClick(Button button)
+alt button=goodAnswerButton
+    KnowledgeLvl->KnowledgeLvl:setView2Data()
+     note over KnowledgeLvl
+       goodAnswerButton=a number randomly between 1 and 3,set answers correspondingly and show answer
+     end note
+     Player->KnowledgeLvl:onClick(Button button)
+     alt button=goodAnswerButton
+         KnowledgeLvl->KnowledgeLvl:setView3Data()
+         note over KnowledgeLvl
+            goodAnswerButton=a number randomly between 1 and 2,set answers correspondingly and show answer
+         end note
+         alt button=goodAnswerButton
+           KnowledgeLvl -> MainActivity: MainActivity.send("myTime:"+myTime);
+           MainActivity->Socket: Socket.send("myTime:"+myTime)
+           Socket->MainActivity: recieveMessage("myTime:"+player2Time);
+           MainActivity->KnowledgeLvl: setMessage("myTime:"+player2Time");
+           alt player2Time>myTime
+           note over KnowledgeLvl
+              You Won
+           end note
+           else player2Time<myTime
+           note over KnowledgeLvl
+              You Lost
+           end note
+         else button!=goodAnswerButton
+            note over KnowledgeLvl
+               You Lost
+            end note
+         end
+     else button!=goodAnswerButton
+          note over KnowledgeLvl
+             You Lost
+          end note
+     end
+
+else button!=goodAnswerButton
+ note over KnowledgeLvl
+ You Lost
+ end note
+end
+
+
+@enduml

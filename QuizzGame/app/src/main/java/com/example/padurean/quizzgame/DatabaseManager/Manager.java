@@ -30,25 +30,23 @@ public class Manager {
         firebaseHelper=new FirebaseHelper();
     }
 
-    public void getDataKnowledge(final KnowledgeLvlCallback callback, final ProgressBar progressBar){
+    public void getDataKnowledge(final KnowledgeLvlCallback callback){
         firebaseHelper.getDataForKnowledgeLvl()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<DataSnapshot>() {
                     @Override
                     public void onCompleted() {
-                        Log.v(TAG,"Good Service completed1");
-//                        progressBar.setVisibility(View.GONE);
+                        Log.v(TAG,"Service completed");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e( TAG,"Error while loading the events1");
+                        Log.e( TAG,"Error while loading the events");
                     }
 
                     @Override
                     public void onNext(final DataSnapshot dataSnapshot) {
-                        Log.i(TAG,"on next data recieved");
                         List<Question> data=new ArrayList<>();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Question question = snapshot.getValue(Question.class);

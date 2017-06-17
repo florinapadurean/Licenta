@@ -1,14 +1,10 @@
 package com.example.padurean.quizzgame.Communication;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.padurean.quizzgame.Callbacks.SocketCallback;
-import com.example.padurean.quizzgame.MainActivity;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;

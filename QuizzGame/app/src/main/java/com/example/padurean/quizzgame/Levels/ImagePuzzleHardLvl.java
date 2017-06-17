@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.example.padurean.quizzgame.Callbacks.GetMessageListener;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageLoose;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageWin;
 import com.example.padurean.quizzgame.R;
@@ -59,9 +60,17 @@ public class ImagePuzzleHardLvl extends Fragment {
     private ProgressBar progressBar;
     private ProgressBar timeProgressBar;
     private Thread t;
+    private com.example.padurean.quizzgame.Callbacks.GetMessageListener callback;
+
 
     public ImagePuzzleHardLvl() {
         super();
+    }
+
+    public static ImagePuzzleHardLvl newInstance(GetMessageListener callback) {
+        ImagePuzzleHardLvl fragment = new ImagePuzzleHardLvl();
+        fragment.callback=callback;
+        return fragment;
     }
 
     @Override
@@ -237,7 +246,7 @@ public class ImagePuzzleHardLvl extends Fragment {
                             myTime = timer.getMyTime();
 //                            timer.stopRunning();
 //                            t.interrupt();
-                            ((ImagePuzzleLvl.GetMessageListener) getActivity()).send("mytime:" + String.valueOf(myTime));
+                            callback.send("mytime:" + String.valueOf(myTime));
                             if (otherPlayerTime != null) {
                                 if (myTime - otherPlayerTime > 0) {
                                     goToPuzzleLoose();
@@ -329,7 +338,4 @@ public class ImagePuzzleHardLvl extends Fragment {
         }
     }
 
-    public interface GetMessageListener{
-        void send(String string);
-    }
 }

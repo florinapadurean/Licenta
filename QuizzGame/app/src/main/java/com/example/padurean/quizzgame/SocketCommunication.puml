@@ -1,0 +1,27 @@
+@startuml
+alt WifiP2pInfo info;info.isGroupOwner
+    MainActivity-> MyServerSocket:serverSocket=new MyServerSocket(this);\nserverSocket.start();
+    note over MainActivity, MyServerSocket
+    Running on a separate thread
+    end note
+    MyServerSocket-> MyServerSocket: ServerSocket serverSocket = new ServerSocket(SERVERPORT);\nSocket client= serverSocket.accept();
+    MyServerSocket->MyServerSocket: String message = in.readLine();
+    MyServerSocket->MainActivity: receiveMessage(message);
+    MainActivity->FragmentLevel: setMessage(message);
+    FragmentLevel->MainActivity: send(String message);
+    MainActivity->MyServerSocket: send(String message);
+else !info.isGroupOwner
+    MainActivity-> ClientSocket:clientSocket=new ClientSocket(this,info.groupOwnerAddress);\nclientSocket.start();
+     note over MainActivity, ClientSocket
+        Running on a separate thread
+     end note
+    ClientSocket->ClientSocket: Socket socket = new Socket(groupOwnerAddress, SERVERPORT);
+    ClientSocket->ClientSocket: String message = in.readLine();
+    ClientSocket->MainActivity: receiveMessage(message);
+    MainActivity->FragmentLevel: setMessage(message);
+    FragmentLevel->MainActivity: send(String message);
+    MainActivity->ClientSocket: send(String message);
+end
+
+
+@enduml

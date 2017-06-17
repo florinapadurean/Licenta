@@ -25,8 +25,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.Profile;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,9 +37,6 @@ public class Login extends Activity implements View.OnClickListener{
 
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-    private AccessToken accessToken;
-    private Profile profile;
-    private LoginManager loginManager;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String TAG="login";
@@ -59,7 +54,7 @@ public class Login extends Activity implements View.OnClickListener{
         if(activeNetwork==null){
             Log.i(TAG,"null");
             startActivity(new Intent(Login.this,ErrorWifi.class));
-                this.finish();
+            this.finish();
         }
 
         if (activeNetwork != null) { // connected to the internet

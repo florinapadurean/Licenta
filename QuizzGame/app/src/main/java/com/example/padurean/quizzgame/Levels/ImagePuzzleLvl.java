@@ -21,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.example.padurean.quizzgame.Callbacks.GetMessageListener;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageLoose;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageWin;
 import com.example.padurean.quizzgame.R;
@@ -44,15 +45,17 @@ public class ImagePuzzleLvl extends Fragment {
     private ProgressBar timeProgressBar;
     private Thread t;
     private Boolean showPuzzleHard=false;
+    private com.example.padurean.quizzgame.Callbacks.GetMessageListener callback;
 
 
     public ImagePuzzleLvl() {
         super();
     }
 
-    public static ImagePuzzleLvl newInstance(Boolean param) {
+    public static ImagePuzzleLvl newInstance(Boolean param,GetMessageListener callback) {
         ImagePuzzleLvl fragment = new ImagePuzzleLvl();
         fragment.showPuzzleHard=param;
+        fragment.callback=callback;
         return fragment;
     }
 
@@ -75,7 +78,6 @@ public class ImagePuzzleLvl extends Fragment {
         progressBar=(ProgressBar) view.findViewById(R.id.progress);
         int color = ContextCompat.getColor(getActivity(), R.color.verdeAlbastrui);
         progressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-//        progressBar.getIndeterminateDrawable().setColorFilter(0xFF4081, android.graphics.PorterDuff.Mode.MULTIPLY);
         timeProgressBar=(ProgressBar) view.findViewById(R.id.progressbar1);
         timeProgressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.OVERLAY);
         timeProgressBar.setMax(40);
@@ -87,7 +89,7 @@ public class ImagePuzzleLvl extends Fragment {
         ok.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Log.v("tangram","ok pressed");
+                Log.v("imagepuzzle","ok pressed");
                 settingsDialog.dismiss();
                 startClock();
             }
@@ -144,10 +146,8 @@ public class ImagePuzzleLvl extends Fragment {
             int action = event.getAction();
             switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
-                    // do nothing
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
-
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
                     break;
@@ -176,7 +176,6 @@ public class ImagePuzzleLvl extends Fragment {
                 case DragEvent.ACTION_DRAG_ENDED:
                     if (event.getResult()) {
                         Log.v("tanagram", "The drop was handled.");
-
                     } else {
                         Log.v("tanagram", "The drop didn't work.");
                     }
@@ -189,9 +188,7 @@ public class ImagePuzzleLvl extends Fragment {
                         Log.v("tangram", "ok :)");
                         if (t.isAlive()) {
                             myTime = timer.getMyTime();
-//                            timer.stopRunning();
-//                            t.interrupt();
-                            ((ImagePuzzleLvl.GetMessageListener) getActivity()).send("mytime:" + String.valueOf(myTime));
+                            callback.send("mytime:" + String.valueOf(myTime));
                             if (otherPlayerTime != null) {
                                 if (myTime - otherPlayerTime > 0) {
                                     goToPuzzleLoose();
@@ -301,9 +298,4 @@ public class ImagePuzzleLvl extends Fragment {
         }
     }
 
-    public interface GetMessageListener{
-        void send(String string);
-
-        String getLastMessageRecieved();
-    }
 }

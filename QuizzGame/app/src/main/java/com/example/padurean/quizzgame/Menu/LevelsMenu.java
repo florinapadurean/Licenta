@@ -10,12 +10,14 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
+import com.example.padurean.quizzgame.Callbacks.GetMessageListener;
 import com.example.padurean.quizzgame.Levels.BattleshipLvl;
 import com.example.padurean.quizzgame.Levels.ImagePuzzleHardLvl;
 import com.example.padurean.quizzgame.Levels.KnowledgeLvl;
 import com.example.padurean.quizzgame.Levels.ImagePuzzleLvl;
 import com.example.padurean.quizzgame.R;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
@@ -65,16 +67,16 @@ public class LevelsMenu extends Fragment {
         if(showPuzzleHard!=null && showPuzzleHard== TRUE){
             puzzleHard.setVisibility(View.VISIBLE);
             spacePuzzleHard.setVisibility(View.VISIBLE);
-            knowledgeLvl=KnowledgeLvl.newInstance(TRUE);
-            imagePuzzleLvl =ImagePuzzleLvl.newInstance(TRUE);
-            battleshipLvl=BattleshipLvl.newInstance(TRUE);
-            imagePuzzleHardLvl=new ImagePuzzleHardLvl();
+            knowledgeLvl=KnowledgeLvl.newInstance(TRUE,(GetMessageListener) getActivity());
+            imagePuzzleLvl =ImagePuzzleLvl.newInstance(TRUE,(GetMessageListener) getActivity());
+            battleshipLvl=BattleshipLvl.newInstance(TRUE,(GetMessageListener) getActivity());
+            imagePuzzleHardLvl=ImagePuzzleHardLvl.newInstance((GetMessageListener) getActivity());
         }
         else{
-            knowledgeLvl=new KnowledgeLvl();
-            imagePuzzleLvl =new ImagePuzzleLvl();
-            imagePuzzleHardLvl=new ImagePuzzleHardLvl();
-            battleshipLvl=new BattleshipLvl();
+            knowledgeLvl=KnowledgeLvl.newInstance(FALSE,(GetMessageListener) getActivity());
+            imagePuzzleLvl =ImagePuzzleLvl.newInstance(FALSE,(GetMessageListener) getActivity());
+            battleshipLvl=BattleshipLvl.newInstance(FALSE,(GetMessageListener) getActivity());
+            imagePuzzleHardLvl=ImagePuzzleHardLvl.newInstance((GetMessageListener) getActivity());
         }
 
         generalKnowledge.setOnClickListener(new View.OnClickListener() {

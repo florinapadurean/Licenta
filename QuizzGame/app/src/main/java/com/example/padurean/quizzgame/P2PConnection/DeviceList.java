@@ -83,6 +83,83 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
         ((DeviceActionListener)getActivity()).connect(device);
     }
 
+    @Override
+    public void onPeersAvailable(WifiP2pDeviceList peerList) {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        peers.clear();
+        peers.addAll(peerList.getDeviceList());
+        ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
+        if (peers.size() == 0) {
+            Log.d("devicelist","No devices found!");
+            return;
+        }
+
+    }
+
+    @Override
+    public void onConnectionInfoAvailable(final WifiP2pInfo info) {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        // The owner IP is now known.
+        if (info.groupFormed && info.isGroupOwner) {
+            Log.v("onconn","owner");
+
+//            Intent i=new Intent(getActivity(), com.example.padurean.quizzgame.Menu.class);
+//            startActivity(i);
+
+        } else if (info.groupFormed) {
+            Log.v("onconn","peer");
+//            Intent i=new Intent(getActivity(), com.example.padurean.quizzgame.Menu.class);
+//            startActivity(i);
+            // The other device acts as the client. In this case, we enable the
+            // get file button.
+        }
+        ((DeviceActionListener)getActivity()).showMenu(info);
+    }
+
+    /**
+     *
+     */
+    public void onInitiateDiscovery() {
+//        progressDialog=pD;
+//        this.getView().setVisibility(View.VISIBLE);
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        progressDialog = ProgressDialog.show(getActivity(), "Press back to cancel", "Seaching For People, Please Wait...", true,
+                true, new DialogInterface.OnCancelListener() {
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
+        nothinghappens();
+    }
+
+    public void nothinghappens(){
+        new CountDownTimer(20000,1000){
+            @Override
+            public void onFinish() {
+                if(progressDialog.isShowing()){
+                    progressDialog.dismiss();
+                    ((DeviceActionListener)getActivity()).stopPeerDiscovery();
+                }
+            }
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if(!progressDialog.isShowing()){
+                    this.cancel();
+                }
+            }
+        }.start();
+
+    }
+
     /**
      * Array adapter for ListFragment that maintains WifiP2pDevice list.
      */
@@ -122,96 +199,6 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
 
         }
     }
-
-
-
-
-    @Override
-    public void onPeersAvailable(WifiP2pDeviceList peerList) {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-        peers.clear();
-        peers.addAll(peerList.getDeviceList());
-        ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
-        if (peers.size() == 0) {
-            Log.d("devicelist","No devices found!");
-            return;
-        }
-
-    }
-
-    @Override
-    public void onConnectionInfoAvailable(final WifiP2pInfo info) {
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-        // The owner IP is now known.
-        // After the group negotiation, we assign the group owner as the file
-        // server. The file server is single threaded, single connection server
-        // socket.
-        if (info.groupFormed && info.isGroupOwner) {
-            Log.v("onconn","owner");
-
-//            Intent i=new Intent(getActivity(), com.example.padurean.quizzgame.Menu.class);
-//            startActivity(i);
-
-        } else if (info.groupFormed) {
-            Log.v("onconn","peer");
-//            Intent i=new Intent(getActivity(), com.example.padurean.quizzgame.Menu.class);
-//            startActivity(i);
-            // The other device acts as the client. In this case, we enable the
-            // get file button.
-        }
-        ((DeviceActionListener)getActivity()).showMenu(info);
-    }
-
-    public void clearPeers() {
-        peers.clear();
-        ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
-    }
-
-    /**
-     *
-     */
-    public void onInitiateDiscovery() {
-//        progressDialog=pD;
-//        this.getView().setVisibility(View.VISIBLE);
-        if (progressDialog != null && progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
-        progressDialog = ProgressDialog.show(getActivity(), "Press back to cancel", "Seaching For People, Please Wait...", true,
-                true, new DialogInterface.OnCancelListener() {
-
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-
-                    }
-                });
-        nothinghappens();
-    }
-
-    public void nothinghappens(){
-        new CountDownTimer(20000,1000){
-            @Override
-            public void onFinish() {
-                if(progressDialog.isShowing()){
-                    progressDialog.dismiss();
-//                    Snackbar.make(mContentView,"No devices found!",Snackbar.LENGTH_SHORT).show();
-                    ((DeviceActionListener)getActivity()).stopPeerDiscovery();
-                }
-            }
-
-            @Override
-            public void onTick(long millisUntilFinished) {
-                if(!progressDialog.isShowing()){
-                    this.cancel();
-                }
-            }
-        }.start();
-
-    }
-
 
     /**
      * An interface-callback for the activity to listen to fragment interaction

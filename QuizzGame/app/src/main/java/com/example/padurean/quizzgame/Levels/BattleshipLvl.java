@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.padurean.quizzgame.Callbacks.GetMessageListener;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageLoose;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageWin;
 import com.example.padurean.quizzgame.R;
@@ -61,14 +62,16 @@ public class BattleshipLvl extends Fragment {
     Boolean allShipsSetFriend=false;
     Boolean allShipsSetMe=false;
     Boolean myTurn=false;
+    private GetMessageListener callback;
 
     public BattleshipLvl(){
 
     }
 
-    public static BattleshipLvl newInstance(Boolean param) {
+    public static BattleshipLvl newInstance(Boolean param,GetMessageListener callback) {
         BattleshipLvl fragment = new BattleshipLvl();
         fragment.showPuzzleHard=param;
+        fragment.callback=callback;
         return fragment;
     }
 
@@ -210,14 +213,14 @@ public class BattleshipLvl extends Fragment {
                         Log.i("ship", "good");
                         checkShip.setVisibility(View.GONE);
 
-                        ((BattleshipLvl.GetMessageListener)getActivity()).send("Ships all set");
+                        callback.send("Ships all set");
                         if(!allShipsSetFriend){
                             progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to set his ships ", " Please Wait...", true, true);
                         }
                         allShipsSetMe=true;
-                        WifiP2pGroup group=((BattleshipLvl.GetMessageListener)getActivity()).getGroupInfo();
+                        WifiP2pGroup group=callback.getGroupInfo();
                         if(group.isGroupOwner() && allShipsSetFriend){
-                            ((BattleshipLvl.GetMessageListener)getActivity()).send("I start");
+                            callback.send("I start");
                             myTurn=true;
                             horizontalScroll.scrollTo((getView().getWidth()),0);
                             Toast.makeText(getActivity(),"You start!Hit one box!", Toast.LENGTH_LONG).show();
@@ -338,7 +341,7 @@ public class BattleshipLvl extends Fragment {
             String txt=v.getTag().toString();
             Log.i("battleship enemy ships",txt);
             if(myTurn){
-                ((BattleshipLvl.GetMessageListener)getActivity()).send("hit:"+txt);
+                callback.send("hit:"+txt);
             }
 
         }};
@@ -470,10 +473,10 @@ public class BattleshipLvl extends Fragment {
             String tag=tagP2.substring(tagP2.indexOf("2") + 1);
             Log.i("tag",tag);
             String s=checkIfShipOrWater(tag);
-            if(s.equals("water"))  ((BattleshipLvl.GetMessageListener)getActivity()).send("water:"+tag);
-            if(s.equals("ship"))  ((BattleshipLvl.GetMessageListener)getActivity()).send("ship:"+tag);
+            if(s.equals("water"))  callback.send("water:"+tag);
+            if(s.equals("ship"))  callback.send("ship:"+tag);
             if(checkIfAllBoatsAreHit()){
-                ((BattleshipLvl.GetMessageListener)getActivity()).send("You won");
+                callback.send("You won");
                 MessageLoose lost = MessageLoose.newInstance("");
                 getActivity().getFragmentManager().beginTransaction()
                         .replace(R.id.frag_menu,lost,"puzzleloose")
@@ -496,7 +499,7 @@ public class BattleshipLvl extends Fragment {
             ImageView iv = (ImageView) getView().findViewWithTag("P2"+tag);
             iv.setImageDrawable(getResources().getDrawable(R.drawable.roundedx));
             myTurn=false;
-            ((BattleshipLvl.GetMessageListener)getActivity()).send("Your turn");
+            callback.send("Your turn");
 
         }
 
@@ -519,7 +522,7 @@ public class BattleshipLvl extends Fragment {
             ImageView iv = (ImageView) getView().findViewWithTag("P2"+tag);
             iv.setBackgroundColor(Color.RED);
             myTurn=false;
-            ((BattleshipLvl.GetMessageListener)getActivity()).send("Your turn");
+            callback.send("Your turn");
         }
 
         if(message.equals("Ships all set")){
@@ -527,9 +530,9 @@ public class BattleshipLvl extends Fragment {
             if(progressDialog!=null && progressDialog.isShowing()){
                 progressDialog.dismiss();
             }
-            WifiP2pGroup group=((BattleshipLvl.GetMessageListener)getActivity()).getGroupInfo();
+            WifiP2pGroup group=callback.getGroupInfo();
             if(group.isGroupOwner() && allShipsSetMe){
-                ((BattleshipLvl.GetMessageListener)getActivity()).send("I start");
+                callback.send("I start");
                 myTurn=true;
                 horizontalScroll.scrollTo((getView().getWidth()) , 0);
                 Toast.makeText(getActivity(),"You start!Hit one box!", Toast.LENGTH_LONG).show();
@@ -613,8 +616,5 @@ public class BattleshipLvl extends Fragment {
         return this.showPuzzleHard;
     }
 
-    public interface GetMessageListener{
-        void send(String string);
-        WifiP2pGroup getGroupInfo();
-    }
+
 }

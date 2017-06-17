@@ -1,0 +1,27 @@
+@startuml
+MainActivity -> WifiBroadcastReciever: new WifiDirectBroadcastReceiver(mManager, mChannel, this)
+MainActivity -> WifiP2pManager: registerReceiver(mReceiver, mIntentFilter)
+MainActivity -> DeviceList: onInitiateDiscovery()
+MainActivity -> WifiP2pManager: mManager.discoverPeers(mChannel,WifiP2pManager.ActionListener)
+DeviceList->DeviceList: new CountDownTimer(20000,1000)
+'MainActivity <- DeviceList:stopPeerDiscovery()
+'MainActivity <- WifiP2pManager:mManager.stopPeerDiscovery(mChannel,WifiP2pManager.ActionListener)
+'MainActivity-> NoDevices
+note over WifiBroadcastReciever,WifiP2pManager
+intent.getAction=WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION
+end note
+WifiP2pManager->WifiBroadcastReciever:onRecieve(Context context, Intent intent)
+WifiBroadcastReciever->WifiP2pManager:mManager.requestPeers(mChannel,DeviceList)
+WifiP2pManager->DeviceList:onPeersAvailable(WifiP2pDeviceList peerList)
+DeviceList->DeviceList:WiFiPeerListAdapter.notifyDataSetChanged()
+note over WifiBroadcastReciever,WifiP2pManager
+intent.getAction=WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION
+end note
+WifiP2pManager->WifiBroadcastReciever:onRecieve(Context context, Intent intent)
+WifiBroadcastReciever->WifiP2pManager:mManager.requestConnectionInfo(mChannel,DeviceList)
+WifiP2pManager->DeviceList:onConnectionInfoAvailable(WifiP2pInfo info)
+DeviceList->MainActivity:showMenu(info)
+
+
+
+@enduml

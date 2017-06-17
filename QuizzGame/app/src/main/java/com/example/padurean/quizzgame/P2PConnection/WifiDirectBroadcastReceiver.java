@@ -34,10 +34,9 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
 
-            // UI update to indicate wifi p2p status.
+            //  indicate wifi p2p status.
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
                 // Wifi Direct mode is enabled
@@ -53,7 +52,6 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
             // asynchronous call and the calling activity is notified with a
             // callback on PeerListListener.onPeersAvailable()
             if (mManager != null) {
-//                mManager.requestPeers(mChannel,(WifiP2pManager.PeerListListener) mActivity.getFragmentManager());
                 mManager.requestPeers(mChannel, (WifiP2pManager.PeerListListener) mActivity.getFragmentManager()
                         .findFragmentById(R.id.frag_list));
             }

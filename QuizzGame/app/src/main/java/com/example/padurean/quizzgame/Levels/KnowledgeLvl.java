@@ -1,5 +1,6 @@
 package com.example.padurean.quizzgame.Levels;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.padurean.quizzgame.Callbacks.GetMessageListener;
 import com.example.padurean.quizzgame.Callbacks.KnowledgeLvlCallback;
 import com.example.padurean.quizzgame.DatabaseManager.Manager;
 import com.example.padurean.quizzgame.Domain.Question;
@@ -51,8 +53,11 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
     private Thread t;
     private Boolean lost=false;
     private ProgressBar timeProgressBar;
+    private ProgressDialog progressDialog;
     private Integer viewQuestion;
     private Boolean showPuzzleHard=false;
+    private GetMessageListener callback;
+
 
 
 
@@ -60,9 +65,10 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
         // Required empty public constructor
     }
 
-    public static KnowledgeLvl newInstance(Boolean param) {
+    public static KnowledgeLvl newInstance(Boolean param,GetMessageListener callback) {
         KnowledgeLvl fragment = new KnowledgeLvl();
         fragment.showPuzzleHard=param;
+        fragment.callback=callback;
         return fragment;
     }
 
@@ -89,7 +95,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
         winner=(TextView) view.findViewById(R.id.winner);
         timeProgressBar=(ProgressBar) view.findViewById(R.id.progressbar1);
         timeProgressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.OVERLAY);
-        timeProgressBar.setMax(30);
+        timeProgressBar.setMax(60);
         myTime=null;
         otherPlayerTime=null;
 
@@ -103,7 +109,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                     } else{
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("i lost");
+                        callback.send("i lost");
                         goToMessageLoose();
                     }
                 }
@@ -114,7 +120,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                     else{
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("i lost");
+                        callback.send("i lost");
                         goToMessageLoose();
                     }
                 }
@@ -126,7 +132,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                             timer.stopRunning();
                             t.interrupt();
                             Log.i(TAG, "i answered in: " + String.valueOf(myTime));
-                            ((GetMessageListener)getActivity()).send("mytime:"+String.valueOf(myTime));
+                            callback.send("mytime:"+String.valueOf(myTime));
                             if (winner.getText().equals("") && otherPlayerTime!=null){
                                 if (myTime - otherPlayerTime > 0) {
                                     goToMessageLoose();
@@ -141,7 +147,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                     else{
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("i lost");
+                        callback.send("i lost");
                         goToMessageLoose();
                     }
                 }
@@ -158,29 +164,28 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                     } else{
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("i lost");
+                        callback.send("i lost");
                         goToMessageLoose();
                     }
-                }
-                else if(viewQuestion==2){
-                    if(goodAnswerButton==2){
+                } else if (viewQuestion == 2) {
+                    if (goodAnswerButton == 2) {
                         setView3Data();
-                    }
-                    else{
+                    } else {
                         t.interrupt();
-                        lost=true;
-                        ((GetMessageListener)getActivity()).send("i lost");
-                        goToMessageLoose();                    }
-                }
-                else if(viewQuestion==3){
-                    if(goodAnswerButton==2){
+                        lost = true;
+                        callback.send("i lost");
+                        goToMessageLoose();
+                    }
+                } else if (viewQuestion == 3) {
+                    if (goodAnswerButton == 2) {
                         if (t.isAlive()) {
                             Log.i(TAG, "kill thread");
                             myTime = timer.getMyTime();
                             timer.stopRunning();
                             t.interrupt();
                             Log.i(TAG, "i answered in: " + String.valueOf(myTime));
-                            ((GetMessageListener)getActivity()).send("mytime:"+String.valueOf(myTime));
+                            callback.send("mytime:"+String.valueOf(myTime));
+                            progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
                             if (winner.getText().equals("") && otherPlayerTime!=null){
                                 if (myTime - otherPlayerTime > 0) {
                                     goToMessageLoose();
@@ -195,7 +200,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                     else{
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("i lost");
+                        callback.send("i lost");
                         goToMessageLoose();
                     }
                 }
@@ -212,7 +217,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                     else{
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("i lost");
+                        callback.send("i lost");
                         goToMessageLoose();
                     }
 
@@ -225,7 +230,8 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                             timer.stopRunning();
                             t.interrupt();
                             Log.i(TAG, "i answered in: " + String.valueOf(myTime));
-                            ((GetMessageListener)getActivity()).send("mytime:"+String.valueOf(myTime));
+                            callback.send("mytime:"+String.valueOf(myTime));
+                            progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
                             if (winner.getText().equals("") && otherPlayerTime!=null){
                                 if (myTime - otherPlayerTime > 0) {
                                     goToMessageLoose();
@@ -240,7 +246,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                     else{
                         t.interrupt();
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("i lost");
+                        callback.send("i lost");
                         goToMessageLoose();
                     }
                 }
@@ -259,7 +265,8 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                             timer.stopRunning();
                             t.interrupt();
                             Log.i(TAG, "i answered in: " + String.valueOf(myTime));
-                            ((GetMessageListener)getActivity()).send("mytime:"+String.valueOf(myTime));
+                            callback.send("mytime:"+String.valueOf(myTime));
+                            progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
                             if (winner.getText().equals("") && otherPlayerTime!=null){
                                 if (myTime - otherPlayerTime > 0) {
                                     goToMessageLoose();
@@ -273,7 +280,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                     }
                     else{
                         lost=true;
-                        ((GetMessageListener)getActivity()).send("i lost");
+                        callback.send("i lost");
                         goToMessageLoose();
                     }
                 }
@@ -307,7 +314,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
     public void getDataForKnowledgeLvl(){
         containerQuestion.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-        manager.getDataKnowledge(this,progressBar);
+        manager.getDataKnowledge(this);
     }
 
 
@@ -408,17 +415,25 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
 
         }
         if (message.startsWith("mytime:")) {
+            if(progressDialog!=null && progressDialog.isShowing()){
+                progressDialog.dismiss();
+            }
             String[] l = message.split(":");
-            otherPlayerTime = Long.parseLong(l[1]);
-            Log.i(TAG,"am primit timp"+otherPlayerTime);
-            if (!lost && myTime!=null) {
-                if (myTime - otherPlayerTime > 0) {
-                    goToMessageLoose();
-                } else {
-                    goToMessageWin("");
+            if(l[1].equals("gone") && myTime!=null){
+
+                goToMessageWin("");
+            }
+            else{
+                otherPlayerTime = Long.parseLong(l[1]);
+                Log.i(TAG,"am primit timp"+otherPlayerTime);
+                if (!lost && myTime!=null) {
+                    if (myTime - otherPlayerTime > 0) {
+                        goToMessageLoose();
+                    } else {
+                        goToMessageWin("");
+                    }
                 }
             }
-
         }
 
     }
@@ -437,11 +452,10 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
 
     public void timerDone() {
         t.interrupt();
-        if (myTime != null) {
-            goToMessageWin("");
-        } else {
+        if (myTime == null) {
             goToMessageLoose();
         }
+        callback.send("mytime:gone");
     }
 
     private void goToMessageLoose() {
@@ -458,8 +472,4 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                 .commit();
     }
 
-
-    public interface GetMessageListener{
-        void send(String string);
-    }
 }

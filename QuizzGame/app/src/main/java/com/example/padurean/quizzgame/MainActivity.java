@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.IntentSender;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -15,7 +14,6 @@ import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
-import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,10 +23,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.padurean.quizzgame.Callbacks.GetMessageListener;
 import com.example.padurean.quizzgame.Callbacks.SocketCallback;
 import com.example.padurean.quizzgame.Communication.ClientSocket;
 import com.example.padurean.quizzgame.Communication.MyServerSocket;
-import com.example.padurean.quizzgame.Domain.Question;
 import com.example.padurean.quizzgame.Errors.NoDevices;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageLoose;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageWin;
@@ -47,17 +45,11 @@ import com.example.padurean.quizzgame.P2PConnection.DeviceList;
 import com.example.padurean.quizzgame.P2PConnection.WifiDirectBroadcastReceiver;
 import com.example.padurean.quizzgame.Menu.StartGameMenu.StartMenuListener;
 import com.facebook.login.LoginManager;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.nearby.messages.Message;
-import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements BattleshipLvl.GetMessageListener,SocketCallback,ImagePuzzleHardLvl.GetMessageListener,ImagePuzzleLvl.GetMessageListener,KnowledgeLvl.GetMessageListener, LevelsMenu.LevelPressedListener,GoogleApiClient.OnConnectionFailedListener,NoDevices.RetryInterface,WifiP2pManager.GroupInfoListener, DeviceList.DeviceActionListener,StartMenuListener,WifiP2pManager.ChannelListener{
+public class MainActivity extends AppCompatActivity implements SocketCallback, GetMessageListener,LevelsMenu.LevelPressedListener,NoDevices.RetryInterface,WifiP2pManager.GroupInfoListener, DeviceList.DeviceActionListener,StartMenuListener,WifiP2pManager.ChannelListener{
 
     private WifiP2pManager mManager;
     private Channel mChannel;
@@ -69,15 +61,9 @@ public class MainActivity extends AppCompatActivity implements BattleshipLvl.Get
 
     private boolean groupFlag=false;
     private WifiP2pGroup groupInfo;
-    private List<Question> knowledgelevel;
-    private MessageListener messageListener;
-    private Message message;
     private String messageAsString;
-    private static final int REQUEST_RESOLVE_ERROR = 1001;
-    private Boolean mResolvingError=false;
     private MyServerSocket serverSocket=null;
     private ClientSocket clientSocket=null;
-    private String lastMessageRecievedAndNotSent="";
 
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
         this.wifiEnabled = isWifiP2pEnabled;
@@ -88,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements BattleshipLvl.Get
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         disconnect();
-        knowledgelevel=new ArrayList<>();
         ActionBar toolbar=getSupportActionBar();
         toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -161,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements BattleshipLvl.Get
 
     @Override
     public void findFriend(){
+
         if (!wifiEnabled) {
             WifiP2pManager manager = (WifiP2pManager) this.getSystemService(Context.WIFI_P2P_SERVICE);
             Channel channel = manager.initialize(this,this.getMainLooper(), null);
@@ -172,16 +158,11 @@ public class MainActivity extends AppCompatActivity implements BattleshipLvl.Get
                Log.d(TAG, "method did not found");
             }
         }
-        startRegistrationAndDiscovery();
+        discoverPeers();
     }
 
 
-    private void startRegistrationAndDiscovery() {
-
-        discoverService();
-    }
-
-    private void discoverService() {
+    private void discoverPeers() {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.show(fm.findFragmentById(R.id.frag_list));
@@ -191,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements BattleshipLvl.Get
         ft.commit();
 
         final DeviceList fragment = (DeviceList) getFragmentManager().findFragmentById(R.id.frag_list);
+        fragment.onInitiateDiscovery();
         fragment.onInitiateDiscovery();
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 
@@ -279,6 +261,7 @@ public class MainActivity extends AppCompatActivity implements BattleshipLvl.Get
                 Log.d(TAG, "Peer stopped doesn't work Reason :" + reason);
             }
         });
+
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.hide(fm.findFragmentById(R.id.frag_list));
@@ -564,25 +547,6 @@ public class MainActivity extends AppCompatActivity implements BattleshipLvl.Get
 
     }
 
-    @Override
-    public String getLastMessageRecieved() {
-        return lastMessageRecievedAndNotSent;
-    }
-
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult result) {
-        if (result.hasResolution()) {
-            try{
-                result.startResolutionForResult(this, REQUEST_RESOLVE_ERROR);
-            }catch (IntentSender.SendIntentException e) {
-                Log.e("Onconnfailed"," failed with exception: " + e);
-            }
-
-        } else {
-            Log.e(TAG, "GoogleApiClient connection failed");
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
