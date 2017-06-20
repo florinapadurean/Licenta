@@ -6,6 +6,7 @@ package com.example.padurean.quizzgame.Levels;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -26,10 +27,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+
 import com.example.padurean.quizzgame.Callbacks.GetMessageListener;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageLoose;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageWin;
+import com.example.padurean.quizzgame.Menu.LevelsMenu;
 import com.example.padurean.quizzgame.R;
+
+import static java.lang.Boolean.TRUE;
 
 
 /**
@@ -59,9 +64,11 @@ public class ImagePuzzleHardLvl extends Fragment {
     private BackgroundTimer timer;
     private ProgressBar progressBar;
     private ProgressBar timeProgressBar;
+    private ProgressDialog progressDialog;
     private Thread t;
     private com.example.padurean.quizzgame.Callbacks.GetMessageListener callback;
-
+    private BackgroundTimer timerForProgressBar;
+    private Thread tt;
 
     public ImagePuzzleHardLvl() {
         super();
@@ -160,6 +167,9 @@ public class ImagePuzzleHardLvl extends Fragment {
         linearLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
+        timerForProgressBar=new BackgroundTimer(System.currentTimeMillis(),60000,timeProgressBar,this,Boolean.TRUE);
+        tt=new Thread(timerForProgressBar);
+        tt.start();
         return view;
     }
 
@@ -247,7 +257,9 @@ public class ImagePuzzleHardLvl extends Fragment {
 //                            timer.stopRunning();
 //                            t.interrupt();
                             callback.send("mytime:" + String.valueOf(myTime));
+                            if(progressDialog==null)progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
                             if (otherPlayerTime != null) {
+                                progressDialog.dismiss();
                                 if (myTime - otherPlayerTime > 0) {
                                     goToPuzzleLoose();
                                 } else if (myTime == otherPlayerTime) {
@@ -274,7 +286,7 @@ public class ImagePuzzleHardLvl extends Fragment {
 
     public void startClock(){
         timeProgressBar.setVisibility(View.VISIBLE);
-        timer=new BackgroundTimer(System.currentTimeMillis(),100000,timeProgressBar,this);
+        timer=new BackgroundTimer(System.currentTimeMillis(),100000,timeProgressBar,this,Boolean.FALSE);
         t=new Thread(timer);
         t.start();
     }
@@ -282,12 +294,25 @@ public class ImagePuzzleHardLvl extends Fragment {
     public void setMessage(String message) {
         if (message.equals("puzzle hard")) {
             linearLayout.setVisibility(View.VISIBLE);
-            settingsDialog.show();
+            getActivity().runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    settingsDialog.show();
+                }
+            });
             progressBar.setVisibility(View.GONE);
+            if(tt!=null && tt.isAlive()){
+                timerForProgressBar.stopRunning();
+                tt.interrupt();
+                tt=null;
+            }
 
         }
 
         if (message.startsWith("mytime:")) {
+            if(progressDialog!=null && progressDialog.isShowing()){
+                progressDialog.dismiss();
+            }
             String[] l = message.split(":");
             otherPlayerTime = Long.parseLong(l[1]);
             Log.i("puzzle", "am primit timp" + otherPlayerTime);
@@ -301,17 +326,33 @@ public class ImagePuzzleHardLvl extends Fragment {
         }
     }
 
+    public void getLastMessage(){
+        String s=callback.getLastMessage();
+        if(!s.equals("")) setMessage(s);
+    }
+
+    public void timeWaitingDone() {
+        Log.i("ImagePuzzle","time waiting done");
+        tt.interrupt();
+        tt=null;
+        callback.showToast("Your friend didn't press on the same level");
+        LevelsMenu lm = LevelsMenu.newInstance(TRUE);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.frag_menu, lm)
+                .commit();
+    }
+
     public void goToPuzzleWin(){
-        MessageWin win= MessageWin.newInstance("");
+        MessageWin win= MessageWin.newInstance("",Boolean.TRUE);
         getActivity().getFragmentManager().beginTransaction()
-                .replace(R.id.frag_menu,win,"puzzlewin")
+                .replace(R.id.frag_menu,win,"win")
                 .commit();
     }
 
     public void goToPuzzleLoose(){
-        MessageLoose lost= MessageLoose.newInstance("");
+        MessageLoose lost= MessageLoose.newInstance("",Boolean.TRUE);
         getActivity().getFragmentManager().beginTransaction()
-                .replace(R.id.frag_menu,lost,"puzzleloose")
+                .replace(R.id.frag_menu,lost,"loose")
                 .commit();
     }
 
@@ -329,12 +370,12 @@ public class ImagePuzzleHardLvl extends Fragment {
     public void timerDone() {
         Log.i("ImageHArdPuzzle","timerdDOne");
         t.interrupt();
-        timer.stopRunning();
         if (myTime != null) {
             Log.i("ImageHArdPuzzle",myTime.toString());
-            goToPuzzleWin();
+//            goToPuzzleWin();
         } else {
             goToPuzzleLoose();
+            callback.send("myTime:"+timer.getMyTime());
         }
     }
 

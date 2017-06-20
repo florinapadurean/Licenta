@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -18,7 +19,7 @@ import java.net.Socket;
 
 public class MyServerSocket extends Thread{
 
-    public static final int SERVERPORT = 4444;
+    public static final int SERVERPORT = 8080;
     private boolean running = false;
     private PrintWriter mOut;
     private BufferedReader in;
@@ -51,7 +52,9 @@ public class MyServerSocket extends Thread{
             System.out.println("S: Connecting...");
 
             //create a server socket. A server socket waits for requests to come in over the network.
-            ServerSocket serverSocket = new ServerSocket(SERVERPORT);
+            ServerSocket serverSocket = new ServerSocket();
+            serverSocket.setReuseAddress(true);
+            serverSocket.bind(new InetSocketAddress(SERVERPORT));
 
             //create client socket... the method accept() listens for a connection to be made to this socket and accepts it.
             client= serverSocket.accept();
@@ -90,8 +93,10 @@ public class MyServerSocket extends Thread{
 
             } catch (Exception e) {
                 System.out.println("S: Error");
-//                e.printStackTrace();
-                callback.showToastDisconnected();
+                e.printStackTrace();
+                callback.showToast("Sorry,someone disconnected!");
+                client.close();
+                serverSocket.close();
 //                callback.disconnect();
             } finally {
 //                client.close();

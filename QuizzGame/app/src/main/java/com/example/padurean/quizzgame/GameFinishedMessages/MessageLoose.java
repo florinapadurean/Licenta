@@ -18,13 +18,19 @@ import com.example.padurean.quizzgame.R;
 public class MessageLoose extends Fragment{
 
     private String text=null;
+    private Boolean showHardLvl;
+
+    public Boolean getShowHardLvl() {
+        return showHardLvl;
+    }
 
     public MessageLoose() {
     }
 
-    public static MessageLoose newInstance(String param){
+    public static MessageLoose newInstance(String param,Boolean showHardLvl){
         MessageLoose imagePuzzleWin= new MessageLoose();
         imagePuzzleWin.text=param;
+        imagePuzzleWin.showHardLvl=showHardLvl;
         return imagePuzzleWin;
     }
 

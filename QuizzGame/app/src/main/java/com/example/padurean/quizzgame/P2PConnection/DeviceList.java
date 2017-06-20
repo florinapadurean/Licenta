@@ -134,7 +134,7 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
 
                     @Override
                     public void onCancel(DialogInterface dialog) {
-
+                        ((DeviceActionListener)getActivity()).stopPeerDiscoveryAtOnCancelDialog();
                     }
                 });
         nothinghappens();
@@ -211,6 +211,7 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
 
         void stopPeerDiscovery();
 
+        void stopPeerDiscoveryAtOnCancelDialog();
     }
 
 }

@@ -17,14 +17,18 @@ import com.example.padurean.quizzgame.R;
 public class MessageWin extends Fragment {
 
     private String text=null;
-
+    private Boolean showHardLvl;
     public MessageWin() {
     }
 
-    public static MessageWin newInstance(String param){
+    public static MessageWin newInstance(String param,boolean showHardLvl){
         MessageWin messageWin = new MessageWin();
         messageWin.text=param;
+        messageWin.showHardLvl=showHardLvl;
         return messageWin;
+    }
+    public Boolean getShowHardLvl() {
+        return showHardLvl;
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {

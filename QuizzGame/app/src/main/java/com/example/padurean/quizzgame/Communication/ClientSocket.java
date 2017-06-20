@@ -20,7 +20,7 @@ import java.net.Socket;
 
 public class ClientSocket extends Thread {
     private String serverMessage;
-    public static final int SERVERPORT = 4444;
+    public static final int SERVERPORT = 8080;
     SocketCallback callback;
     private boolean mRun = false;
     InetAddress groupOwnerAddress;
@@ -111,7 +111,7 @@ public class ClientSocket extends Thread {
 
 
             } catch (Exception e) {
-                callback.showToastDisconnected();
+                callback.showToast("Sorry,someone disconnected!");
 //                callback.disconnect();
                 Log.e("TCP", "S: Error", e);
 

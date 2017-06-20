@@ -1,0 +1,41 @@
+@startuml
+actor Player
+Player->LevelsMenu:onClick(Button imagePuzzle)
+LevelsMenu -> MainActivity: MainActivity.send("puzzle");
+Socket<- MainActivity: send("puzzle");
+LevelsMenu -> ImagePuzzleLvl: getFragmentManager.replace(R.id.frag_menu,imagePuzzleLvl,"puzzlelvlfragment")
+ImagePuzzleLvl -> ImagePuzzleLvl: wait for friend press the same level
+Socket->MainActivity: recieveMessage("puzzle");
+MainActivity->ImagePuzzleLvl: setMessage("puzzle");
+ImagePuzzleLvl->ImagePuzzleLvl:Dialog.show();
+  note over ImagePuzzleLvl
+      dialog containing the full image
+  end note
+Player->ImagePuzzleLvl:onTouch(View v)
+Player->ImagePuzzleLvl:onDrag(View v,DragEvent e)
+alt event.getAction()=DragEvent.ACTION_DROP
+     ImagePuzzleLvl->ImagePuzzleLvl:  Drawable d1=v.getBackground();\nDrawable d2=e.getLocalState().getBackground();\nv.setBackground(d2);\n e.getLocalState().setBackground(d1)
+else event.getAction()=DragEvent.ACTION_DROP_ENDED:
+     note over ImagePuzzleLvl
+        Check each box in the view if it has the right background picture
+     end note
+     alt all boxes have the right image backgound
+         ImagePuzzleLvl -> MainActivity: MainActivity.send("myTime:"+myTime);
+         MainActivity->Socket: Socket.send("myTime:"+myTime)
+         Socket->MainActivity: recieveMessage("myTime:"+player2Time);
+         MainActivity->ImagePuzzleLvl: setMessage("myTime:"+player2Time");
+         alt player2Time>myTime
+         note over ImagePuzzleLvl
+              You Won
+         end note
+         else player2Time<myTime
+         note over ImagePuzzleLvl
+              You Lost
+         end note
+         end
+     end
+
+end
+
+
+@enduml

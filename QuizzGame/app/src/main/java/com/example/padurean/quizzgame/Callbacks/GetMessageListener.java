@@ -9,4 +9,7 @@ import android.net.wifi.p2p.WifiP2pGroup;
 public interface GetMessageListener{
     void send(String string);
     WifiP2pGroup getGroupInfo();
+    void showToast(String message);
+    String getLastMessage();
+    void setLastMessageEmpty();
 }

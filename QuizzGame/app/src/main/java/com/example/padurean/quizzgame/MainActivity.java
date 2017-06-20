@@ -14,6 +14,7 @@ import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import com.example.padurean.quizzgame.Menu.LevelsMenu;
 import com.example.padurean.quizzgame.Login.Login;
 
 
+import static android.provider.Contacts.SettingsColumns.KEY;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
@@ -49,21 +51,24 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.lang.reflect.Method;
 
-public class MainActivity extends AppCompatActivity implements SocketCallback, GetMessageListener,LevelsMenu.LevelPressedListener,NoDevices.RetryInterface,WifiP2pManager.GroupInfoListener, DeviceList.DeviceActionListener,StartMenuListener,WifiP2pManager.ChannelListener{
+public class MainActivity extends AppCompatActivity implements SocketCallback, GetMessageListener, LevelsMenu.LevelPressedListener, NoDevices.RetryInterface, WifiP2pManager.GroupInfoListener, DeviceList.DeviceActionListener, StartMenuListener, WifiP2pManager.ChannelListener {
 
     private WifiP2pManager mManager;
     private Channel mChannel;
     private BroadcastReceiver mReceiver;
     private IntentFilter mIntentFilter;
-    private Boolean wifiEnabled=FALSE;
-    static String TAG="MAin";
+    private Boolean wifiEnabled = FALSE;
+    static String TAG = "MAin";
     private Thread t;
 
-    private boolean groupFlag=false;
+    private boolean groupFlag = false;
     private WifiP2pGroup groupInfo;
-    private String messageAsString;
-    private MyServerSocket serverSocket=null;
-    private ClientSocket clientSocket=null;
+    private Boolean msgNotSent;
+    private MyServerSocket serverSocket = null;
+    private ClientSocket clientSocket = null;
+    public static final String FILTER = "just.a.filter";
+    public static final String KEY = "key";
+    public String lastMsg="";
 
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
         this.wifiEnabled = isWifiP2pEnabled;
@@ -73,8 +78,15 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        disconnect();
-        ActionBar toolbar=getSupportActionBar();
+//        disconnect();
+        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                disconnect();
+            }
+        }, new IntentFilter(FILTER));
+        startService(new Intent(this, OnClearFromRecentService.class));
+        ActionBar toolbar = getSupportActionBar();
         toolbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_HOME
                 | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_CUSTOM);
         toolbar.setDisplayUseLogoEnabled(true);
@@ -102,17 +114,19 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
         }
     }
 
-    /** register the BroadcastReceiver with the intent values to be matched */
+    /**
+     * register the BroadcastReceiver with the intent values to be matched
+     */
     @Override
     public void onResume() {
-        Log.i(TAG,"onResume()");
+        Log.i(TAG, "onResume()");
         super.onResume();
 
     }
 
     @Override
     public void onPause() {
-        Log.i(TAG,"onPause()");
+        Log.i(TAG, "onPause()");
         super.onPause();
     }
 
@@ -129,10 +143,9 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.log_out:
-                if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     FirebaseAuth.getInstance().signOut();
-                }
-                else{
+                } else {
                     LoginManager.getInstance().logOut();
                 }
                 send("end connection");
@@ -145,17 +158,17 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
     }
 
     @Override
-    public void findFriend(){
+    public void findFriend() {
 
         if (!wifiEnabled) {
             WifiP2pManager manager = (WifiP2pManager) this.getSystemService(Context.WIFI_P2P_SERVICE);
-            Channel channel = manager.initialize(this,this.getMainLooper(), null);
+            Channel channel = manager.initialize(this, this.getMainLooper(), null);
 
             try {
                 Method method1 = manager.getClass().getMethod("enableP2p", Channel.class);
                 method1.invoke(manager, channel);
             } catch (Exception e) {
-               Log.d(TAG, "method did not found");
+                Log.d(TAG, "method did not found");
             }
         }
         discoverPeers();
@@ -176,16 +189,16 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
         fragment.onInitiateDiscovery();
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
 
-                    @Override
-                    public void onSuccess() {
-                        Log.d(TAG, "Discovery Initiated");
-                    }
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "Discovery Initiated");
+            }
 
-                    @Override
-                    public void onFailure(int reasonCode) {
-                        Log.d(TAG, "Discovery Failed : " + reasonCode);
-                    }
-                });
+            @Override
+            public void onFailure(int reasonCode) {
+                Log.d(TAG, "Discovery Failed : " + reasonCode);
+            }
+        });
 
     }
 
@@ -213,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 
 
     public void disconnect() {
-        try{
+        try {
             getFragmentManager().beginTransaction()
                     .hide(getFragmentManager().findFragmentById(R.id.frag_menu))
                     .show(getFragmentManager().findFragmentById(R.id.frag_start))
@@ -227,19 +240,18 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 
                 @Override
                 public void onSuccess() {
-                    Log.d(TAG,"dissconecteddddddd");
+                    Log.d(TAG, "dissconecteddddddd");
                 }
             });
-        }
-        catch (Exception e){
-            Log.e(TAG,e.toString());
+        } catch (Exception e) {
+            Log.e(TAG, e.toString());
         }
     }
 
     @Override
     public void onChannelDisconnected() {
         // we will try once more
-        if (mManager != null ) {
+        if (mManager != null) {
             Toast.makeText(this, "Channel lost. Trying again", Toast.LENGTH_LONG).show();
             mManager.initialize(this, getMainLooper(), this);
         } else {
@@ -249,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
         }
     }
 
-    public void stopPeerDiscovery(){
+    public void stopPeerDiscovery() {
         mManager.stopPeerDiscovery(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
@@ -271,21 +283,46 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
         ft.commit();
     }
 
+    public void stopPeerDiscoveryAtOnCancelDialog() {
+        mManager.stopPeerDiscovery(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG, "Peer search stopped");
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Log.d(TAG, "Peer stopped doesn't work Reason :" + reason);
+            }
+        });
+
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.hide(fm.findFragmentById(R.id.frag_list));
+        ft.show(fm.findFragmentById(R.id.frag_start));
+        ft.hide(fm.findFragmentById(R.id.frag_menu));
+        ft.hide(fm.findFragmentById(R.id.frag_err_no_devices));
+        ft.commit();
+    }
+
+
     @Override
     protected void onStart() {
-        Log.i(TAG,"onstart()");
+        Log.i(TAG, "onstart()");
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        Log.i(TAG,"onStop()");
+        Log.i(TAG, "onStop()");
         super.onStop();
     }
 
+
+
     @Override
     protected void onDestroy() {
-        Log.i(TAG,"onDestroy()");
+        Log.i(TAG, "onDestroy()");
         unregisterReceiver(mReceiver);
         if (mManager != null && mChannel != null) {
             mManager.removeGroup(mChannel, new WifiP2pManager.ActionListener() {
@@ -305,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
             Method method1 = mManager.getClass().getMethod("disableP2p", Channel.class);
             method1.invoke(mManager, mChannel);
         } catch (Exception e) {
-            Log.i(TAG,"method did not found");
+            Log.i(TAG, "method did not found");
         }
         super.onDestroy();
     }
@@ -313,18 +350,19 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 
     @Override
     public void showMenu(WifiP2pInfo info) {
-       if(info.isGroupOwner){
-           Log.i(TAG,"server start");
-           serverSocket=new MyServerSocket(this);
-           serverSocket.start();
-       }
-        else{
-           Log.i(TAG,"client start");
-           clientSocket=new ClientSocket(this,info.groupOwnerAddress);
-           clientSocket.start();
-       }
+//        if (serverSocket == null && clientSocket == null) {
+            if (info.isGroupOwner) {
+                Log.i(TAG, "server start");
+                serverSocket = new MyServerSocket(this);
+                serverSocket.start();
+            } else {
+                Log.i(TAG, "client start");
+                clientSocket = new ClientSocket(this, info.groupOwnerAddress);
+                clientSocket.start();
+            }
+//        }
 
-        this.groupFlag=true;
+        this.groupFlag = true;
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.hide(fm.findFragmentById(R.id.frag_list));
@@ -333,91 +371,116 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
         ft.hide(fm.findFragmentById(R.id.frag_err_no_devices));
         ft.commit();
     }
+
     @Override
     public void onBackPressed() {
-        if(getFragmentManager().findFragmentById(R.id.frag_menu).isVisible()){
-            Fragment fragment_menu=getFragmentManager().findFragmentById(R.id.frag_menu);
-            if(fragment_menu instanceof MessageLoose){
-                LevelsMenu lm=LevelsMenu.newInstance(TRUE);
+        if (getFragmentManager().findFragmentById(R.id.frag_menu).isVisible()) {
+            Fragment fragment_menu = getFragmentManager().findFragmentById(R.id.frag_menu);
+            if (fragment_menu instanceof MessageLoose) {
+                LevelsMenu lm;
+                if (((MessageLoose) fragment_menu).getShowHardLvl()) {
+                    lm = LevelsMenu.newInstance(TRUE);
+                } else {
+                    lm = LevelsMenu.newInstance(FALSE);
+                }
 //                LevelsMenu lm=new LevelsMenu();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.frag_menu,lm)
-                        .commit();
-            }
-            if(fragment_menu instanceof MessageWin){
-                LevelsMenu lm=LevelsMenu.newInstance(TRUE);
-//                LevelsMenu lm=new LevelsMenu();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.frag_menu,lm)
+                        .replace(R.id.frag_menu, lm)
                         .commit();
             }
 
-            if(fragment_menu instanceof KnowledgeLvl){
-                KnowledgeLvl kl=(KnowledgeLvl)fragment_menu;
+            if (fragment_menu instanceof MessageWin) {
                 LevelsMenu lm;
-                if(kl.getShowPuzzleHard()){
-                    lm=LevelsMenu.newInstance(TRUE);
-                }
-                else{
-                    lm=new LevelsMenu();
+                if (((MessageWin) fragment_menu).getShowHardLvl()) {
+                    lm = LevelsMenu.newInstance(TRUE);
+                } else {
+                    lm = LevelsMenu.newInstance(FALSE);
                 }
 
+//                LevelsMenu lm=new LevelsMenu();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.frag_menu,lm)
+                        .replace(R.id.frag_menu, lm)
                         .commit();
             }
-            if(fragment_menu instanceof ImagePuzzleLvl){
-                ImagePuzzleLvl plvl=(ImagePuzzleLvl)fragment_menu;
+
+            if (fragment_menu instanceof KnowledgeLvl) {
+                KnowledgeLvl kl = (KnowledgeLvl) fragment_menu;
                 LevelsMenu lm;
-                if(plvl.getShowPuzzleHard()){
-                    lm=LevelsMenu.newInstance(TRUE);
+                if (kl.getShowPuzzleHard()) {
+                    lm = LevelsMenu.newInstance(TRUE);
+                } else {
+                    lm = new LevelsMenu();
+                }
+                kl.stopLevel();
+                send("I exited KnowledgeLvl");
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.frag_menu, lm)
+                        .commit();
+            }
+            if (fragment_menu instanceof ImagePuzzleLvl) {
+                ImagePuzzleLvl plvl = (ImagePuzzleLvl) fragment_menu;
+                LevelsMenu lm;
+                if (plvl.getShowPuzzleHard()) {
+                    lm = LevelsMenu.newInstance(TRUE);
                     send("I exited ImagePuzzleLvl");
-                }else{
-                    lm=new LevelsMenu();
+                } else {
+                    lm = new LevelsMenu();
                     send("I exited ImagePuzzleLvl");
                 }
+                plvl.stopLevel();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.frag_menu,lm)
+                        .replace(R.id.frag_menu, lm)
                         .commit();
             }
-            if(fragment_menu instanceof ImagePuzzleHardLvl){
-                LevelsMenu lm=LevelsMenu.newInstance(TRUE);
+            if (fragment_menu instanceof ImagePuzzleHardLvl) {
+                ImagePuzzleHardLvl phlvl = (ImagePuzzleHardLvl) fragment_menu;
+                phlvl.stopLevel();
+                LevelsMenu lm = LevelsMenu.newInstance(TRUE);
                 send("I exited ImagePuzzleHardLvl");
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.frag_menu,lm)
+                        .replace(R.id.frag_menu, lm)
                         .commit();
             }
 
-            if(fragment_menu instanceof BattleshipLvl){
-                BattleshipLvl kl=(BattleshipLvl) fragment_menu;
+            if (fragment_menu instanceof BattleshipLvl) {
+                BattleshipLvl kl = (BattleshipLvl) fragment_menu;
                 LevelsMenu lm;
-                if(kl.getShowPuzzleHard()){
-                    lm=LevelsMenu.newInstance(TRUE);
+                if (kl.getShowPuzzleHard()) {
+                    lm = LevelsMenu.newInstance(TRUE);
+                } else {
+                    lm = LevelsMenu.newInstance(FALSE);
                 }
-                else{
-                    lm=new LevelsMenu();
-                }
+                kl.stopLevel();
                 send("I exited BattleshipLvl");
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.frag_menu,lm)
+                        .replace(R.id.frag_menu, lm)
                         .commit();
             }
-            if(fragment_menu instanceof LevelsMenu){
+            if (fragment_menu instanceof LevelsMenu) {
                 send("end connection");
                 disconnect();
             }
         }
-        if(getFragmentManager().findFragmentById(R.id.frag_start).isVisible() ||
-                getFragmentManager().findFragmentById(R.id.frag_list).isVisible()){
-            super.onBackPressed();
+        if (getFragmentManager().findFragmentById(R.id.frag_start).isVisible()) {
+
+        }
+        if (getFragmentManager().findFragmentById(R.id.frag_list).isVisible()) {
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.hide(fm.findFragmentById(R.id.frag_list));
+            ft.show(fm.findFragmentById(R.id.frag_start));
+            ft.hide(fm.findFragmentById(R.id.frag_menu));
+            ft.hide(fm.findFragmentById(R.id.frag_err_no_devices));
+            ft.commit();
+//            super.onBackPressed();
         }
     }
 
-    public void showToastDisconnected(){
+    public void showToast(final String message) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MainActivity.this, "Sorry,someone disconnected!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -425,79 +488,108 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 
     @Override
     public void onGroupInfoAvailable(WifiP2pGroup group) {
-        this.groupInfo=group;
+        this.groupInfo = group;
     }
 
 
-    public WifiP2pGroup getGroupInfo(){
+    public WifiP2pGroup getGroupInfo() {
         return groupInfo;
     }
 
 
     public void send(String string) {
-        if(serverSocket!=null){
+        if (serverSocket != null) {
             serverSocket.send(string);
         }
-        if(clientSocket!=null){
+        if (clientSocket != null) {
             clientSocket.send(string);
         }
 
     }
 
-    public void recieveMessage(final String messageAsString){
+    public void recieveMessage(final String messageAsString) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Boolean msgNotSent=true;
-
+                Boolean msgNotSent = true;
                 //the other player exited imgpuzzlelvl
-                Fragment fragment_menu=getFragmentManager().findFragmentById(R.id.frag_menu);
-                Log.i(TAG,messageAsString);
-                if(messageAsString.equals("I exited ImagePuzzleLvl") && fragment_menu.isVisible() && fragment_menu instanceof  ImagePuzzleLvl){
-                    Log.i(TAG,"recieved I exited ImagePuzzleLvl");
-                    ImagePuzzleLvl plvl=(ImagePuzzleLvl)fragment_menu;
+                Fragment fragment_menu = getFragmentManager().findFragmentById(R.id.frag_menu);
+                Log.i(TAG, messageAsString);
+                if (messageAsString.equals("I exited ImagePuzzleLvl") && fragment_menu.isVisible() && fragment_menu instanceof ImagePuzzleLvl) {
+                    Log.i(TAG, "recieved I exited ImagePuzzleLvl");
+                    ImagePuzzleLvl plvl = (ImagePuzzleLvl) fragment_menu;
                     LevelsMenu lm;
-                    if(plvl.getShowPuzzleHard()){
-                        lm=LevelsMenu.newInstance(TRUE);
-                    }else{
-                        lm=new LevelsMenu();
+                    if (plvl.getShowPuzzleHard()) {
+                        lm = LevelsMenu.newInstance(TRUE);
+                    } else {
+                        lm = LevelsMenu.newInstance(FALSE);
                     }
                     plvl.stopLevel();
                     getFragmentManager().beginTransaction()
-                            .replace(R.id.frag_menu,lm)
+                            .replace(R.id.frag_menu, lm)
                             .commit();
                     Toast.makeText(MainActivity.this, "Sorry,your friend exited Image Puzzle Level", Toast.LENGTH_SHORT).show();
                 }
-                if(messageAsString.equals("I exited ImagePuzzleHardLvl") && fragment_menu.isVisible() && fragment_menu instanceof  ImagePuzzleLvl){
-                    Log.i(TAG,"recieved I exited ImagePuzzleHardLvl");
-                    ImagePuzzleHardLvl phlvl=(ImagePuzzleHardLvl)fragment_menu;
-                    LevelsMenu lm=LevelsMenu.newInstance(TRUE);
+                if (messageAsString.equals("I exited ImagePuzzleHardLvl") && fragment_menu.isVisible() && fragment_menu instanceof ImagePuzzleHardLvl) {
+                    Log.i(TAG, "recieved I exited ImagePuzzleHardLvl");
+                    ImagePuzzleHardLvl phlvl = (ImagePuzzleHardLvl) fragment_menu;
+                    LevelsMenu lm = LevelsMenu.newInstance(TRUE);
                     phlvl.stopLevel();
                     getFragmentManager().beginTransaction()
-                            .replace(R.id.frag_menu,lm)
+                            .replace(R.id.frag_menu, lm)
                             .commit();
                     Toast.makeText(MainActivity.this, "Sorry,your friend exited Image Puzzle Hard Level", Toast.LENGTH_SHORT).show();
                 }
-                if(messageAsString.equals( "I exited BattleshipLvl") && fragment_menu.isVisible() && fragment_menu instanceof  BattleshipLvl){
-                    Log.i(TAG,"recieved I exited BattleshipLvl");
-                    BattleshipLvl bLvl=(BattleshipLvl) fragment_menu;
-                    LevelsMenu lm=LevelsMenu.newInstance(TRUE);
+                if (messageAsString.equals("I exited BattleshipLvl") && fragment_menu.isVisible() && fragment_menu instanceof BattleshipLvl) {
+                    Log.i(TAG, "recieved I exited BattleshipLvl");
+                    BattleshipLvl bLvl = (BattleshipLvl) fragment_menu;
+                    LevelsMenu lm;
+                    if (bLvl.getShowPuzzleHard()) {
+                        lm = LevelsMenu.newInstance(TRUE);
+                    } else {
+                        lm = LevelsMenu.newInstance(FALSE);
+                    }
                     bLvl.stopLevel();
                     getFragmentManager().beginTransaction()
-                            .replace(R.id.frag_menu,lm)
+                            .replace(R.id.frag_menu, lm)
                             .commit();
                     Toast.makeText(MainActivity.this, "Sorry,your friend exited Battleship Level", Toast.LENGTH_SHORT).show();
                 }
+                if (messageAsString.equals("I exited KnowledgeLvl") && fragment_menu.isVisible() && fragment_menu instanceof KnowledgeLvl) {
+                    Log.i(TAG, "recieved I exited KnowledgeLvl");
+                    KnowledgeLvl kl = (KnowledgeLvl) fragment_menu;
+                    LevelsMenu lm;
+                    if (kl.getShowPuzzleHard()) {
+                        lm = LevelsMenu.newInstance(TRUE);
+                    } else {
+                        lm = LevelsMenu.newInstance(FALSE);
+                    }
+                    kl.stopLevel();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.frag_menu, lm)
+                            .commit();
+                    Toast.makeText(MainActivity.this, "Sorry,your friend exited Knowledge Level", Toast.LENGTH_SHORT).show();
+                }
 
-                if(messageAsString.equals("I exited ImagePuzzleLvl") || messageAsString.equals("I exited ImagePuzzleHardLvl") || messageAsString.equals("I exited BattleshipLvl")){
-                    msgNotSent=false;
-                }else{
+                if (messageAsString.equals("end connection") || messageAsString.equals("I exited KnowledgeLvl") || messageAsString.equals("I exited ImagePuzzleLvl") || messageAsString.equals("I exited ImagePuzzleHardLvl") || messageAsString.equals("I exited BattleshipLvl")) {
+                    msgNotSent = false;
+                } else {
                     //strat game message
-                    KnowledgeLvl f=(KnowledgeLvl)getFragmentManager().findFragmentByTag("knowledgelvlfragment");
-                    ImagePuzzleLvl f1=(ImagePuzzleLvl)getFragmentManager().findFragmentByTag("puzzlelvlfragment");
-                    ImagePuzzleHardLvl f2=(ImagePuzzleHardLvl) getFragmentManager().findFragmentByTag("puzzlehardlvlfragment");
-                    BattleshipLvl f3=(BattleshipLvl) getFragmentManager().findFragmentByTag("battleshipfragment");
+                    KnowledgeLvl f = (KnowledgeLvl) getFragmentManager().findFragmentByTag("knowledgelvlfragment");
+                    ImagePuzzleLvl f1 = (ImagePuzzleLvl) getFragmentManager().findFragmentByTag("puzzlelvlfragment");
+                    ImagePuzzleHardLvl f2 = (ImagePuzzleHardLvl) getFragmentManager().findFragmentByTag("puzzlehardlvlfragment");
+                    BattleshipLvl f3 = (BattleshipLvl) getFragmentManager().findFragmentByTag("battleshipfragment");
+                    MessageLoose ml = (MessageLoose) getFragmentManager().findFragmentByTag("loose");
+                    MessageWin mw = (MessageWin) getFragmentManager().findFragmentByTag("win");
 
+                    if (ml != null && ml.isVisible()) {
+                        Log.i("messageloose", "setMessage:" + messageAsString);
+                        msgNotSent = false;
+                    }
+                    if (mw != null && mw.isVisible()) {
+                        Log.i("messagewin", "setMessage:" + messageAsString);
+                        msgNotSent = false;
+                    }
                     //wait
                     if (f != null && f.isVisible()) {
                         Log.i("knowledge", "setMessage:" + messageAsString);
@@ -523,28 +615,81 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
                 }
 
 
-
-                if(msgNotSent){
-                    Runnable r=new Runnable() {
-                        @Override
-                        public void run() {
-                            Boolean msgNotSent=true;
-                            int counter=50;
-                            //wait a few seconds
-                            while (counter>0){
-                                counter--;
-                            }
-                            recieveMessage(messageAsString);
-                        }
-                    };
-                    t=new Thread(r);
-                    t.start();
+                if (msgNotSent) {
+                    lastMsg=messageAsString;
+//                    Runnable r = new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Boolean msgNotSent = true;
+//                            int counter = 50;
+//                            //wait a few seconds
+//                            Boolean b = retryRecieveMessage(messageAsString);
+//                            while (retryRecieveMessage(messageAsString)) {
+//
+//                            }
+//
+//                        }
+//                    };
+//                    t = new Thread(r);
+//                    t.start();
 
                 }
+                else lastMsg="";
 
             }
         });
 
+    }
+
+    @Override
+    public String getLastMessage() {
+        return lastMsg;
+    }
+
+    @Override
+    public void setLastMessageEmpty() {
+        lastMsg="";
+        lastMsg="";
+    }
+
+    public Boolean retryRecieveMessage(final String message) {
+        msgNotSent = true;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG + "retryReciveMessage", message);
+//                              Boolean msgNotSent=true;
+                KnowledgeLvl f = (KnowledgeLvl) getFragmentManager().findFragmentByTag("knowledgelvlfragment");
+                ImagePuzzleLvl f1 = (ImagePuzzleLvl) getFragmentManager().findFragmentByTag("puzzlelvlfragment");
+                ImagePuzzleHardLvl f2 = (ImagePuzzleHardLvl) getFragmentManager().findFragmentByTag("puzzlehardlvlfragment");
+                BattleshipLvl f3 = (BattleshipLvl) getFragmentManager().findFragmentByTag("battleshipfragment");
+
+                //wait
+                if (f != null && f.isVisible()) {
+                    Log.i("knowledge", "setMessage:" + message);
+                    f.setMessage(message);
+                    msgNotSent = false;
+                }
+                if (f1 != null && f1.isVisible()) {
+                    Log.i("puzzle", "setMessage:" + message);
+                    f1.setMessage(message);
+                    msgNotSent = false;
+                }
+                if (f2 != null && f2.isVisible()) {
+                    Log.i("puzzleHArd", "setMessage:" + message);
+                    f2.setMessage(message);
+                    msgNotSent = false;
+                }
+
+                if (f3 != null && f3.isVisible()) {
+                    Log.i("battleship", "setMessage:" + message);
+                    f3.setMessage(message);
+                    msgNotSent = false;
+                }
+
+            }
+        });
+        return msgNotSent;
     }
 
 
@@ -557,7 +702,7 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 //                Log.e(TAG, "GoogleApiClient connection failed. Unable to resolve.");
 //            }
 //        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
 //        }
     }
 

@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.example.padurean.quizzgame.Callbacks.GetMessageListener;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageLoose;
 import com.example.padurean.quizzgame.GameFinishedMessages.MessageWin;
+import com.example.padurean.quizzgame.Menu.LevelsMenu;
 import com.example.padurean.quizzgame.R;
 
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static java.lang.Boolean.TRUE;
 
 /**
  * Created by Asus on 12.06.2017.
@@ -63,6 +66,8 @@ public class BattleshipLvl extends Fragment {
     Boolean allShipsSetMe=false;
     Boolean myTurn=false;
     private GetMessageListener callback;
+    private BackgroundTimer timerForProgressBar;
+    private Thread tt;
 
     public BattleshipLvl(){
 
@@ -127,6 +132,9 @@ public class BattleshipLvl extends Fragment {
 
             }
         }
+        timerForProgressBar=new BackgroundTimer(System.currentTimeMillis(),60000,null,this,Boolean.TRUE);
+        tt=new Thread(timerForProgressBar);
+        tt.start();
         return v;
     }
 
@@ -209,7 +217,7 @@ public class BattleshipLvl extends Fragment {
                 case 4:
                     List<String> l=shipsPosition.get("Submarine");
                     if(l.size()==2){
-                        counter++;
+                        counter=5;
                         Log.i("ship", "good");
                         checkShip.setVisibility(View.GONE);
 
@@ -459,10 +467,21 @@ public class BattleshipLvl extends Fragment {
     public void setMessage(String message) {
         if (message.equals("battleship")) {
             Log.v("battleship","aici");
+            callback.setLastMessageEmpty();
 //            linearLayout.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
             myGrid.setVisibility(View.VISIBLE);
-            chooseShipDialog.show();
+            getActivity().runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    chooseShipDialog.show();
+                }
+            });
+            if(tt!=null && tt.isAlive()){
+                timerForProgressBar.stopRunning();
+                tt.interrupt();
+                tt=null;
+            }
         }
 
         if(message.startsWith("hit:")){
@@ -477,9 +496,9 @@ public class BattleshipLvl extends Fragment {
             if(s.equals("ship"))  callback.send("ship:"+tag);
             if(checkIfAllBoatsAreHit()){
                 callback.send("You won");
-                MessageLoose lost = MessageLoose.newInstance("");
+                MessageLoose lost = MessageLoose.newInstance("",this.showPuzzleHard);
                 getActivity().getFragmentManager().beginTransaction()
-                        .replace(R.id.frag_menu,lost,"puzzleloose")
+                        .replace(R.id.frag_menu,lost,"loose")
                         .commit();
             }
             horizontalScroll.scrollTo(0,0);
@@ -487,9 +506,9 @@ public class BattleshipLvl extends Fragment {
 
         if(message.equals("You won")){
             MessageWin win;
-            win = MessageWin.newInstance("");
+            win = MessageWin.newInstance("",this.showPuzzleHard);
             getActivity().getFragmentManager().beginTransaction()
-                    .replace(R.id.frag_menu, win, "puzzlewin")
+                    .replace(R.id.frag_menu, win, "win")
                     .commit();
         }
 
@@ -539,6 +558,27 @@ public class BattleshipLvl extends Fragment {
             }
 
         }
+    }
+
+    public void getLastMessage(){
+        String s=callback.getLastMessage();
+        if(!s.equals("")) setMessage(s);
+    }
+
+    public void timeWaitingDone() {
+        Log.i("Battleship","time waiting done");
+        tt.interrupt();
+        tt=null;
+        callback.showToast("Your friend didn't press on the same level");
+        LevelsMenu lm;
+        if (this.getShowPuzzleHard()) {
+            lm = LevelsMenu.newInstance(TRUE);
+        } else {
+            lm = new LevelsMenu();
+        }
+        getFragmentManager().beginTransaction()
+                .replace(R.id.frag_menu, lm)
+                .commit();
     }
 
     private String checkIfShipOrWater(String tag) {

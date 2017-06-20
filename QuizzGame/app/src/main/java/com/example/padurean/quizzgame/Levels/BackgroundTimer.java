@@ -23,32 +23,59 @@ public class BackgroundTimer implements Runnable {
     private Boolean running;
     private ProgressBar progressBar;
     private Fragment callback;
+    private Boolean progressBarSpinning;
 
 
-    public BackgroundTimer(long start, long howLong, ProgressBar progressBar,Fragment callback){
+    public BackgroundTimer(long start, long howLong, ProgressBar progressBar,Fragment callback,Boolean b){
         this.start=start;
         this.howLong=howLong;
         this.running=true;
         this.progressBar=progressBar;
         this.callback=callback;
+        this.progressBarSpinning=b;
     }
 
     @Override
     public void run() {
         while (running){
+
+//                if(callback instanceof ImagePuzzleLvl){
+//                    ((ImagePuzzleLvl)callback).setMessage(s);
+//                }else if(callback instanceof ImagePuzzleHardLvl){
+//                    ((ImagePuzzleHardLvl)callback).setMessage(s);
+//                }else
+            if(callback instanceof KnowledgeLvl){
+                    ((KnowledgeLvl)callback).getLastMessage();
+            }
+            if(callback instanceof ImagePuzzleLvl){
+                ((ImagePuzzleLvl)callback).getLastMessage();
+            }
+            if(callback instanceof ImagePuzzleHardLvl) {
+                ((ImagePuzzleHardLvl) callback).getLastMessage();
+            }
+            if(callback instanceof BattleshipLvl){
+                ((BattleshipLvl)callback).getLastMessage();
+            }
             now = System.currentTimeMillis();
             elapsed = now - start;
-            progressBar.setProgress((int)elapsed/1000);
+            if(progressBar!=null)progressBar.setProgress((int)elapsed/1000);
 //            Log.i(TAG,"elapsed "+elapsed+" howlong "+ howLong);
             if (elapsed/1000 >= howLong/1000) {
                 Log.i(TAG,"game over");
                 this.running=false;
                 if(callback instanceof ImagePuzzleLvl){
-                    ((ImagePuzzleLvl)callback).timerDone();
+                    if(progressBarSpinning){
+                        ((ImagePuzzleLvl)callback).timeWaitingDone();
+                    }else ((ImagePuzzleLvl)callback).timerDone();
                 }else if(callback instanceof ImagePuzzleHardLvl){
+                    if(progressBarSpinning) ((ImagePuzzleHardLvl)callback).timeWaitingDone();
                     ((ImagePuzzleHardLvl)callback).timerDone();
                 }else if(callback instanceof KnowledgeLvl){
-                    ((KnowledgeLvl)callback).timerDone();
+                    if(progressBarSpinning) ((KnowledgeLvl)callback).timeWaitingDone();
+                    else ((KnowledgeLvl)callback).timerDone();
+                }
+                if(callback instanceof BattleshipLvl){
+                    ((BattleshipLvl)callback).timeWaitingDone();
                 }
 
             }
@@ -59,10 +86,6 @@ public class BackgroundTimer implements Runnable {
 
     public void stopRunning(){
         this.running=false;
-    }
-
-    public Boolean isRunning(){
-        return this.running;
     }
 
 

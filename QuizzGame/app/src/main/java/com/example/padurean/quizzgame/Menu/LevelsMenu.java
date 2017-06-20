@@ -35,8 +35,6 @@ public class LevelsMenu extends Fragment {
     private Boolean showPuzzleHard=false;
 
 
-//    private OnFragmentInteractionListener mListener;
-
     public LevelsMenu() {
         // Required empty public constructor
     }

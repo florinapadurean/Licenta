@@ -1,0 +1,38 @@
+@startuml
+actor Player
+Player->BattleshipLvl:onClick(ImageView P2rXcY);
+Battleship->MainActivity: send("hit:"+P2rXcY);
+MainActivity->Socket: send("hit:"+P2rXcY);
+Socket->MainActivity: recieveMessage(message);
+MainActivity->BattleshipLvl: setMessage(message);
+alt message.startsWith("hit:")
+    BattleshipLvl->BattleshipLvl:String s=checkIfShipOrWater(tag)
+    alt s=water
+    BattleshipLvl->MainActivity: send("water:"+P2rXcY)
+    BattleshipLvl->BattleshipLvl:ImageView rXcY setBackground X
+    else
+    BattleshipLvl->MainActivity: send("ship:"+P2rXcY)
+    BattleshipLvl->BattleshipLvl:ImageView rXcY setBackground red
+    end
+    BattleshipLvl->BattleshipLvl:checkIfAllBoatsAreHit()
+    alt checkIfAllBoatsAreHit()
+        BattleshipLvl->MainActivity:send("You won");
+         note over BattleshipLvl
+                 "You lost"
+         end note
+    end
+else message.equals("You won")
+    note over BattleshipLvl
+         "You won"
+    end note
+else message.startsWith("water:")
+    BattleshipLvl->BattleshipLvl:ImageView P2rXcY setBackground X
+    BattleshipLvl->MainActivity: send("Your turn");
+else message.startsWith("ship:")
+ BattleshipLvl->BattleshipLvl:ImageView P2rXcY setBackground red
+    BattleshipLvl->MainActivity: send("Your turn");
+else message.equals("Your turn")
+    BattleshipLvl->BattleshipLvl: Snackbar.makeText("your turn!").show()
+end
+
+@enduml

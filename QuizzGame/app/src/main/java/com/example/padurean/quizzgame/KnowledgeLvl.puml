@@ -2,6 +2,7 @@
 actor Player
 Player->LevelsMenu:onClick(Button generalKnowledge)
 LevelsMenu -> MainActivity: MainActivity.send("Knowledge");
+Socket <- MainActivity: send("Knowledge");
 LevelsMenu -> KnowledgeLvl: getFragmentManager.replace(R.id.frag_menu,battleshipLvl,"battleshipfragment")
 KnowledgeLvl -> KnowledgeLvl: wait for friend press the same level
 Socket->MainActivity: recieveMessage("Knowledge");
@@ -23,6 +24,7 @@ alt button=goodAnswerButton
          note over KnowledgeLvl
             goodAnswerButton=a number randomly between 1 and 2,set answers correspondingly and show answer
          end note
+         Player->KnowledgeLvl:onClick(Button button)
          alt button=goodAnswerButton
            KnowledgeLvl -> MainActivity: MainActivity.send("myTime:"+myTime);
            MainActivity->Socket: Socket.send("myTime:"+myTime)
@@ -51,6 +53,11 @@ else button!=goodAnswerButton
  note over KnowledgeLvl
  You Lost
  end note
+end
+else button!=goodAnswerButton
+   note over KnowledgeLvl
+         You Lost
+   end note
 end
 
 

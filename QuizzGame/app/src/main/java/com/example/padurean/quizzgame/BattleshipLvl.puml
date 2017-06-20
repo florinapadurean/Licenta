@@ -1,0 +1,65 @@
+@startuml
+actor Player
+Player->LevelsMenu:onClick(Button battleship)
+LevelsMenu -> MainActivity: MainActivity.send("battleship");
+LevelsMenu -> BattleshipLvl: getFragmentManager.replace(R.id.frag_menu,battleshipLvl,"battleshipfragment"))
+BattleshipLvl -> BattleshipLvl: wait for friend\npress the same level
+Socket->MainActivity: recieveMessage("battleship");
+MainActivity->BattleshipLvl: setMessage("battleship");
+BattleshipLvl->BattleshipLvl:counter=0;
+BattleshipLvl->BattleshipLvl:chooseShipDialog.show()
+loop
+loop
+Player->BattleshipLvl:onClick(ImageView rXcY)
+note over Player,BattleshipLvl
+        when click on Image view with rXcY,change background color
+end note
+end
+Player->BattleshipLvl:onClick(Button checkShip)
+alt counter=0
+    BattleshipLvl->BattleshipLvl:ship=checkShipOnePiece(shipLength,type)
+    alt ship=true
+        BattleshipLvl->BattleshipLvl:counter=1;
+    else
+        BattleshipLvl->BattleshipLvl:setWater(type);
+        BattleshipLvl->BattleshipLvl:Toast.makeText(errormessage).show;
+    end
+else counter=1
+     BattleshipLvl->BattleshipLvl:ship=checkShipOnePiece(shipLength,type)
+        alt ship=true
+            BattleshipLvl->BattleshipLvl:counter=2;
+        else
+            BattleshipLvl->BattleshipLvl:setWater(type);
+            BattleshipLvl->BattleshipLvl:Toast.makeText(errormessage).show;
+        end
+else counter=2
+     BattleshipLvl->BattleshipLvl:ship=checkShipOnePiece(shipLength,type)
+        alt ship=true
+            BattleshipLvl->BattleshipLvl:counter=3;
+        else
+            BattleshipLvl->BattleshipLvl:setWater(type);
+            BattleshipLvl->BattleshipLvl:Toast.makeText(errormessage).show;
+        end
+else counter=3
+     BattleshipLvl->BattleshipLvl:ship=checkShipTwoPieces(shipLength,type)
+        alt ship=true
+            BattleshipLvl->BattleshipLvl:counter=4;
+        else
+            BattleshipLvl->BattleshipLvl:setWater(type);
+            BattleshipLvl->BattleshipLvl:Toast.makeText(errormessage).show;
+        end
+else counter=4
+     BattleshipLvl->BattleshipLvl:ship=checkShipOnePiece(shipLength,type)
+        alt ship=true
+            BattleshipLvl->BattleshipLvl:counter=5;
+            alt friend had placed its ships && WifiP2pGroup.isGroupOwner()
+                Battleshiplvl->MainActivity:MainActivity.send("I start");
+            end
+        else
+            BattleshipLvl->BattleshipLvl:setWater(type);
+            BattleshipLvl->BattleshipLvl:Toast.makeText(errormessage).show;
+        end
+
+end
+end
+@enduml
