@@ -5,7 +5,9 @@ package com.example.padurean.quizzgame.Callbacks;
  */
 
 public interface SocketCallback {
-    public void recieveMessage(String messageAsString);
-    public void disconnect();
-    public void showToast(String message);
+    void recieveMessage(String messageAsString);
+
+    void disconnect();
+
+    void showToast(String message);
 }

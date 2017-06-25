@@ -1,0 +1,196 @@
+@startuml
+left to right direction
+'class android.app.Activity{
+'  + void onCreate();
+'  + void onStart();
+'  + void onStop();
+'  + void onPause();
+'  + void onResume();
+'  + void onDestroy();
+'}
+
+class android.app.Fragment{
+    + void onCreate();
+    + void onCreateView();
+    + void onAttach(Context context);
+    + void onDetach();
+    + void onStart();
+    + void onStop();
+    + void onPause();
+    + void onResume();
+    + void onDestroy();
+}
+class com.example.padurean.quizzgame.Menu.LevelsMenu{
+   - LinearLayout generalKnowledge;
+   - LinearLayout puzzle;
+   - LinearLayout puzzleHard;
+   - LinearLayout battleship;
+   - BattleshipLvl battleshipLvl;
+   - KnowledgeLvl knowledgeLvl;
+   - ImagePuzzleLvl imagePuzzleLvl;
+   - ImagePuzzleHardLvl imagePuzzleHardLvl;
+   - Boolean showPuzzleHard;
+    + static LevelsMenu newInstance(Boolean param,GetMessageListener callback);
+}
+'class com.example.padurean.quizzgame.Errors.ErrorWifi{
+'}
+'class com.example.padurean.quizzgame.Errors.NoDevices{
+'}
+class com.example.padurean.quizzgame.Levels.BattleshipLvl{
+   - Button checkShip;
+   - Map<String,List<String>> shipsPosition;
+   - Boolean allShipsSetFriend;
+   - Boolean allShipsSetMe;
+   - BackgroundTimer timerForProgressBar;
+   - Thread tt;
+    + static BattleshipLvl newInstance(Boolean param,GetMessageListener callback);
+    + Boolean checkShipOnePiece(Integer,String type);
+    + Boolean checkShipTwoPieces(Integer,String type);
+    + void setWater(String shipType);
+    + void setMessage(String message);
+    + void getLastMessage();
+    + void timeWaitingDone();
+    + void checkIfShipOrWater(String tag);
+    + void checkIfAllBoatsAreHit();
+    + void stopLevel();
+    + Boolean getShowPuzzleHard();
+}
+'class com.example.padurean.quizzgame.Levels.ImagePuzzleHardLvl{
+'    - Long myTime;
+'    - Long otherPlayerTime;
+'    - BackgroundTimer timer;
+'    - Thread t;
+'    - FrameLayout box1;
+'    - FrameLayout box2;
+'    - FrameLayout box3;
+'    - FrameLayout box4;
+'    - FrameLayout box5;
+'    - FrameLayout box6;
+'    - FrameLayout box7;
+'    - FrameLayout box8;
+'    - FrameLayout box9;
+'    - FrameLayout box10;
+'    - FrameLayout box11;
+'    - FrameLayout box12;
+'    - BackgroundTimer timerForProgressBar;
+'    - Thread tt;
+'     + static ImagePuzzleHardLvl newInstance(GetMessageListener callback);
+'     + void startClock();
+'     + void stopLevel();
+'     + void setMessage(String message);
+'     + void getLastMessage();
+'     + void timeWaitingDone();
+'     + void timerDone();
+'     + void goToPuzzleWin();
+'     + void goToPuzzleLoose();
+'
+'}
+class com.example.padurean.quizzgame.Levels.ImagePuzzleLvl{
+        - Boolean showPuzzleHard
+        - Long myTime;
+        - Long otherPlayerTime;
+        - BackgroundTimer timer;
+        - Thread t;
+        - BackgroundTimer timerForProgressBar;
+        - Thread tt;
+         + static ImagePuzzleLvl newInstance(Boolean param,GetMessageListener callback);
+         + void startClock();
+         + void stopLevel();
+         + Boolean getShowPuzzleHard();
+         + void setMessage(String message);
+         + void getLastMessage();
+         + void timeWaitingDone();
+         + void timerDone();
+         + void goToPuzzleWin();
+         + void goToPuzzleLoose();
+}
+class com.example.padurean.quizzgame.Levels.KnowledgeLvl{
+    - Long myTime;
+        - Long otherPlayerTime;
+        - BackgroundTimer timer;
+        - Thread t;
+        - BackgroundTimer timerForProgressBar;
+        - Thread tt;
+        - Manager manager;
+        - List<Question> data;
+        - Boolean dataIsSet;
+        - Boolean player2IsReady;
+    - Boolean showPuzzleHard
+       + static KnowledgeLvl newInstance(Boolean param,GetMessageListener callback);
+       + void startClock();
+       + void stopLevel();
+       + Boolean getShowPuzzleHard();
+       + void setMessage(String message);
+       + void getLastMessage();
+       + void timeWaitingDone();
+       + void timerDxone();
+    + void goToMessageWin();
+    + void goToMessageLoose();
+    + void setView3Data();
+    + void setView2Data();
+    + void setData(List<Question> data);
+}
+'class com.example.padurean.quizzgame.Login.Login{
+'   - LoginButton loginButton;
+'   - CallbackManager callbackManager;
+'   - FirebaseAtuh.AuthStateListener mAuthListener;
+'    + void onClick(View view);
+'}
+'class com.example.padurean.quizzgame.MainActivity{
+'   - WifiP2pManager mManager;
+'   - Channel mChannel;
+'   - BroadcastReceiver mReceiver;
+'   - IntentFilter mIntentFilter;
+'   - MyServerSocket serverSocket;
+'   - ClientSocket clientSocket;
+'    + boolean onOptionsItemSelected(MenuItem item);
+'    + void findFriend() ;
+'    + void discoverPeers();
+'    + void connect(WifiP2pDevice device);
+'    + void disconnect();
+'    + void onChannelDisconnected();
+'    + void showMenu();
+'    + void stopPeerDiscovery();
+'    + void onBackPressed():
+'    + void recieveMessage(final String messageAsString);
+'    + void send(String message);
+'}
+
+'class com.example.padurean.quizzgame.Menu.StartGameMenu{
+'    Button startDiscovery;
+'}
+'com.example.padurean.quizzgame.Errors.ErrorWifi ..> com.example.padurean.quizzgame.Login.Login
+'com.example.padurean.quizzgame.Errors.NoDevices --|> android.app.Fragment
+
+com.example.padurean.quizzgame.Levels.BattleshipLvl --|> android.app.Fragment
+com.example.padurean.quizzgame.Levels.ImagePuzzleLvl --|> android.app.Fragment
+'com.example.padurean.quizzgame.Levels.ImagePuzzleHardLvl --|> android.app.Fragment
+com.example.padurean.quizzgame.Levels.KnowledgeLvl --|> android.app.Fragment
+com.example.padurean.quizzgame.Levels.BattleshipLvl ..> com.example.padurean.quizzgame.Menu.LevelsMenu
+'com.example.padurean.quizzgame.Levels.ImagePuzzleHardLvl ..> com.example.padurean.quizzgame.Menu.LevelsMenu
+com.example.padurean.quizzgame.Levels.ImagePuzzleLvl ..> com.example.padurean.quizzgame.Menu.LevelsMenu
+com.example.padurean.quizzgame.Levels.KnowledgeLvl ..> com.example.padurean.quizzgame.Menu.LevelsMenu
+
+'com.example.padurean.quizzgame.Login.Login --|> android.app.Activity
+'com.example.padurean.quizzgame.Login.Login ..> com.example.padurean.quizzgame.Errors.ErrorWifi
+'com.example.padurean.quizzgame.Login.Login ..> com.example.padurean.quizzgame.MainActivity
+'com.example.padurean.quizzgame.MainActivity ..> android.content.BroadcastReceiver
+'com.example.padurean.quizzgame.MainActivity --|> android.app.Activity
+'com.example.padurean.quizzgame.MainActivity ..> com.example.padurean.quizzgame.Errors.NoDevices
+'com.example.padurean.quizzgame.MainActivity ..> com.example.padurean.quizzgame.Levels.BattleshipLvl
+'com.example.padurean.quizzgame.MainActivity ..> com.example.padurean.quizzgame.Levels.ImagePuzzleHardLvl
+'com.example.padurean.quizzgame.MainActivity ..> com.example.padurean.quizzgame.Levels.ImagePuzzleLvl
+'com.example.padurean.quizzgame.MainActivity ..> com.example.padurean.quizzgame.Levels.KnowledgeLvl
+'com.example.padurean.quizzgame.MainActivity ..> com.example.padurean.quizzgame.Login.Login
+'com.example.padurean.quizzgame.MainActivity ..> com.example.padurean.quizzgame.Menu.LevelsMenu
+'com.example.padurean.quizzgame.MainActivity ..> com.example.padurean.quizzgame.P2PConnection.DeviceList
+'com.example.padurean.quizzgame.MainActivity ..> com.example.padurean.quizzgame.P2PConnection.WifiDirectBroadcastReceiver
+
+com.example.padurean.quizzgame.Menu.LevelsMenu --|> android.app.Fragment
+com.example.padurean.quizzgame.Menu.LevelsMenu ..> com.example.padurean.quizzgame.Levels.BattleshipLvl
+'com.example.padurean.quizzgame.Menu.LevelsMenu ..> com.example.padurean.quizzgame.Levels.ImagePuzzleHardLvl
+com.example.padurean.quizzgame.Menu.LevelsMenu ..> com.example.padurean.quizzgame.Levels.ImagePuzzleLvl
+com.example.padurean.quizzgame.Menu.LevelsMenu ..> com.example.padurean.quizzgame.Levels.KnowledgeLvl
+'com.example.padurean.quizzgame.Menu.StartGameMenu --|> android.app.Fragment
+
+@enduml

@@ -16,20 +16,23 @@ import com.example.padurean.quizzgame.R;
 
 public class MessageWin extends Fragment {
 
-    private String text=null;
+    private String text = null;
     private Boolean showHardLvl;
+
     public MessageWin() {
     }
 
-    public static MessageWin newInstance(String param,boolean showHardLvl){
+    public static MessageWin newInstance(String param, boolean showHardLvl) {
         MessageWin messageWin = new MessageWin();
-        messageWin.text=param;
-        messageWin.showHardLvl=showHardLvl;
+        messageWin.text = param;
+        messageWin.showHardLvl = showHardLvl;
         return messageWin;
     }
+
     public Boolean getShowHardLvl() {
         return showHardLvl;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +46,9 @@ public class MessageWin extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.puzzle_win, container, false);
-        if(text!=null){
-            TextView additionalText=(TextView) view.findViewById(R.id.additional_text);
+        View view = inflater.inflate(R.layout.puzzle_win, container, false);
+        if (text != null) {
+            TextView additionalText = (TextView) view.findViewById(R.id.additional_text);
             additionalText.setText(text);
         }
         return view;

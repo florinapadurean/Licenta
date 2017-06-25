@@ -9,5 +9,7 @@ import java.util.List;
  */
 
 public interface KnowledgeLvlCallback {
+
     void setData(List<Question> data);
+
 }

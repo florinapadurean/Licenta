@@ -54,7 +54,6 @@ public class LevelsMenu extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.v("lvls","aici");
         final View view=inflater.inflate(R.layout.fragment_menu, container, false);
         generalKnowledge=(LinearLayout)view.findViewById(R.id.general_knowledge);
         puzzle=(LinearLayout)view.findViewById(R.id.puzzle);
@@ -144,12 +143,6 @@ public class LevelsMenu extends Fragment {
 
     }
 
-    @Override
-    public void onStart() {
-//        puzzleHard.setVisibility(View.VISIBLE);
-        Log.v("lvls","aici");
-        super.onStart();
-    }
 
     @Override
     public void onAttach(Context context) {

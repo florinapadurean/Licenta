@@ -34,7 +34,7 @@ import rx.Observable;
 import static java.lang.Boolean.TRUE;
 
 
-public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
+public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback {
 
     private Manager manager;
     private Button answerButton1;
@@ -45,115 +45,116 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
     private TextView winner;
     private Integer goodAnswerButton;
     private List<Question> data;
-    private String TAG="Knowledgelvl";
+    private String TAG = "Knowledgelvl";
     private ProgressBar progressBar;
     private LinearLayout containerQuestion;
     private Long myTime;
     private Long otherPlayerTime;
-    private Boolean dataSet=false;
-    private Boolean player2IsReady=false;
+    private Boolean dataSet = false;
+    private Boolean player2IsReady = false;
+    private Boolean player2HasLost = false;
     private BackgroundTimer timer;
     private BackgroundTimer timerForProgressBar;
     private Thread t;
     private Thread tt;
-    private Boolean lost=false;
+    private Boolean lost = false;
     private ProgressBar timeProgressBar;
     private ProgressDialog progressDialog;
     private Integer viewQuestion;
-    private Boolean showPuzzleHard=false;
+    private Boolean showPuzzleHard = false;
     private GetMessageListener callback;
-
-
 
 
     public KnowledgeLvl() {
         // Required empty public constructor
     }
 
-    public static KnowledgeLvl newInstance(Boolean param,GetMessageListener callback) {
+    public static KnowledgeLvl newInstance(Boolean param, GetMessageListener callback) {
         KnowledgeLvl fragment = new KnowledgeLvl();
-        fragment.showPuzzleHard=param;
-        fragment.callback=callback;
+        fragment.showPuzzleHard = param;
+        fragment.callback = callback;
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        manager=new Manager();
+        manager = new Manager();
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view=inflater.inflate(R.layout.fragment_knowledge_lvl, container, false);
-        answerButton1=(Button) view.findViewById(R.id.button1);
-        answerButton2=(Button) view.findViewById(R.id.button2);
-        answerButton3=(Button) view.findViewById(R.id.button3);
-        answerButton4=(Button) view.findViewById(R.id.button4);
-        progressBar=(ProgressBar) view.findViewById(R.id.progress);
+        final View view = inflater.inflate(R.layout.fragment_knowledge_lvl, container, false);
+        answerButton1 = (Button) view.findViewById(R.id.button1);
+        answerButton2 = (Button) view.findViewById(R.id.button2);
+        answerButton3 = (Button) view.findViewById(R.id.button3);
+        answerButton4 = (Button) view.findViewById(R.id.button4);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress);
         int color = ContextCompat.getColor(getActivity(), R.color.verdeAlbastrui);
         progressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-//        progressBar.getIndeterminateDrawable().setColorFilter(0xFF4081, android.graphics.PorterDuff.Mode.MULTIPLY);
-        questionTextView=(TextView) view.findViewById(R.id.question);
-        containerQuestion=(LinearLayout) view.findViewById(R.id.questionContainer);
-        winner=(TextView) view.findViewById(R.id.winner);
-        timeProgressBar=(ProgressBar) view.findViewById(R.id.progressbar1);
+        questionTextView = (TextView) view.findViewById(R.id.question);
+        containerQuestion = (LinearLayout) view.findViewById(R.id.questionContainer);
+        winner = (TextView) view.findViewById(R.id.winner);
+        timeProgressBar = (ProgressBar) view.findViewById(R.id.progressbar1);
         timeProgressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.OVERLAY);
         timeProgressBar.setMax(60);
-        myTime=null;
-        otherPlayerTime=null;
+        myTime = null;
+        otherPlayerTime = null;
 
         answerButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("clicked","view:"+viewQuestion+" button2");
-                if(viewQuestion==1){
-                    if(goodAnswerButton==1){
+                Log.i("clicked", "view:" + viewQuestion + " button2");
+                if (viewQuestion == 1) {
+                    if (goodAnswerButton == 1) {
                         setView2Data();
-                    } else{
+                    } else {
                         t.interrupt();
-                        lost=true;
+                        lost = true;
                         callback.send("i lost");
                         goToMessageLoose();
                     }
-                }
-                else if(viewQuestion==2){
-                    if(goodAnswerButton==1){
+                } else if (viewQuestion == 2) {
+                    if (goodAnswerButton == 1) {
                         setView3Data();
-                    }
-                    else{
+                    } else {
                         t.interrupt();
-                        lost=true;
+                        lost = true;
                         callback.send("i lost");
                         goToMessageLoose();
                     }
-                }
-                else if(viewQuestion==3){
-                    if(goodAnswerButton==1){
+                } else if (viewQuestion == 3) {
+                    if (goodAnswerButton == 1) {
                         if (t.isAlive()) {
                             Log.i(TAG, "kill thread");
                             myTime = timer.getMyTime();
                             timer.stopRunning();
                             t.interrupt();
                             Log.i(TAG, "i answered in: " + String.valueOf(myTime));
-                            callback.send("mytime:"+String.valueOf(myTime));
-                            progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
-                            if (winner.getText().equals("") && otherPlayerTime!=null){
-                                progressDialog.dismiss();
-                                if (myTime - otherPlayerTime > 0) {
-                                    goToMessageLoose();
-                                } else if(myTime==otherPlayerTime) {
-                                    goToMessageWin("You did it in the same time!");
-                                  }else{
-                                    goToMessageWin("");
-                                  }
+                            callback.send("mytime:" + String.valueOf(myTime));
+                            if(player2HasLost){
+                                Log.i(TAG, "player alreadylost");
+                                goToMessageWin("");
                             }
+                            else{
+                                progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
+                                if (winner.getText().equals("") && otherPlayerTime != null) {
+                                    progressDialog.dismiss();
+                                    if (myTime - otherPlayerTime > 0) {
+                                        goToMessageLoose();
+                                    } else if (myTime == otherPlayerTime) {
+                                        goToMessageWin("You did it in the same time!");
+                                    } else {
+                                        goToMessageWin("");
+                                    }
+                                }
+                            }
+
                         }
-                    }
-                    else{
+                    } else {
                         t.interrupt();
-                        lost=true;
+                        lost = true;
                         callback.send("i lost");
                         goToMessageLoose();
                     }
@@ -164,13 +165,13 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
         answerButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("clicked","view:"+viewQuestion+" button2");
-                if(viewQuestion==1){
-                    if(goodAnswerButton==2){
+                Log.i("clicked", "view:" + viewQuestion + " button2");
+                if (viewQuestion == 1) {
+                    if (goodAnswerButton == 2) {
                         setView2Data();
-                    } else{
+                    } else {
                         t.interrupt();
-                        lost=true;
+                        lost = true;
                         callback.send("i lost");
                         goToMessageLoose();
                     }
@@ -191,23 +192,28 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                             timer.stopRunning();
                             t.interrupt();
                             Log.i(TAG, "i answered in: " + String.valueOf(myTime));
-                            callback.send("mytime:"+String.valueOf(myTime));
-                            progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
-                            if (winner.getText().equals("") && otherPlayerTime!=null){
-                                progressDialog.dismiss();
-                                if (myTime - otherPlayerTime > 0) {
-                                    goToMessageLoose();
-                                } else if(myTime==otherPlayerTime) {
-                                    goToMessageWin("You did it in the same time!");
-                                }else{
-                                    goToMessageWin("");
+                            callback.send("mytime:" + String.valueOf(myTime));
+                            if(player2HasLost){
+                                Log.i(TAG, "player alreadylost");
+                                goToMessageWin("");
+                            }
+                            else{
+                                progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
+                                if (winner.getText().equals("") && otherPlayerTime != null) {
+                                    progressDialog.dismiss();
+                                    if (myTime - otherPlayerTime > 0) {
+                                        goToMessageLoose();
+                                    } else if (myTime == otherPlayerTime) {
+                                        goToMessageWin("You did it in the same time!");
+                                    } else {
+                                        goToMessageWin("");
+                                    }
                                 }
                             }
                         }
-                    }
-                    else{
+                    } else {
                         t.interrupt();
-                        lost=true;
+                        lost = true;
                         callback.send("i lost");
                         goToMessageLoose();
                     }
@@ -217,44 +223,47 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
         answerButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("clicked","view:"+viewQuestion+" button3");
-                if(viewQuestion==2){
-                    if(goodAnswerButton==3){
+                Log.i("clicked", "view:" + viewQuestion + " button3");
+                if (viewQuestion == 2) {
+                    if (goodAnswerButton == 3) {
                         setView3Data();
-                    }
-                    else{
+                    } else {
                         t.interrupt();
-                        lost=true;
+                        lost = true;
                         callback.send("i lost");
                         goToMessageLoose();
                     }
 
-                }
-                else if(viewQuestion==3){
-                    if(goodAnswerButton==3){
+                } else if (viewQuestion == 3) {
+                    if (goodAnswerButton == 3) {
                         if (t.isAlive()) {
                             Log.i(TAG, "kill thread");
                             myTime = timer.getMyTime();
                             timer.stopRunning();
                             t.interrupt();
                             Log.i(TAG, "i answered in: " + String.valueOf(myTime));
-                            callback.send("mytime:"+String.valueOf(myTime));
-                            progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
-                            if (winner.getText().equals("") && otherPlayerTime!=null){
-                                progressDialog.dismiss();
-                                if (myTime - otherPlayerTime > 0) {
-                                    goToMessageLoose();
-                                } else if(myTime==otherPlayerTime) {
-                                    goToMessageWin("You did it in the same time!");
-                                }else{
-                                    goToMessageWin("");
+                            callback.send("mytime:" + String.valueOf(myTime));
+                            if(player2HasLost){
+                                Log.i(TAG, "player alreadylost");
+                                goToMessageWin("");
+                            }
+                            else{
+                                progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
+                                if (winner.getText().equals("") && otherPlayerTime != null) {
+                                    progressDialog.dismiss();
+                                    if (myTime - otherPlayerTime > 0) {
+                                        goToMessageLoose();
+                                    } else if (myTime == otherPlayerTime) {
+                                        goToMessageWin("You did it in the same time!");
+                                    } else {
+                                        goToMessageWin("");
+                                    }
                                 }
                             }
                         }
-                    }
-                    else{
+                    } else {
                         t.interrupt();
-                        lost=true;
+                        lost = true;
                         callback.send("i lost");
                         goToMessageLoose();
                     }
@@ -265,31 +274,36 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
         answerButton4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("clicked","view:"+viewQuestion+" button4");
-                if(viewQuestion==3){
-                    if(goodAnswerButton==4){
+                Log.i("clicked", "view:" + viewQuestion + " button4");
+                if (viewQuestion == 3) {
+                    if (goodAnswerButton == 4) {
                         if (t.isAlive()) {
                             Log.i(TAG, "kill thread");
                             myTime = timer.getMyTime();
                             timer.stopRunning();
                             t.interrupt();
                             Log.i(TAG, "i answered in: " + String.valueOf(myTime));
-                            callback.send("mytime:"+String.valueOf(myTime));
-                            progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
-                            if (winner.getText().equals("") && otherPlayerTime!=null){
-                                progressDialog.dismiss();
-                                if (myTime - otherPlayerTime > 0) {
-                                    goToMessageLoose();
-                                } else if(myTime==otherPlayerTime) {
-                                    goToMessageWin("You did it in the same time!");
-                                }else{
-                                    goToMessageWin("");
+                            callback.send("mytime:" + String.valueOf(myTime));
+                            if(player2HasLost){
+                                Log.i(TAG, "player alreadylost");
+                                goToMessageWin("");
+                            }
+                            else{
+                                progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
+                                if (winner.getText().equals("") && otherPlayerTime != null) {
+                                    progressDialog.dismiss();
+                                    if (myTime - otherPlayerTime > 0) {
+                                        goToMessageLoose();
+                                    } else if (myTime == otherPlayerTime) {
+                                        goToMessageWin("You did it in the same time!");
+                                    } else {
+                                        goToMessageWin("");
+                                    }
                                 }
                             }
                         }
-                    }
-                    else{
-                        lost=true;
+                    } else {
+                        lost = true;
                         callback.send("i lost");
                         goToMessageLoose();
                     }
@@ -299,16 +313,14 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
         });
 
 
-
-
-        Log.i("knowledglvl","1");
-        data=new ArrayList<>();
+        Log.i("knowledglvl", "1");
+        data = new ArrayList<>();
         getDataForKnowledgeLvl();
-//        data=((KnowledgeLvlData)getActivity()).getDataForKnowledgeLvl();
 
-        timerForProgressBar=new BackgroundTimer(System.currentTimeMillis(),60000,timeProgressBar,this,Boolean.TRUE);
-        tt=new Thread(timerForProgressBar);
+        timerForProgressBar = new BackgroundTimer(System.currentTimeMillis(), 60000, timeProgressBar, this, Boolean.TRUE);
+        tt = new Thread(timerForProgressBar);
         tt.start();
+
         return view;
     }
 
@@ -324,7 +336,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
 
     }
 
-    public void getDataForKnowledgeLvl(){
+    public void getDataForKnowledgeLvl() {
         containerQuestion.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         manager.getDataKnowledge(this);
@@ -333,53 +345,49 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
 
     @Override
     public void setData(List<Question> data) {
-        viewQuestion=1;
-        this.data=data;
+        viewQuestion = 1;
+        this.data = data;
         Random ran = new Random();
-        goodAnswerButton=ran.nextInt() % 2 == 0 ? 1 : 2;
-        Log.i("ganswerbuttonView1",goodAnswerButton.toString());
-        if(goodAnswerButton==1){
+        goodAnswerButton = ran.nextInt() % 2 == 0 ? 1 : 2;
+        Log.i("ganswerbuttonView1", goodAnswerButton.toString());
+        if (goodAnswerButton == 1) {
             answerButton1.setText(data.get(0).getGoodAnswer());
             answerButton2.setText(data.get(0).getBadAnswer1());
-        }
-        else if(goodAnswerButton==2){
+        } else if (goodAnswerButton == 2) {
             answerButton2.setText(data.get(0).getGoodAnswer());
             answerButton1.setText(data.get(0).getBadAnswer1());
         }
         questionTextView.setText(data.get(0).getQuestion());
-        Log.i("knowledglvl","dataset");
-        dataSet=true;
-        if(dataSet && player2IsReady){
-            Log.i("knowledge","set");
+        Log.i("knowledglvl", "dataset");
+        dataSet = true;
+        if (dataSet && player2IsReady) {
+            Log.i("knowledge", "set");
             containerQuestion.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
-            if(tt!=null && tt.isAlive()){
+            if (tt != null && tt.isAlive()) {
                 timerForProgressBar.stopRunning();
                 tt.interrupt();
-                tt=null;
+                tt = null;
             }
             startClock();
         }
-//        containerQuestion.setVisibility(View.VISIBLE);
     }
 
-    public void setView2Data(){
-        viewQuestion=2;
+    public void setView2Data() {
+        viewQuestion = 2;
         Random ran = new Random();
-        goodAnswerButton=ran.nextInt(3 - 1 + 1) + 1;
-        Log.i("ganswerbuttonView2",goodAnswerButton.toString());
-        if(goodAnswerButton==1){
+        goodAnswerButton = ran.nextInt(3 - 1 + 1) + 1;
+        Log.i("ganswerbuttonView2", goodAnswerButton.toString());
+        if (goodAnswerButton == 1) {
             answerButton1.setText(data.get(1).getGoodAnswer());
             answerButton2.setText(data.get(1).getBadAnswer1());
             answerButton3.setText(data.get(1).getBadAnswer2());
 
-        }
-        else if(goodAnswerButton==2){
+        } else if (goodAnswerButton == 2) {
             answerButton2.setText(data.get(1).getGoodAnswer());
             answerButton1.setText(data.get(1).getBadAnswer1());
             answerButton3.setText(data.get(1).getBadAnswer2());
-        }
-        else if(goodAnswerButton==3){
+        } else if (goodAnswerButton == 3) {
             answerButton2.setText(data.get(1).getBadAnswer2());
             answerButton1.setText(data.get(1).getBadAnswer1());
             answerButton3.setText(data.get(1).getGoodAnswer());
@@ -388,30 +396,27 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
         answerButton3.setVisibility(View.VISIBLE);
     }
 
-    public void setView3Data(){
-        viewQuestion=3;
+    public void setView3Data() {
+        viewQuestion = 3;
         Random ran = new Random();
-        goodAnswerButton=ran.nextInt(4 - 1 + 1) + 1;
-        Log.i("ganswerbuttonView3",goodAnswerButton.toString());
-        if(goodAnswerButton==1){
+        goodAnswerButton = ran.nextInt(4 - 1 + 1) + 1;
+        Log.i("ganswerbuttonView3", goodAnswerButton.toString());
+        if (goodAnswerButton == 1) {
             answerButton1.setText(data.get(2).getGoodAnswer());
             answerButton2.setText(data.get(2).getBadAnswer1());
             answerButton3.setText(data.get(2).getBadAnswer2());
             answerButton4.setText(data.get(2).getBadAnswer3());
-        }
-        else if(goodAnswerButton==2){
+        } else if (goodAnswerButton == 2) {
             answerButton2.setText(data.get(2).getGoodAnswer());
             answerButton1.setText(data.get(2).getBadAnswer1());
             answerButton3.setText(data.get(2).getBadAnswer2());
             answerButton4.setText(data.get(2).getBadAnswer3());
-        }
-        else if(goodAnswerButton==3){
+        } else if (goodAnswerButton == 3) {
             answerButton2.setText(data.get(2).getBadAnswer2());
             answerButton1.setText(data.get(2).getBadAnswer1());
             answerButton3.setText(data.get(2).getGoodAnswer());
             answerButton4.setText(data.get(2).getBadAnswer3());
-        }
-        else if(goodAnswerButton==4){
+        } else if (goodAnswerButton == 4) {
             answerButton2.setText(data.get(2).getBadAnswer2());
             answerButton1.setText(data.get(2).getBadAnswer1());
             answerButton3.setText(data.get(2).getBadAnswer3());
@@ -426,32 +431,42 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
     public void setMessage(String message) {
         if (message.equals("knowledge")) {
             callback.setLastMessageEmpty();
-            Log.i("knowledge","setmsgknowledge");
-            player2IsReady=true;
-            if(dataSet && player2IsReady){
+            Log.i("knowledge", "setmsgknowledge");
+            player2IsReady = true;
+            if (dataSet && player2IsReady) {
                 containerQuestion.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
-                if(tt!=null && tt.isAlive()){
+                if (tt != null && tt.isAlive()) {
                     timerForProgressBar.stopRunning();
                     tt.interrupt();
-                    tt=null;
+                    tt = null;
                 }
                 startClock();
             }
 
         }
-        if (message.startsWith("mytime:")) {
-            if(progressDialog!=null && progressDialog.isShowing()){
+
+        if (message.equals("i lost")){
+            if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
-            }
-            String[] l = message.split(":");
-            if(Integer.parseInt(l[1])==0 && myTime!=null){
                 goToMessageWin("");
             }
             else{
+                Log.v("knowledgelvl","player2lost");
+                player2HasLost=true;
+            }
+        }
+        if (message.startsWith("mytime:")) {
+            if (progressDialog != null && progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            String[] l = message.split(":");
+            if (Integer.parseInt(l[1]) == 0 && myTime != null) {
+                goToMessageWin("");
+            } else {
                 otherPlayerTime = Long.parseLong(l[1]);
-                Log.i(TAG,"am primit timp"+otherPlayerTime);
-                if (!lost && myTime!=null) {
+                Log.i(TAG, "am primit timp" + otherPlayerTime);
+                if (!lost && myTime != null) {
                     if (myTime - otherPlayerTime > 0) {
                         goToMessageLoose();
                     } else {
@@ -464,30 +479,30 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
     }
 
 
-    public void startClock(){
+    public void startClock() {
         timeProgressBar.setVisibility(View.VISIBLE);
-        timer=new BackgroundTimer(System.currentTimeMillis(),60000,timeProgressBar,this,Boolean.FALSE);
-        t=new Thread(timer);
+        timer = new BackgroundTimer(System.currentTimeMillis(), 60000, timeProgressBar, this, Boolean.FALSE);
+        t = new Thread(timer);
         t.start();
     }
 
-    public Boolean getShowPuzzleHard(){
+    public Boolean getShowPuzzleHard() {
         return this.showPuzzleHard;
     }
 
     public void timerDone() {
-        Log.i("knowledge","timer done");
+        Log.i("knowledge", "timer done");
         t.interrupt();
         if (myTime == null) {
             goToMessageLoose();
         }
-        callback.send("mytime:"+timer.getMyTime());
+        callback.send("mytime:" + timer.getMyTime());
     }
 
     public void timeWaitingDone() {
-        Log.i("knowledge","time waiting done");
+        Log.i("knowledge", "time waiting done");
         tt.interrupt();
-        tt=null;
+        tt = null;
         callback.showToast("Your friend didn't press on the same level");
         LevelsMenu lm;
         if (this.getShowPuzzleHard()) {
@@ -500,37 +515,38 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback{
                 .commit();
     }
 
-    public void getLastMessage(){
-        String s=callback.getLastMessage();
-        if(!s.equals("")) setMessage(s);
+    public void getLastMessage() {
+        String s = callback.getLastMessage();
+        if (!s.equals("")) setMessage(s);
     }
 
 
     private void goToMessageLoose() {
-        MessageLoose lost= MessageLoose.newInstance("",this.showPuzzleHard);
+        stopLevel();
+        MessageLoose lost = MessageLoose.newInstance("", this.showPuzzleHard);
         getActivity().getFragmentManager().beginTransaction()
-                .replace(R.id.frag_menu,lost,"loose")
+                .replace(R.id.frag_menu, lost, "loose")
                 .commit();
     }
 
-    private void goToMessageWin(String message){
-        MessageWin win= MessageWin.newInstance(message,this.showPuzzleHard);
+    private void goToMessageWin(String message) {
+        stopLevel();
+        MessageWin win = MessageWin.newInstance(message, this.showPuzzleHard);
         getActivity().getFragmentManager().beginTransaction()
-                .replace(R.id.frag_menu,win,"win")
+                .replace(R.id.frag_menu, win, "win")
                 .commit();
     }
 
-    public void stopLevel(){
-        if(t!=null && t.isAlive()){
+    public void stopLevel() {
+        if (t != null && t.isAlive()) {
             timer.stopRunning();
             t.interrupt();
-            t=null;
+            t = null;
         }
-        if(progressDialog!=null && progressDialog.isShowing()){
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
     }
-
 
 
 }

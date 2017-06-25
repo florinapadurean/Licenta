@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
     private ClientSocket clientSocket = null;
     public static final String FILTER = "just.a.filter";
     public static final String KEY = "key";
-    public String lastMsg="";
+    public String lastMsg = "";
 
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
         this.wifiEnabled = isWifiP2pEnabled;
@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        disconnect();
         LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -102,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
         mReceiver = new WifiDirectBroadcastReceiver(mManager, mChannel, this);
+        //register the BroadcastReceiver with the intent values to be matched
         registerReceiver(mReceiver, mIntentFilter);
         if (savedInstanceState == null) {
             FragmentManager fm = getFragmentManager();
@@ -114,9 +114,7 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
         }
     }
 
-    /**
-     * register the BroadcastReceiver with the intent values to be matched
-     */
+
     @Override
     public void onResume() {
         Log.i(TAG, "onResume()");
@@ -250,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 
     @Override
     public void onChannelDisconnected() {
-        // we will try once more
+        // try again if channel is lost
         if (mManager != null) {
             Toast.makeText(this, "Channel lost. Trying again", Toast.LENGTH_LONG).show();
             mManager.initialize(this, getMainLooper(), this);
@@ -319,7 +317,6 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
     }
 
 
-
     @Override
     protected void onDestroy() {
         Log.i(TAG, "onDestroy()");
@@ -350,17 +347,15 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 
     @Override
     public void showMenu(WifiP2pInfo info) {
-//        if (serverSocket == null && clientSocket == null) {
-            if (info.isGroupOwner) {
-                Log.i(TAG, "server start");
-                serverSocket = new MyServerSocket(this);
-                serverSocket.start();
-            } else {
-                Log.i(TAG, "client start");
-                clientSocket = new ClientSocket(this, info.groupOwnerAddress);
-                clientSocket.start();
-            }
-//        }
+        if (info.isGroupOwner) {
+            Log.i(TAG, "server start");
+            serverSocket = new MyServerSocket(this);
+            serverSocket.start();
+        } else {
+            Log.i(TAG, "client start");
+            clientSocket = new ClientSocket(this, info.groupOwnerAddress);
+            clientSocket.start();
+        }
 
         this.groupFlag = true;
         FragmentManager fm = getFragmentManager();
@@ -383,7 +378,6 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
                 } else {
                     lm = LevelsMenu.newInstance(FALSE);
                 }
-//                LevelsMenu lm=new LevelsMenu();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.frag_menu, lm)
                         .commit();
@@ -397,7 +391,6 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
                     lm = LevelsMenu.newInstance(FALSE);
                 }
 
-//                LevelsMenu lm=new LevelsMenu();
                 getFragmentManager().beginTransaction()
                         .replace(R.id.frag_menu, lm)
                         .commit();
@@ -472,7 +465,6 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
             ft.hide(fm.findFragmentById(R.id.frag_menu));
             ft.hide(fm.findFragmentById(R.id.frag_err_no_devices));
             ft.commit();
-//            super.onBackPressed();
         }
     }
 
@@ -616,25 +608,8 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 
 
                 if (msgNotSent) {
-                    lastMsg=messageAsString;
-//                    Runnable r = new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Boolean msgNotSent = true;
-//                            int counter = 50;
-//                            //wait a few seconds
-//                            Boolean b = retryRecieveMessage(messageAsString);
-//                            while (retryRecieveMessage(messageAsString)) {
-//
-//                            }
-//
-//                        }
-//                    };
-//                    t = new Thread(r);
-//                    t.start();
-
-                }
-                else lastMsg="";
+                    lastMsg = messageAsString;
+                } else lastMsg = "";
 
             }
         });
@@ -648,63 +623,14 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 
     @Override
     public void setLastMessageEmpty() {
-        lastMsg="";
-        lastMsg="";
+        lastMsg = "";
+        lastMsg = "";
     }
 
-    public Boolean retryRecieveMessage(final String message) {
-        msgNotSent = true;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.i(TAG + "retryReciveMessage", message);
-//                              Boolean msgNotSent=true;
-                KnowledgeLvl f = (KnowledgeLvl) getFragmentManager().findFragmentByTag("knowledgelvlfragment");
-                ImagePuzzleLvl f1 = (ImagePuzzleLvl) getFragmentManager().findFragmentByTag("puzzlelvlfragment");
-                ImagePuzzleHardLvl f2 = (ImagePuzzleHardLvl) getFragmentManager().findFragmentByTag("puzzlehardlvlfragment");
-                BattleshipLvl f3 = (BattleshipLvl) getFragmentManager().findFragmentByTag("battleshipfragment");
-
-                //wait
-                if (f != null && f.isVisible()) {
-                    Log.i("knowledge", "setMessage:" + message);
-                    f.setMessage(message);
-                    msgNotSent = false;
-                }
-                if (f1 != null && f1.isVisible()) {
-                    Log.i("puzzle", "setMessage:" + message);
-                    f1.setMessage(message);
-                    msgNotSent = false;
-                }
-                if (f2 != null && f2.isVisible()) {
-                    Log.i("puzzleHArd", "setMessage:" + message);
-                    f2.setMessage(message);
-                    msgNotSent = false;
-                }
-
-                if (f3 != null && f3.isVisible()) {
-                    Log.i("battleship", "setMessage:" + message);
-                    f3.setMessage(message);
-                    msgNotSent = false;
-                }
-
-            }
-        });
-        return msgNotSent;
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == REQUEST_RESOLVE_ERROR) {
-//            if (resultCode == RESULT_OK) {
-//                mGoogleApiClient.connect();
-//            } else {
-//                Log.e(TAG, "GoogleApiClient connection failed. Unable to resolve.");
-//            }
-//        } else {
-        super.onActivityResult(requestCode, resultCode, data);
-//        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 
 
 }

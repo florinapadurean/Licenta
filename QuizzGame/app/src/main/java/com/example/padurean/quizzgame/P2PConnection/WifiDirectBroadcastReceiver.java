@@ -15,16 +15,13 @@ import android.util.Log;
 import com.example.padurean.quizzgame.MainActivity;
 import com.example.padurean.quizzgame.R;
 
-/**
- * A BroadcastReceiver that notifies of important Wi-Fi p2p events.
- */
 public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
     private WifiP2pManager mManager;
     private WifiP2pManager.Channel mChannel;
     private MainActivity mActivity;
 
-    public WifiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel,MainActivity activity) {
+    public WifiDirectBroadcastReceiver(WifiP2pManager manager, WifiP2pManager.Channel channel, MainActivity activity) {
         super();
         this.mManager = manager;
         this.mChannel = channel;
@@ -48,8 +45,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
             Log.d("wifiBroadcastReciever", "P2P state changed - " + state);
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
 
-            // request available peers from the wifi p2p manager. This is an
-            // asynchronous call and the calling activity is notified with a
+            // Device list is notified with a
             // callback on PeerListListener.onPeersAvailable()
             if (mManager != null) {
                 mManager.requestPeers(mChannel, (WifiP2pManager.PeerListListener) mActivity.getFragmentManager()
@@ -68,33 +64,29 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver {
 
                 // we are connected with the other device, request connection
                 // info to find group owner IP
-
                 DeviceList fragment = (DeviceList) mActivity.getFragmentManager().findFragmentById(R.id.frag_list);
                 mManager.requestConnectionInfo(mChannel, fragment);
-                mManager.requestGroupInfo(mChannel,mActivity);
-            } else {
-                // It's a disconnect
-//                mActivity.resetData();
+                mManager.requestGroupInfo(mChannel, mActivity);
             }
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             WifiP2pDevice device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
             switch (device.status) {
                 case WifiP2pDevice.CONNECTED:
-                    Log.v("wifiBroadcastReciever","mConnected");
+                    Log.v("wifiBroadcastReciever", "mConnected");
                     break;
                 case WifiP2pDevice.INVITED:
-                    Log.v("wifiBroadcastReciever","mInvited");
+                    Log.v("wifiBroadcastReciever", "mInvited");
                     break;
                 case WifiP2pDevice.FAILED:
-                    Log.v("wifiBroadcastReciever","mFailed");
+                    Log.v("wifiBroadcastReciever", "mFailed");
                     break;
                 case WifiP2pDevice.AVAILABLE:
-                    Log.v("wifiBroadcastReciever","mAvailable");
+                    Log.v("wifiBroadcastReciever", "mAvailable");
                     break;
                 case WifiP2pDevice.UNAVAILABLE:
-                    Log.v("wifiBroadcastReciever","mUnavailable");
+                    Log.v("wifiBroadcastReciever", "mUnavailable");
                 default:
-                    Log.v("wifiBroadcastReciever","mUnknown");
+                    Log.v("wifiBroadcastReciever", "mUnknown");
                     break;
             }
         }

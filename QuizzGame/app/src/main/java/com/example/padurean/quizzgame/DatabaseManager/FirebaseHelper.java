@@ -26,15 +26,15 @@ public class FirebaseHelper {
 
     private static FirebaseDatabase mDatabase;
     private static DatabaseReference mRef;
-    private static String TAG="FirebaseHelper";
+    private static String TAG = "FirebaseHelper";
 
-    public FirebaseHelper(){
+    public FirebaseHelper() {
         mDatabase = FirebaseDatabase.getInstance();
     }
 
     @NonNull
     public Observable<DataSnapshot> getDataForKnowledgeLvl() {
-        mRef=mDatabase.getReference().child("KnowledgeLvl");
+        mRef = mDatabase.getReference().child("KnowledgeLvl");
         return Observable.create(new Observable.OnSubscribe<DataSnapshot>() {
             @Override
             public void call(final Subscriber<? super DataSnapshot> subscriber) {
@@ -58,13 +58,14 @@ public class FirebaseHelper {
         });
     }
 
-    public void recieveDateOnce(final OnGetDataListener listener){
-        mRef=mDatabase.getReference().child("KnowledgeLvl");
+    public void recieveDateOnce(final OnGetDataListener listener) {
+        mRef = mDatabase.getReference().child("KnowledgeLvl");
         mRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("KnowledgeLvl", "onCancelled", databaseError.toException());
             }
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listener.onSuccess(dataSnapshot);
@@ -72,13 +73,16 @@ public class FirebaseHelper {
         });
     }
 
-
-
+    public void saveScores(String child, Integer score) {
+        mRef = mDatabase.getReference().child("KnowledgeLvl");
+    }
 
 
     public interface OnGetDataListener {
         public void onStart();
+
         public void onSuccess(DataSnapshot data);
+
         public void onFailed(DatabaseError databaseError);
     }
 }

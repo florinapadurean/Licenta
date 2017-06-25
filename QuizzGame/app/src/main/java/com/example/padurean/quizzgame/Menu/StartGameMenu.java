@@ -17,7 +17,6 @@ public class StartGameMenu extends Fragment {
     public StartGameMenu() {
     }
 
-
     public static StartGameMenu newInstance() {
         StartGameMenu fragment = new StartGameMenu();
         return fragment;
@@ -32,14 +31,12 @@ public class StartGameMenu extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_start_menu, container, false);
-        startDiscovery=(Button) view.findViewById(R.id.discovery);
-        startDiscovery.setOnClickListener(new View.OnClickListener()
-        {
+        View view = inflater.inflate(R.layout.fragment_start_menu, container, false);
+        startDiscovery = (Button) view.findViewById(R.id.discovery);
+        startDiscovery.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                ((StartMenuListener)getActivity()).findFriend();
+            public void onClick(View v) {
+                ((StartMenuListener) getActivity()).findFriend();
             }
         });
         return view;
@@ -48,23 +45,22 @@ public class StartGameMenu extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        ((StartMenuListener)getActivity()).onStop();
+//        ((StartMenuListener)getActivity()).onStop();
     }
 
-    public interface StartMenuListener{
+    public interface StartMenuListener {
         void findFriend();
+
         void onStop();
     }
 }

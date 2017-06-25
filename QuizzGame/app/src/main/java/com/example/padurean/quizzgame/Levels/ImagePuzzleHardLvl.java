@@ -76,7 +76,7 @@ public class ImagePuzzleHardLvl extends Fragment {
 
     public static ImagePuzzleHardLvl newInstance(GetMessageListener callback) {
         ImagePuzzleHardLvl fragment = new ImagePuzzleHardLvl();
-        fragment.callback=callback;
+        fragment.callback = callback;
         return fragment;
     }
 
@@ -93,43 +93,42 @@ public class ImagePuzzleHardLvl extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_puzzle_hard, container, false);
+        View view = inflater.inflate(R.layout.fragment_puzzle_hard, container, false);
 
-        progressBar=(ProgressBar) view.findViewById(R.id.progress);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress);
         int color = ContextCompat.getColor(getActivity(), R.color.verdeAlbastrui);
         progressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        timeProgressBar=(ProgressBar) view.findViewById(R.id.progressbar1);
+        timeProgressBar = (ProgressBar) view.findViewById(R.id.progressbar1);
         timeProgressBar.getIndeterminateDrawable().setColorFilter(color, PorterDuff.Mode.OVERLAY);
         timeProgressBar.setMax(100);
-        myTime=null;
-        otherPlayerTime=null;
+        myTime = null;
+        otherPlayerTime = null;
 
-        View dialogView=inflater.inflate(R.layout.puzzle_dialog, container, false);
-        ImageView img=(ImageView)dialogView.findViewById(R.id.imgView);
+        View dialogView = inflater.inflate(R.layout.puzzle_dialog, container, false);
+        ImageView img = (ImageView) dialogView.findViewById(R.id.imgView);
         img.setBackground(getResources().getDrawable(R.drawable.clock));
-        Button ok=(Button)dialogView.findViewById(R.id.okbtn);
-        ok.setOnClickListener(new View.OnClickListener(){
+        Button ok = (Button) dialogView.findViewById(R.id.okbtn);
+        ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("tangram","ok pressed");
+                Log.v("tangram", "ok pressed");
                 settingsDialog.dismiss();
                 startClock();
             }
         });
 
-        box1= (FrameLayout) view.findViewById(R.id.empty_box1);
-        box2= (FrameLayout) view.findViewById(R.id.empty_box2);
-        box3= (FrameLayout) view.findViewById(R.id.empty_box3);
-        box4= (FrameLayout) view.findViewById(R.id.empty_box4);
-        box5= (FrameLayout) view.findViewById(R.id.empty_box5);
-        box6= (FrameLayout) view.findViewById(R.id.empty_box6);
-        box7= (FrameLayout) view.findViewById(R.id.empty_box7);
-        box8= (FrameLayout) view.findViewById(R.id.empty_box8);
-        box9= (FrameLayout) view.findViewById(R.id.empty_box9);
-        box10= (FrameLayout) view.findViewById(R.id.empty_box10);
-        box11= (FrameLayout) view.findViewById(R.id.empty_box11);
-        box12= (FrameLayout) view.findViewById(R.id.empty_box12);
-
+        box1 = (FrameLayout) view.findViewById(R.id.empty_box1);
+        box2 = (FrameLayout) view.findViewById(R.id.empty_box2);
+        box3 = (FrameLayout) view.findViewById(R.id.empty_box3);
+        box4 = (FrameLayout) view.findViewById(R.id.empty_box4);
+        box5 = (FrameLayout) view.findViewById(R.id.empty_box5);
+        box6 = (FrameLayout) view.findViewById(R.id.empty_box6);
+        box7 = (FrameLayout) view.findViewById(R.id.empty_box7);
+        box8 = (FrameLayout) view.findViewById(R.id.empty_box8);
+        box9 = (FrameLayout) view.findViewById(R.id.empty_box9);
+        box10 = (FrameLayout) view.findViewById(R.id.empty_box10);
+        box11 = (FrameLayout) view.findViewById(R.id.empty_box11);
+        box12 = (FrameLayout) view.findViewById(R.id.empty_box12);
 
 
         box1.setOnTouchListener(new MyTouchListener());
@@ -146,7 +145,6 @@ public class ImagePuzzleHardLvl extends Fragment {
         box12.setOnTouchListener(new MyTouchListener());
 
 
-
         box1.setOnDragListener(new MyDragListener());
         box2.setOnDragListener(new MyDragListener());
         box3.setOnDragListener(new MyDragListener());
@@ -159,7 +157,7 @@ public class ImagePuzzleHardLvl extends Fragment {
         box10.setOnDragListener(new MyDragListener());
         box11.setOnDragListener(new MyDragListener());
         box12.setOnDragListener(new MyDragListener());
-        linearLayout=(LinearLayout) view.findViewById(R.id.grid);
+        linearLayout = (LinearLayout) view.findViewById(R.id.grid);
         linearLayout.setOnDragListener(new MyDragListener());
         settingsDialog = new Dialog(getActivity());
         settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -167,8 +165,8 @@ public class ImagePuzzleHardLvl extends Fragment {
         linearLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
-        timerForProgressBar=new BackgroundTimer(System.currentTimeMillis(),60000,timeProgressBar,this,Boolean.TRUE);
-        tt=new Thread(timerForProgressBar);
+        timerForProgressBar = new BackgroundTimer(System.currentTimeMillis(), 60000, timeProgressBar, this, Boolean.TRUE);
+        tt = new Thread(timerForProgressBar);
         tt.start();
         return view;
     }
@@ -208,25 +206,24 @@ public class ImagePuzzleHardLvl extends Fragment {
                 case DragEvent.ACTION_DRAG_EXITED:
                     break;
                 case DragEvent.ACTION_DROP:
-                    if(v instanceof LinearLayout){
-                        FrameLayout view1=(FrameLayout)event.getLocalState();
+                    if (v instanceof LinearLayout) {
+                        FrameLayout view1 = (FrameLayout) event.getLocalState();
                         view1.setVisibility(View.VISIBLE);
                         break;
                     }
-                    if(event.getLocalState() instanceof FrameLayout && v instanceof FrameLayout){
-                        FrameLayout view1=(FrameLayout)event.getLocalState();
+                    if (event.getLocalState() instanceof FrameLayout && v instanceof FrameLayout) {
+                        FrameLayout view1 = (FrameLayout) event.getLocalState();
                         //unde
-                        FrameLayout view2=(FrameLayout)v;
-                        Log.v("puzzle",view1.toString()+" "+view2.toString());
-                        Drawable d1=view1.getBackground();
-                        Drawable d2=view2.getBackground();
+                        FrameLayout view2 = (FrameLayout) v;
+                        Log.v("puzzle", view1.toString() + " " + view2.toString());
+                        Drawable d1 = view1.getBackground();
+                        Drawable d2 = view2.getBackground();
                         view1.setBackground(d2);
                         view1.setVisibility(View.VISIBLE);
                         view2.setBackground(d1);
                         view2.setVisibility(View.VISIBLE);
-                    }
-                    else{
-                        Log.v("puzzle",event.getLocalState().toString());
+                    } else {
+                        Log.v("puzzle", event.getLocalState().toString());
                     }
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -257,7 +254,8 @@ public class ImagePuzzleHardLvl extends Fragment {
 //                            timer.stopRunning();
 //                            t.interrupt();
                             callback.send("mytime:" + String.valueOf(myTime));
-                            if(progressDialog==null)progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
+                            if (progressDialog == null)
+                                progressDialog = ProgressDialog.show(getActivity(), "Waiting for your friend to finish tis level", " Please Wait...", true, true);
                             if (otherPlayerTime != null) {
                                 progressDialog.dismiss();
                                 if (myTime - otherPlayerTime > 0) {
@@ -265,13 +263,13 @@ public class ImagePuzzleHardLvl extends Fragment {
                                 } else if (myTime == otherPlayerTime) {
                                     goToPuzzleWin();
                                 } else {
-                                   goToPuzzleWin();
+                                    goToPuzzleWin();
                                 }
                             }
                         }
                     } else {
                         if (!t.isAlive()) {
-                           goToPuzzleLoose();
+                            goToPuzzleLoose();
                         }
 
                     }
@@ -284,33 +282,33 @@ public class ImagePuzzleHardLvl extends Fragment {
         }
     }
 
-    public void startClock(){
+    public void startClock() {
         timeProgressBar.setVisibility(View.VISIBLE);
-        timer=new BackgroundTimer(System.currentTimeMillis(),100000,timeProgressBar,this,Boolean.FALSE);
-        t=new Thread(timer);
+        timer = new BackgroundTimer(System.currentTimeMillis(), 100000, timeProgressBar, this, Boolean.FALSE);
+        t = new Thread(timer);
         t.start();
     }
 
     public void setMessage(String message) {
         if (message.equals("puzzle hard")) {
             linearLayout.setVisibility(View.VISIBLE);
-            getActivity().runOnUiThread(new Runnable(){
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     settingsDialog.show();
                 }
             });
             progressBar.setVisibility(View.GONE);
-            if(tt!=null && tt.isAlive()){
+            if (tt != null && tt.isAlive()) {
                 timerForProgressBar.stopRunning();
                 tt.interrupt();
-                tt=null;
+                tt = null;
             }
 
         }
 
         if (message.startsWith("mytime:")) {
-            if(progressDialog!=null && progressDialog.isShowing()){
+            if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
             String[] l = message.split(":");
@@ -326,15 +324,15 @@ public class ImagePuzzleHardLvl extends Fragment {
         }
     }
 
-    public void getLastMessage(){
-        String s=callback.getLastMessage();
-        if(!s.equals("")) setMessage(s);
+    public void getLastMessage() {
+        String s = callback.getLastMessage();
+        if (!s.equals("")) setMessage(s);
     }
 
     public void timeWaitingDone() {
-        Log.i("ImagePuzzle","time waiting done");
+        Log.i("ImagePuzzle", "time waiting done");
         tt.interrupt();
-        tt=null;
+        tt = null;
         callback.showToast("Your friend didn't press on the same level");
         LevelsMenu lm = LevelsMenu.newInstance(TRUE);
         getFragmentManager().beginTransaction()
@@ -342,40 +340,40 @@ public class ImagePuzzleHardLvl extends Fragment {
                 .commit();
     }
 
-    public void goToPuzzleWin(){
-        MessageWin win= MessageWin.newInstance("",Boolean.TRUE);
+    public void goToPuzzleWin() {
+        MessageWin win = MessageWin.newInstance("", Boolean.TRUE);
         getActivity().getFragmentManager().beginTransaction()
-                .replace(R.id.frag_menu,win,"win")
+                .replace(R.id.frag_menu, win, "win")
                 .commit();
     }
 
-    public void goToPuzzleLoose(){
-        MessageLoose lost= MessageLoose.newInstance("",Boolean.TRUE);
+    public void goToPuzzleLoose() {
+        MessageLoose lost = MessageLoose.newInstance("", Boolean.TRUE);
         getActivity().getFragmentManager().beginTransaction()
-                .replace(R.id.frag_menu,lost,"loose")
+                .replace(R.id.frag_menu, lost, "loose")
                 .commit();
     }
 
-    public void stopLevel(){
-        if(t!=null && t.isAlive()){
+    public void stopLevel() {
+        if (t != null && t.isAlive()) {
             timer.stopRunning();
             t.interrupt();
         }
-        if(settingsDialog.isShowing()){
+        if (settingsDialog.isShowing()) {
             settingsDialog.dismiss();
         }
 
     }
 
     public void timerDone() {
-        Log.i("ImageHArdPuzzle","timerdDOne");
+        Log.i("ImageHArdPuzzle", "timerdDOne");
         t.interrupt();
         if (myTime != null) {
-            Log.i("ImageHArdPuzzle",myTime.toString());
+            Log.i("ImageHArdPuzzle", myTime.toString());
 //            goToPuzzleWin();
         } else {
             goToPuzzleLoose();
-            callback.send("myTime:"+timer.getMyTime());
+            callback.send("myTime:" + timer.getMyTime());
         }
     }
 

@@ -36,14 +36,12 @@ public class NoDevices extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i("nodevices","aici");
-        View v=inflater.inflate(R.layout.fragment_no_devices, container, false);
-        ImageButton retrybtn=(ImageButton) v.findViewById(R.id.retry_btn);
-        Log.i("nodevices","aici2");
+        View v = inflater.inflate(R.layout.fragment_no_devices, container, false);
+        ImageButton retrybtn = (ImageButton) v.findViewById(R.id.retry_btn);
         retrybtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((RetryInterface)getActivity()).findFriend();
+                ((RetryInterface) getActivity()).findFriend();
             }
         });
         return v;
@@ -53,7 +51,6 @@ public class NoDevices extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @Override
@@ -61,7 +58,7 @@ public class NoDevices extends Fragment {
         super.onDetach();
     }
 
-    public interface RetryInterface{
+    public interface RetryInterface {
         void findFriend();
     }
 }

@@ -51,7 +51,7 @@ public class Question {
         this.badAnswer3 = badAnswer3;
     }
 
-    public Question(){
+    public Question() {
 
     }
 

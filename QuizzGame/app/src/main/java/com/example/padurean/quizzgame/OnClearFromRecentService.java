@@ -14,7 +14,8 @@ import static android.app.Service.START_NOT_STICKY;
 
 public class OnClearFromRecentService extends Service {
 
-    public OnClearFromRecentService(){}
+    public OnClearFromRecentService() {
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -36,7 +37,6 @@ public class OnClearFromRecentService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         Log.e("ClearFromRecentService", "END");
-        //Code here
         LocalBroadcastManager.getInstance(getBaseContext()).sendBroadcast(
                 new Intent(MainActivity.FILTER).putExtra(MainActivity.KEY, "cevaa")
         );

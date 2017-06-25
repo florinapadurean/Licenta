@@ -3,6 +3,7 @@ package com.example.padurean.quizzgame.Communication;
 import android.util.Log;
 
 import com.example.padurean.quizzgame.Callbacks.SocketCallback;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -17,30 +18,28 @@ import java.net.Socket;
  * Created by Asus on 02.06.2017.
  */
 
-public class MyServerSocket extends Thread{
+public class MyServerSocket extends Thread {
 
-    public static final int SERVERPORT = 8080;
+    private static final int SERVERPORT = 8080;
     private boolean running = false;
     private PrintWriter mOut;
     private BufferedReader in;
-    SocketCallback callback;
-    Socket client;
+    private SocketCallback callback;
+    private Socket client;
 
 
-    public MyServerSocket(SocketCallback callback){
-        this.callback=callback;
-//        serverSocket=null;
-//        socket=null;
+    public MyServerSocket(SocketCallback callback) {
+        this.callback = callback;
     }
 
-    public void send(String message){
-        Log.i("serverSocket","send msg:"+message);
+    public void send(String message) {
+        Log.i("serverSocket", "send msg:" + message);
         if (mOut != null && !mOut.checkError()) {
             mOut.println(message);
             mOut.flush();
         }
-        if(message=="end connection"){
-            running=false;
+        if (message == "end connection") {
+            running = false;
         }
     }
 
@@ -56,8 +55,7 @@ public class MyServerSocket extends Thread{
             serverSocket.setReuseAddress(true);
             serverSocket.bind(new InetSocketAddress(SERVERPORT));
 
-            //create client socket... the method accept() listens for a connection to be made to this socket and accepts it.
-            client= serverSocket.accept();
+            client = serverSocket.accept();
             System.out.println("S: Receiving...");
 
             try {
@@ -68,23 +66,20 @@ public class MyServerSocket extends Thread{
                 //read the message received from client
                 in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-                //in this while we wait to receive messages from client (it's an infinite loop)
-                //this while it's like a listener for messages
                 while (running) {
                     String message = in.readLine();
-                    if (message != null ) {
-                        Log.i("serverSocket","recieve msg:"+message);
-                        if(message=="end connection"){
-                            Log.v("Client","aici alo");
+                    if (message != null) {
+                        Log.i("serverSocket", "recieve msg:" + message);
+                        if (message == "end connection") {
+                            Log.v("Client", "aici alo");
                             client.close();
                             if (client != null) client.close();
                             if (in != null) in.close();
-                            if(mOut!=null) mOut.close();
+                            if (mOut != null) mOut.close();
                             callback.disconnect();
-                            running=false;
+                            running = false;
                             break;
-                        }
-                        else{
+                        } else {
                             callback.recieveMessage(message);
                         }
                     }
@@ -97,12 +92,10 @@ public class MyServerSocket extends Thread{
                 callback.showToast("Sorry,someone disconnected!");
                 client.close();
                 serverSocket.close();
-//                callback.disconnect();
             } finally {
-//                client.close();
                 if (client != null) client.close();
                 if (in != null) in.close();
-                if(mOut!=null) mOut.close();
+                if (mOut != null) mOut.close();
                 callback.disconnect();
                 System.out.println("S: Done.");
             }

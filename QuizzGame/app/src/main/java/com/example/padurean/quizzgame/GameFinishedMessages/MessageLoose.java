@@ -15,9 +15,9 @@ import com.example.padurean.quizzgame.R;
  * Created by Asus on 28.05.2017.
  */
 
-public class MessageLoose extends Fragment{
+public class MessageLoose extends Fragment {
 
-    private String text=null;
+    private String text = null;
     private Boolean showHardLvl;
 
     public Boolean getShowHardLvl() {
@@ -27,10 +27,10 @@ public class MessageLoose extends Fragment{
     public MessageLoose() {
     }
 
-    public static MessageLoose newInstance(String param,Boolean showHardLvl){
-        MessageLoose imagePuzzleWin= new MessageLoose();
-        imagePuzzleWin.text=param;
-        imagePuzzleWin.showHardLvl=showHardLvl;
+    public static MessageLoose newInstance(String param, Boolean showHardLvl) {
+        MessageLoose imagePuzzleWin = new MessageLoose();
+        imagePuzzleWin.text = param;
+        imagePuzzleWin.showHardLvl = showHardLvl;
         return imagePuzzleWin;
     }
 
@@ -48,9 +48,9 @@ public class MessageLoose extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.puzzle_loose, container, false);
-        if(text!=null){
-            TextView additionalText=(TextView) view.findViewById(R.id.additional_text);
+        View view = inflater.inflate(R.layout.puzzle_loose, container, false);
+        if (text != null) {
+            TextView additionalText = (TextView) view.findViewById(R.id.additional_text);
             additionalText.setText(text);
         }
         return view;

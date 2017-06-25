@@ -24,30 +24,30 @@ import rx.schedulers.Schedulers;
 
 public class Manager {
     private FirebaseHelper firebaseHelper;
-    private String TAG="Manager";
+    private String TAG = "Manager";
 
-    public Manager(){
-        firebaseHelper=new FirebaseHelper();
+    public Manager() {
+        firebaseHelper = new FirebaseHelper();
     }
 
-    public void getDataKnowledge(final KnowledgeLvlCallback callback){
+    public void getDataKnowledge(final KnowledgeLvlCallback callback) {
         firebaseHelper.getDataForKnowledgeLvl()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<DataSnapshot>() {
                     @Override
                     public void onCompleted() {
-                        Log.v(TAG,"Service completed");
+                        Log.v(TAG, "Service completed");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e( TAG,"Error while loading the events");
+                        Log.e(TAG, "Error while loading the events");
                     }
 
                     @Override
                     public void onNext(final DataSnapshot dataSnapshot) {
-                        List<Question> data=new ArrayList<>();
+                        List<Question> data = new ArrayList<>();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Question question = snapshot.getValue(Question.class);
                             data.add(question);
@@ -58,8 +58,6 @@ public class Manager {
                     }
                 });
     }
-
-
 
 
 }

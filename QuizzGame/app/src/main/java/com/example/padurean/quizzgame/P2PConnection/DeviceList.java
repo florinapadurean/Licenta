@@ -29,7 +29,7 @@ import java.util.List;
  * Created by Asus on 26.02.2017.
  */
 
-public class DeviceList extends ListFragment implements WifiP2pManager.PeerListListener,WifiP2pManager.ConnectionInfoListener{
+public class DeviceList extends ListFragment implements WifiP2pManager.PeerListListener, WifiP2pManager.ConnectionInfoListener {
 
     private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     ProgressDialog progressDialog = null;
@@ -44,14 +44,10 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mContentView = inflater.inflate(R.layout.devices_list, container,false);
+        mContentView = inflater.inflate(R.layout.devices_list, container, false);
         this.setListAdapter(new WiFiPeerListAdapter(getActivity(), R.layout.row_devices, peers));
         return mContentView;
     }
-
-    /**
-     * @return this device
-     */
 
 
     private static String getDeviceStatus(int deviceStatus) {
@@ -73,14 +69,11 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
         }
     }
 
-    /**
-     * Initiate a connection with the peer.
-     */
+
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         WifiP2pDevice device = (WifiP2pDevice) getListAdapter().getItem(position);
-//        ((DeviceActionListener) getActivity()).showDetails(device);
-        ((DeviceActionListener)getActivity()).connect(device);
+        ((DeviceActionListener) getActivity()).connect(device);
     }
 
     @Override
@@ -92,7 +85,7 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
         peers.addAll(peerList.getDeviceList());
         ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
         if (peers.size() == 0) {
-            Log.d("devicelist","No devices found!");
+            Log.d("devicelist", "No devices found!");
             return;
         }
 
@@ -105,27 +98,15 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
         }
         // The owner IP is now known.
         if (info.groupFormed && info.isGroupOwner) {
-            Log.v("onconn","owner");
-
-//            Intent i=new Intent(getActivity(), com.example.padurean.quizzgame.Menu.class);
-//            startActivity(i);
-
+            Log.v("onconn", "owner");
         } else if (info.groupFormed) {
-            Log.v("onconn","peer");
-//            Intent i=new Intent(getActivity(), com.example.padurean.quizzgame.Menu.class);
-//            startActivity(i);
-            // The other device acts as the client. In this case, we enable the
-            // get file button.
+            Log.v("onconn", "peer");
         }
-        ((DeviceActionListener)getActivity()).showMenu(info);
+        ((DeviceActionListener) getActivity()).showMenu(info);
     }
 
-    /**
-     *
-     */
+
     public void onInitiateDiscovery() {
-//        progressDialog=pD;
-//        this.getView().setVisibility(View.VISIBLE);
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
@@ -134,25 +115,25 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
 
                     @Override
                     public void onCancel(DialogInterface dialog) {
-                        ((DeviceActionListener)getActivity()).stopPeerDiscoveryAtOnCancelDialog();
+                        ((DeviceActionListener) getActivity()).stopPeerDiscoveryAtOnCancelDialog();
                     }
                 });
         nothinghappens();
     }
 
-    public void nothinghappens(){
-        new CountDownTimer(20000,1000){
+    public void nothinghappens() {
+        new CountDownTimer(20000, 1000) {
             @Override
             public void onFinish() {
-                if(progressDialog.isShowing()){
+                if (progressDialog.isShowing()) {
                     progressDialog.dismiss();
-                    ((DeviceActionListener)getActivity()).stopPeerDiscovery();
+                    ((DeviceActionListener) getActivity()).stopPeerDiscovery();
                 }
             }
 
             @Override
             public void onTick(long millisUntilFinished) {
-                if(!progressDialog.isShowing()){
+                if (!progressDialog.isShowing()) {
                     this.cancel();
                 }
             }
@@ -167,16 +148,10 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
 
         private List<WifiP2pDevice> items;
 
-        /**
-         * @param context
-         * @param textViewResourceId
-         * @param objects
-         */
         public WiFiPeerListAdapter(Context context, int textViewResourceId,
                                    List<WifiP2pDevice> objects) {
             super(context, textViewResourceId, objects);
             items = objects;
-
         }
 
         @Override
@@ -191,7 +166,7 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
             if (device != null) {
                 TextView top = (TextView) v.findViewById(R.id.device_name);
                 if (top != null) {
-                    top.setText(device.deviceName+"-"+getDeviceStatus(device.status));
+                    top.setText(device.deviceName + "-" + getDeviceStatus(device.status));
                 }
             }
 
@@ -200,10 +175,7 @@ public class DeviceList extends ListFragment implements WifiP2pManager.PeerListL
         }
     }
 
-    /**
-     * An interface-callback for the activity to listen to fragment interaction
-     * events.
-     */
+    //An interface-callback for the MainActivity to listen to fragment interaction events.
     public interface DeviceActionListener {
         void showMenu(WifiP2pInfo info);
 

@@ -59,10 +59,7 @@ public class Login extends Activity implements View.OnClickListener{
 
         if (activeNetwork != null) { // connected to the internet
             if ((activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)) {
-//                String s=activeNetwork.getState().toString();
                 Log.i(TAG, "connected");
-//                startActivity(new Intent(Login.this,ErrorWifi.class));
-//                this.finish();
             }
         }
         mAuth = FirebaseAuth.getInstance();
@@ -80,18 +77,15 @@ public class Login extends Activity implements View.OnClickListener{
             public void onSuccess(LoginResult loginResult) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 Log.i(TAG,"Success login");
-                // App code
             }
 
             @Override
             public void onCancel() {
-                // App code
                 Log.i(TAG,"Cancel login");
             }
 
             @Override
             public void onError(FacebookException exception) {
-                // App code
                 Log.i(TAG,"ERR login"+exception.toString());
             }
         });
@@ -101,12 +95,13 @@ public class Login extends Activity implements View.OnClickListener{
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                    // User is signed in with firebase
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     Intent i=new Intent(Login.this,MainActivity.class);
                     startActivity(i);
 
                 } else {
+                    //user is signed in with facebook
                     boolean loggedIn = AccessToken.getCurrentAccessToken() != null;
                     if(loggedIn){
                         Intent i=new Intent(Login.this,MainActivity.class);
@@ -197,7 +192,6 @@ public class Login extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        Log.i(TAG,"aiciiii"+view);
         if(view == signup_text){
             Log.i(TAG,"aici");
             LayoutInflater inflater = this.getLayoutInflater();
@@ -206,7 +200,6 @@ public class Login extends Activity implements View.OnClickListener{
             final EditText email_text_signup = (EditText) v.findViewById(R.id.email_signup);
             final EditText password_text_signup = (EditText) v.findViewById(R.id.password_signup);
 
-            // Add the buttons
             builder.setTitle("Sign Up")
                     .setView(v)
                     .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -239,12 +232,12 @@ public class Login extends Activity implements View.OnClickListener{
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     //checking if success
                                     progressDialog.dismiss();
-                                    Log.i(TAG,"oncompleye");
+                                    Log.i(TAG,"oncomplete");
                                     if (task.isSuccessful()) {
                                         finish();
                                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                     } else {
-                                        Log.i(TAG,"oncompleye not successful");
+                                        Log.i(TAG,"oncomplete not successful");
                                         //display some message here
                                         Toast.makeText(Login.this, "Registration Error", Toast.LENGTH_LONG).show();
                                     }

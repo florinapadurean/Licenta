@@ -23,8 +23,8 @@ public class ErrorWifi extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_error_wifi);
-        ImageButton turnOnWiFi=(ImageButton) findViewById(R.id.wifi_off_btn);
-        turnOnWiFi.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake));
+        ImageButton turnOnWiFi = (ImageButton) findViewById(R.id.wifi_off_btn);
+        turnOnWiFi.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shake));
         turnOnWiFi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -32,14 +32,15 @@ public class ErrorWifi extends AppCompatActivity {
             }
         });
     }
+
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if(activeNetwork!=null){
-            Log.i("errwifi","not null");
-            startActivity(new Intent(ErrorWifi.this,Login.class));
+        if (activeNetwork != null) {
+            Log.i("errwifi", "not null");
+            startActivity(new Intent(ErrorWifi.this, Login.class));
             this.finish();
         }
     }
