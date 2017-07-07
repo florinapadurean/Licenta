@@ -69,6 +69,7 @@ public class ImagePuzzleHardLvl extends Fragment {
     private com.example.padurean.quizzgame.Callbacks.GetMessageListener callback;
     private BackgroundTimer timerForProgressBar;
     private Thread tt;
+    private View dialogView;
 
     public ImagePuzzleHardLvl() {
         super();
@@ -104,16 +105,19 @@ public class ImagePuzzleHardLvl extends Fragment {
         myTime = null;
         otherPlayerTime = null;
 
-        View dialogView = inflater.inflate(R.layout.puzzle_dialog, container, false);
+        dialogView = inflater.inflate(R.layout.puzzle_dialog, container, false);
         ImageView img = (ImageView) dialogView.findViewById(R.id.imgView);
         img.setBackground(getResources().getDrawable(R.drawable.clock));
+        settingsDialog = new Dialog(getActivity());
+        settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        settingsDialog.setContentView(dialogView);
         Button ok = (Button) dialogView.findViewById(R.id.okbtn);
         ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.v("tangram", "ok pressed");
-                settingsDialog.dismiss();
-                startClock();
+                    @Override
+                    public void onClick(View v) {
+                        Log.v("tangram", "ok pressed");
+                        settingsDialog.dismiss();
+                        startClock();
             }
         });
 
@@ -159,13 +163,11 @@ public class ImagePuzzleHardLvl extends Fragment {
         box12.setOnDragListener(new MyDragListener());
         linearLayout = (LinearLayout) view.findViewById(R.id.grid);
         linearLayout.setOnDragListener(new MyDragListener());
-        settingsDialog = new Dialog(getActivity());
-        settingsDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        settingsDialog.setContentView(dialogView);
+
         linearLayout.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
-        timerForProgressBar = new BackgroundTimer(System.currentTimeMillis(), 60000, timeProgressBar, this, Boolean.TRUE);
+        timerForProgressBar = new BackgroundTimer(System.currentTimeMillis(), 30000, timeProgressBar, this, Boolean.TRUE);
         tt = new Thread(timerForProgressBar);
         tt.start();
         return view;
@@ -283,6 +285,10 @@ public class ImagePuzzleHardLvl extends Fragment {
     }
 
     public void startClock() {
+        if(settingsDialog.isShowing()){
+            settingsDialog.hide();
+//            dialogView.setVisibility(View.GONE);
+        }
         timeProgressBar.setVisibility(View.VISIBLE);
         timer = new BackgroundTimer(System.currentTimeMillis(), 100000, timeProgressBar, this, Boolean.FALSE);
         t = new Thread(timer);
@@ -291,19 +297,22 @@ public class ImagePuzzleHardLvl extends Fragment {
 
     public void setMessage(String message) {
         if (message.equals("puzzle hard")) {
-            linearLayout.setVisibility(View.VISIBLE);
+            callback.setLastMessageEmpty();
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    linearLayout.setVisibility(View.VISIBLE);
+
                     settingsDialog.show();
-                }
-            });
-            progressBar.setVisibility(View.GONE);
-            if (tt != null && tt.isAlive()) {
-                timerForProgressBar.stopRunning();
-                tt.interrupt();
-                tt = null;
+                    progressBar.setVisibility(View.GONE);
+                    if (tt != null && tt.isAlive()) {
+                        timerForProgressBar.stopRunning();
+                        tt.interrupt();
+                        tt = null;
+                    }
+
             }
+            });
 
         }
 
@@ -358,6 +367,11 @@ public class ImagePuzzleHardLvl extends Fragment {
         if (t != null && t.isAlive()) {
             timer.stopRunning();
             t.interrupt();
+        }
+        if (tt != null && tt.isAlive()) {
+            timerForProgressBar.stopRunning();
+            tt.interrupt();
+            tt = null;
         }
         if (settingsDialog.isShowing()) {
             settingsDialog.dismiss();

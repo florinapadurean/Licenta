@@ -141,7 +141,7 @@ public class BattleshipLvl extends Fragment {
 
             }
         }
-        timerForProgressBar = new BackgroundTimer(System.currentTimeMillis(), 60000, null, this, Boolean.TRUE);
+        timerForProgressBar = new BackgroundTimer(System.currentTimeMillis(), 30000, null, this, Boolean.TRUE);
         tt = new Thread(timerForProgressBar);
         tt.start();
         return v;
@@ -653,6 +653,11 @@ public class BattleshipLvl extends Fragment {
         }
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
+        }
+        if (tt != null && tt.isAlive()) {
+            timerForProgressBar.stopRunning();
+            tt.interrupt();
+            tt = null;
         }
 
     }

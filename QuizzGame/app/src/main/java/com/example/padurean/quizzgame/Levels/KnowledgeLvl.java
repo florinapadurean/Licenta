@@ -317,7 +317,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback {
         data = new ArrayList<>();
         getDataForKnowledgeLvl();
 
-        timerForProgressBar = new BackgroundTimer(System.currentTimeMillis(), 60000, timeProgressBar, this, Boolean.TRUE);
+        timerForProgressBar = new BackgroundTimer(System.currentTimeMillis(), 30000, timeProgressBar, this, Boolean.TRUE);
         tt = new Thread(timerForProgressBar);
         tt.start();
 
@@ -517,6 +517,7 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback {
 
     public void getLastMessage() {
         String s = callback.getLastMessage();
+        Log.v("Knowledge","lastmsg: "+s);
         if (!s.equals("")) setMessage(s);
     }
 
@@ -542,6 +543,11 @@ public class KnowledgeLvl extends Fragment implements KnowledgeLvlCallback {
             timer.stopRunning();
             t.interrupt();
             t = null;
+        }
+        if (tt != null && tt.isAlive()) {
+            timerForProgressBar.stopRunning();
+            tt.interrupt();
+            tt = null;
         }
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();

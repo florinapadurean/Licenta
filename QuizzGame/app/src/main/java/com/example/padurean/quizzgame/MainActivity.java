@@ -58,12 +58,11 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
     private BroadcastReceiver mReceiver;
     private IntentFilter mIntentFilter;
     private Boolean wifiEnabled = FALSE;
-    static String TAG = "MAin";
+    static String TAG = "Main";
     private Thread t;
 
     private boolean groupFlag = false;
     private WifiP2pGroup groupInfo;
-    private Boolean msgNotSent;
     private MyServerSocket serverSocket = null;
     private ClientSocket clientSocket = null;
     public static final String FILTER = "just.a.filter";
@@ -241,6 +240,8 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
                     Log.d(TAG, "dissconecteddddddd");
                 }
             });
+            if(serverSocket!=null && serverSocket.isAlive()) {serverSocket.send("end connection");serverSocket.interrupt(); serverSocket=null;}
+            if(clientSocket!=null && clientSocket.isAlive()) {clientSocket.send("end connection");clientSocket.interrupt(); clientSocket=null;}
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
@@ -335,6 +336,8 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 
             });
         }
+        if(serverSocket!=null && serverSocket.isAlive()) {serverSocket.send("end connection");serverSocket.interrupt(); serverSocket=null;}
+        if(clientSocket!=null && clientSocket.isAlive()) {serverSocket.send("end connection");clientSocket.interrupt(); clientSocket=null;}
         try {
             Method method1 = mManager.getClass().getMethod("disableP2p", Channel.class);
             method1.invoke(mManager, mChannel);
@@ -347,11 +350,11 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 
     @Override
     public void showMenu(WifiP2pInfo info) {
-        if (info.isGroupOwner) {
+        if (serverSocket==null && info.isGroupOwner) {
             Log.i(TAG, "server start");
             serverSocket = new MyServerSocket(this);
             serverSocket.start();
-        } else {
+        } else if(clientSocket==null){
             Log.i(TAG, "client start");
             clientSocket = new ClientSocket(this, info.groupOwnerAddress);
             clientSocket.start();
@@ -364,22 +367,22 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
         ft.hide(fm.findFragmentById(R.id.frag_start));
         ft.show(fm.findFragmentById(R.id.frag_menu));
         ft.hide(fm.findFragmentById(R.id.frag_err_no_devices));
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     @Override
     public void onBackPressed() {
         if (getFragmentManager().findFragmentById(R.id.frag_menu).isVisible()) {
-            Fragment fragment_menu = getFragmentManager().findFragmentById(R.id.frag_menu);
-            if (fragment_menu instanceof MessageLoose) {
-                LevelsMenu lm;
-                if (((MessageLoose) fragment_menu).getShowHardLvl()) {
-                    lm = LevelsMenu.newInstance(TRUE);
-                } else {
-                    lm = LevelsMenu.newInstance(FALSE);
-                }
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.frag_menu, lm)
+                    Fragment fragment_menu = getFragmentManager().findFragmentById(R.id.frag_menu);
+                    if (fragment_menu instanceof MessageLoose) {
+                        LevelsMenu lm;
+                        if (((MessageLoose) fragment_menu).getShowHardLvl()) {
+                            lm = LevelsMenu.newInstance(TRUE);
+                        } else {
+                            lm = LevelsMenu.newInstance(FALSE);
+                        }
+                        getFragmentManager().beginTransaction()
+                                .replace(R.id.frag_menu, lm)
                         .commit();
             }
 
@@ -465,6 +468,8 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
             ft.hide(fm.findFragmentById(R.id.frag_menu));
             ft.hide(fm.findFragmentById(R.id.frag_err_no_devices));
             ft.commit();
+            if(serverSocket!=null && serverSocket.isAlive()) {serverSocket.send("end connection");serverSocket.interrupt(); serverSocket=null;}
+            if(clientSocket!=null && clientSocket.isAlive()) {serverSocket.send("end connection");clientSocket.interrupt(); clientSocket=null;}
         }
     }
 
@@ -608,6 +613,7 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
 
 
                 if (msgNotSent) {
+                    Log.i("main","msg not sent:"+ messageAsString);
                     lastMsg = messageAsString;
                 } else lastMsg = "";
 
@@ -626,11 +632,6 @@ public class MainActivity extends AppCompatActivity implements SocketCallback, G
         lastMsg = "";
         lastMsg = "";
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
 
 
 }

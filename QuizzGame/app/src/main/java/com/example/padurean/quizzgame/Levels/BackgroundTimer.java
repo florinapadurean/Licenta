@@ -38,12 +38,6 @@ public class BackgroundTimer implements Runnable {
     @Override
     public void run() {
         while (running) {
-
-//                if(callback instanceof ImagePuzzleLvl){
-//                    ((ImagePuzzleLvl)callback).setMessage(s);
-//                }else if(callback instanceof ImagePuzzleHardLvl){
-//                    ((ImagePuzzleHardLvl)callback).setMessage(s);
-//                }else
             if (callback instanceof KnowledgeLvl) {
                 ((KnowledgeLvl) callback).getLastMessage();
             }

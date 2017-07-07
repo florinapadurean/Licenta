@@ -123,7 +123,7 @@ public class ImagePuzzleLvl extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         Log.v("3", "aici");
 
-        timerForProgressBar = new BackgroundTimer(System.currentTimeMillis(), 60000, timeProgressBar, this, Boolean.TRUE);
+        timerForProgressBar = new BackgroundTimer(System.currentTimeMillis(), 30000, timeProgressBar, this, Boolean.TRUE);
         tt = new Thread(timerForProgressBar);
         tt.start();
         return view;
@@ -239,20 +239,23 @@ public class ImagePuzzleLvl extends Fragment {
         if (message.equals("puzzle")) {
             callback.setLastMessageEmpty();
             Log.v("4", "aici");
-            linearLayout.setVisibility(View.VISIBLE);
+
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    linearLayout.setVisibility(View.VISIBLE);
                     settingsDialog.show();
+                    progressBar.setVisibility(View.GONE);
+                    if (tt != null && tt.isAlive()) {
+                        timerForProgressBar.stopRunning();
+                        tt.interrupt();
+                        tt = null;
+                    }
                 }
             });
 
-            progressBar.setVisibility(View.GONE);
-            if (tt != null && tt.isAlive()) {
-                timerForProgressBar.stopRunning();
-                tt.interrupt();
-                tt = null;
-            }
+
+
         }
 
         if (message.startsWith("mytime:")) {
@@ -314,6 +317,11 @@ public class ImagePuzzleLvl extends Fragment {
             timer.stopRunning();
             t.interrupt();
             t = null;
+        }
+        if (tt != null && tt.isAlive()) {
+            timerForProgressBar.stopRunning();
+            tt.interrupt();
+            tt = null;
         }
         if (settingsDialog != null && settingsDialog.isShowing()) {
             settingsDialog.dismiss();

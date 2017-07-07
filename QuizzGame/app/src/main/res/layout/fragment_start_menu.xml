@@ -29,6 +29,7 @@
 
             <Button
                 android:id="@+id/discovery"
+                android:layout_marginTop="50dp"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -36,14 +37,6 @@
                 android:text="Find a friend"
                 />
 
-            <Button
-                android:id="@+id/highscores"
-                android:layout_width="200dp"
-                android:layout_marginTop="10dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/button"
-                android:text="High scores" />
 
         </LinearLayout>
     </LinearLayout>

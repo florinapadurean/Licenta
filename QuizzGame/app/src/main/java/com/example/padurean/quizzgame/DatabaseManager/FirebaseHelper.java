@@ -73,9 +73,6 @@ public class FirebaseHelper {
         });
     }
 
-    public void saveScores(String child, Integer score) {
-        mRef = mDatabase.getReference().child("KnowledgeLvl");
-    }
 
 
     public interface OnGetDataListener {
